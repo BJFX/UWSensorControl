@@ -1,0 +1,41 @@
+﻿<Page x:Class="USBLDC.Views.SonarConfig"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:controls="clr-namespace:TinyMetroWpfLibrary.Controls;assembly=TinyMetroWpfLibrary.Controls"
+      xmlns:controls1="clr-namespace:USBLDC.Controls"
+      mc:Ignorable="d" 
+      Background="{StaticResource DefaultBackgroundBrush}"
+       d:DesignHeight="718" d:DesignWidth="1024"
+	Title="SonarConfig">
+
+    <controls:MetroContentControl>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="80"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="40"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <!--Logo and title-->
+            <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="5"/>
+                </Grid.RowDefinitions>
+                <controls1:TitleBarControl 
+                    Title="{Binding SonarConfigPageName, Mode=OneWay, Source={StaticResource Resources}}"
+                    Grid.Row ="0"
+                    TitleImageSource="/Assets/ico_setting_normal.png"
+                    BackButtonVisibility="Collapsed"
+                    Grid.Column ="1"
+                    Grid.ColumnSpan ="2"
+                    HorizontalAlignment ="Stretch"/>
+            </Grid>
+        </Grid>
+    </controls:MetroContentControl>
+</Page>

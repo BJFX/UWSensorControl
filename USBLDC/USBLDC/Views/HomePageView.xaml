@@ -1,0 +1,47 @@
+﻿<Page x:Class="USBLDC.Views.HomePageView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"  
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
+      xmlns:k="clr-namespace:TinyMetroWpfLibrary.Controls.TouchKeyBoard;assembly=TinyMetroWpfLibrary.Controls"
+      xmlns:Controls="clr-namespace:TinyMetroWpfLibrary.Controls;assembly=TinyMetroWpfLibrary.Controls"
+      xmlns:MetroControl="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+      xmlns:ViewControls="clr-namespace:USBLDC.Controls"
+      xmlns:adp="clr-namespace:USBLDC.AttachedProperty"
+      xmlns:Converters="clr-namespace:USBLDC.Converters"
+      Background="{StaticResource DefaultBackgroundBrush}"
+      DataContext="{Binding HomePageViewModel, Source={StaticResource ViewModelLocator}}" 
+      mc:Ignorable="d" 
+      d:DesignHeight="718" d:DesignWidth="1024"
+        Title="HomePage">
+    <Controls:MetroContentControl>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="80"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="40"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <!--Logo and title-->
+            <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="5"/>
+                </Grid.RowDefinitions>
+                <ViewControls:TitleBarControl 
+                    Title="{Binding Home_Title_ApplicationName, Mode=OneWay, Source={StaticResource Resources}}"
+                    Grid.Row ="0"
+                    TitleImageSource="/Assets/ico_coordinate.png"
+                    BackButtonVisibility="Collapsed"
+                    Grid.Column ="1"
+                    Grid.ColumnSpan ="2"
+                    HorizontalAlignment ="Stretch"/>
+            </Grid>
+        </Grid>
+    </Controls:MetroContentControl>
+</Page>
