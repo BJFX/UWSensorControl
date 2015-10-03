@@ -4,7 +4,6 @@
     {
         public MainFrameViewModel _mainFrameViewModel;
         public HomePageViewModel _homwPageViewModel;
-        public ConnectViewModel _ConnectViewModel;
         public SonarConfigViewModel _SonarConfigViewModel;
         /// <summary>
         /// Gets the MainFrame ViewModel
@@ -35,19 +34,7 @@
                 return _homwPageViewModel;
             }
         }
-        public ConnectViewModel ConnectViewModel
-        {
-            get
-            {
-                // Creates the MainFrame ViewModel
-                if (_ConnectViewModel == null)
-                {
-                    _ConnectViewModel = new ConnectViewModel();
-                    _ConnectViewModel.Initialize();
-                }
-                return _ConnectViewModel;
-            }
-        }
+      
         public SonarConfigViewModel SonarConfigViewModel
         {
             get

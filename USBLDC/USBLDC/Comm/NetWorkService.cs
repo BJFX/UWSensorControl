@@ -73,9 +73,15 @@ namespace USBLDC.Comm
                 throw new Exception("已初始化");
             }
             _datatcpClient = new TcpClient { SendTimeout = 1000 };
-
-            if (!TCPDataService.Init(_datatcpClient, IPAddress.Parse(_conf.GetIP()), int.Parse(_conf.GetNetPort())))
-                throw new Exception("通信网络初始化失败");
+            try
+            {
+                if (!TCPDataService.Init(_datatcpClient, IPAddress.Parse(_conf.GetIP()), int.Parse(_conf.GetNetPort())))
+                    throw new Exception("通信网络初始化失败");
+            }
+            catch (Exception)
+            {
+                throw new Exception("网络配置初始化失败");
+            }
 
             IsInitialize = true;
         }

@@ -35,6 +35,28 @@ namespace USBLDC.Structure
         public SonarConfig()
         {
             Id = 0x0001;
+            Index = 0;
+            Length = 288;
+            Cmd = 0;
+            VelCmd = 0;
+            SurVel = 1500;
+            AvgVel = 1500;
+            FixedGain = 20;
+            TVGCmd = 1;
+            FixedTVG = 20;
+            TVGSampling = 0;
+            TVGSamples = 0;
+            TVGA1 = 0;
+            TVGA2 = 0;
+            TVGA3 = 0;
+            PingPeriod = 12;
+            ADSaved = 1;
+            PoseSaved = 1;
+            PosSaved = 1;
+            SonarDepth = 10;
+            SonarGPSx = 10;
+            SonarGPSy = 10;
+            SonarGPSz = 10;
         }
         public bool Parse(byte[] bytes)
         {

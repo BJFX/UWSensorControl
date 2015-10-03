@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<USBL>
+  <Net>
+    <IP>192.168.2.100</IP>
+    <DataPort>10011</DataPort>
+    <PoseIP>192.168.2.101</PoseIP>
+    <PosePort>10010</PosePort>
+  </Net>
+  <GPS>
+    <ComPort>COM2</ComPort>
+    <DataRate>9600</DataRate>
+  </GPS>
+</USBL>

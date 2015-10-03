@@ -46,7 +46,7 @@ namespace USBLDC.ViewModel
 
         internal void ShowAbout()
         {
-            AboutVisibility = !AboutVisibility;
+            AboutVisibility = true;
         }
 
         #endregion

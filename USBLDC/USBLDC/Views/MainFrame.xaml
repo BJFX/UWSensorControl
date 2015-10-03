@@ -9,9 +9,11 @@
         xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing" 
         xmlns:ee="http://schemas.microsoft.com/expression/2010/effects"
         xmlns:Converters="clr-namespace:USBLDC.Converters"
+        xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+        Dialog:DialogParticipation.Register="{Binding}"
         DataContext="{Binding MainFrameViewModel, Source={StaticResource ViewModelLocator}}"
         commands:ApplicationCommands.RegisterCommandBindings="{Binding RegisteredCommands}"
-        ShowTitleBar ="False"  ShowCloseButton="False" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" WindowStyle="None" WindowState="Maximized" >
+        ShowTitleBar ="False"  ShowCloseButton="False" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" WindowStyle="None" WindowState="Maximized" MouseDoubleClick="MetroWindow_MouseDoubleClick" FontSize="18" >
     <metroControl:MetroWindow.Resources>
         <Converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         <Converters:VisibilityBoolConverter x:Key="vbcvtr"/>
@@ -30,7 +32,7 @@
         <Controls:AnimationSlide  
             Panel.ZIndex="90"
                                      x:Name="AboutPanel"
-                                     IsOpen="{Binding AboutVisibility}" 
+                                     IsOpen="{Binding AboutVisibility, Mode=TwoWay}" 
                                      IsAutoClose="True"   
                                      Width="350" 
                                      VerticalAlignment="Stretch"
@@ -47,12 +49,8 @@
                         </Style.Triggers>
                     </Style>
                 </Grid.Resources>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <StackPanel Margin="20,20,10,20" Grid.Row="0">
+
+                <StackPanel Orientation="Vertical" Margin="10,20,10,20" >
                     
                     <StackPanel Orientation="Horizontal" Margin="0,10,0,0" >
                         <Image Width="50" Height="50" Source="{StaticResource AppIcon}" Margin="0,0,10,0"/>
@@ -79,10 +77,11 @@
 
                     <TextBlock Text="{Binding PosLastUpdateTime}" TextWrapping="Wrap" HorizontalAlignment="Left"/>
                     <TextBlock />
-
-                    <TextBlock Text="{Binding SPLASH_COPY_RIGHT, Mode=OneWay, Source={StaticResource Resources}}" TextWrapping="Wrap" Margin="0,10,0,0"/>
-                    <TextBlock Text="{Binding SPLASH_RIGHT_RESERVER, Mode=OneWay, Source={StaticResource Resources}}" TextWrapping="Wrap"/>
-                </StackPanel>
+                    <StackPanel VerticalAlignment="Bottom">
+                        <TextBlock Text="{Binding SPLASH_COPY_RIGHT, Mode=OneWay, Source={StaticResource Resources}}" TextWrapping="Wrap" Margin="0,10,0,0"/>
+                        <TextBlock Text="{Binding SPLASH_RIGHT_RESERVER, Mode=OneWay, Source={StaticResource Resources}}" TextWrapping="Wrap"/>
+                    </StackPanel>
+                    </StackPanel>
 
             </Grid>
         </Controls:AnimationSlide>

@@ -61,6 +61,15 @@ namespace USBLDC.Properties {
         }
         
         /// <summary>
+        ///   查找类似 保存 的本地化字符串。
+        /// </summary>
+        public static string AppBarButton_Save {
+            get {
+                return ResourceManager.GetString("AppBarButton_Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 USBL显控程序 的本地化字符串。
         /// </summary>
         public static string Home_Title_ApplicationName {
@@ -70,7 +79,7 @@ namespace USBLDC.Properties {
         }
         
         /// <summary>
-        ///   查找类似 声纳参数设置 的本地化字符串。
+        ///   查找类似 参数设置 的本地化字符串。
         /// </summary>
         public static string SonarConfigPageName {
             get {

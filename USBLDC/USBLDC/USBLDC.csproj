@@ -105,6 +105,7 @@
     <Compile Include="Core\BasicConf.cs" />
     <Compile Include="Comm\CommService.cs" />
     <Compile Include="Comm\NetWorkService.cs" />
+    <Compile Include="Core\csFile.cs" />
     <Compile Include="Core\ICore.cs" />
     <Compile Include="Core\ProjectConf.cs" />
     <Compile Include="Core\TraceFile.cs" />
@@ -132,10 +133,6 @@
     <Page Include="Resources\SkinStyle.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\ConnectView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MainFrame.xaml">
       <SubType>Designer</SubType>
@@ -177,13 +174,9 @@
     <Compile Include="Structure\RawPositionInfo.cs" />
     <Compile Include="Structure\SonarConfig.cs" />
     <Compile Include="Structure\StructureInterface.cs" />
-    <Compile Include="ViewModel\ConnectViewModel.cs" />
     <Compile Include="ViewModel\HomePageViewModel.cs" />
     <Compile Include="ViewModel\MainFrameViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
-    <Compile Include="Views\ConnectView.xaml.cs">
-      <DependentUpon>ConnectView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\MainFrame.xaml.cs">
       <DependentUpon>MainFrame.xaml</DependentUpon>
     </Compile>

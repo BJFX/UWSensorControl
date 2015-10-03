@@ -42,6 +42,7 @@
                     Grid.ColumnSpan ="2"
                     HorizontalAlignment ="Stretch"/>
             </Grid>
+            
         </Grid>
     </Controls:MetroContentControl>
 </Page>

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using TinyMetroWpfLibrary.EventAggregation;
 using USBLDC.Comm;
 using USBLDC.Events;
 using USBLDC.Helpers;
+using USBLDC.Structure;
 
 namespace USBLDC.Core
 {
@@ -27,6 +29,7 @@ namespace USBLDC.Core
         //基础配置信息
         private BasicConf _appConf;
         private ProjectConf _projectConf;
+        private SonarConfig _sonarConfig;
         private Comm.Observer<DataEventArgs> _observer; 
         private bool _serviceStarted = false;
         public string Error { get; private set; }
@@ -39,6 +42,10 @@ namespace USBLDC.Core
             get { return _usblTraceService ?? (_usblTraceService = new USBLTraceService()); }
         }
 
+        public SonarConfig SonarConfiguration
+        {
+            get { return _sonarConfig ?? (_sonarConfig = new SonarConfig()); }
+        }
 
         public static UnitCore GetInstance()
         {
@@ -56,18 +63,33 @@ namespace USBLDC.Core
 
         }
 
+        public bool UpdateSonarConfig()
+        {
+            string conf = BasicConf.MyExecPath + "\\" + "DefConf.dat";
+            if (File.Exists(conf))
+            {
+                return SonarConfiguration.Parse(File.ReadAllBytes(conf));
+            }
+            else
+            {
+                var bw = new FileStream(conf,FileMode.OpenOrCreate);
+                bw.Write(SonarConfiguration.SavePakage(), 0, SonarConfiguration.SavePakage().Length);
+                bw.Close();
+                return true;
+            }
+        }
         public bool LoadConfiguration()
         {
             bool ret = true;
             try
             {
                 _appConf = BasicConf.GetInstance();
-
+                ret = UpdateSonarConfig();
             }
             catch (Exception ex)
             {
                 ret = false;
-                EventAggregator.PublishMessage(new LogEvent(ex.Message, ex, LogType.Error));
+                
             }
             return ret;
         }
@@ -94,7 +116,7 @@ namespace USBLDC.Core
         {
             try
             {
-                if(!LoadConfiguration()) throw new Exception("无法读取基本配置");
+                LoadConfiguration();
                 NetCore.Initialize();
                 NetCore.Start();
                 CommCore.Initialize();
@@ -103,9 +125,10 @@ namespace USBLDC.Core
                 
                 return _serviceStarted;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Error = e.Message;
+                Error = ex.Message;
+                EventAggregator.PublishMessage(new LogEvent(ex.Message, ex, LogType.Error));
                 return false;
             }
             

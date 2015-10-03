@@ -1,8 +1,10 @@
-﻿using System;
+﻿using MahApps.Metro.Controls.Dialogs;
+using System;
 using TinyMetroWpfLibrary.Controller;
 using TinyMetroWpfLibrary.EventAggregation;
 using USBLDC.Events;
 using USBLDC.Helpers;
+using USBLDC.ViewModel;
 namespace USBLDC.Core.Controllers
 {
     /// <summary>
@@ -53,7 +55,10 @@ namespace USBLDC.Core.Controllers
 
         public void Alert(string message)
         {
-            throw new System.NotImplementedException();
+            var md = new MetroDialogSettings();
+            md.AffirmativeButtonText = "好的";
+            MainFrameViewModel.pMainFrame.DialogCoordinator.ShowMessageAsync(MainFrameViewModel.pMainFrame, "错误",
+                message, MessageDialogStyle.Affirmative, md);
         }
 
         public void BroadCast(string message)
@@ -70,9 +75,10 @@ namespace USBLDC.Core.Controllers
             {
                 case LogType.Error:
                     ErrorLog(message.Message, message.Ex);
+                    Alert(message.Message);
                     break;
                 case LogType.Warning:
-                    WriteLog(message.Message);
+                    Alert(message.Message);
                     break;
                 default:
                     WriteLog(message.Message);

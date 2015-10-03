@@ -5,13 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:Controls="clr-namespace:TinyMetroWpfLibrary.Controls;assembly=TinyMetroWpfLibrary.Controls"
              mc:Ignorable="d" 
-             HorizontalAlignment="Stretch" Height="80" ClipToBounds="False"
+             HorizontalAlignment="Stretch" Height="100" ClipToBounds="False"
              >
     <Grid>
        
         <StackPanel Orientation="Horizontal" 
                     HorizontalAlignment="Left">
-            <Button Click="GoBack" Margin="40" Background="Transparent"  Grid.Column="0" VerticalAlignment="Center"  HorizontalAlignment="Center"  Style="{StaticResource BackAppBarButtonStyle}" Visibility="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=BackButtonVisibility}"/>
+            <Button Click="GoBack" Margin="20" Background="Transparent"  Grid.Column="0" VerticalAlignment="Center"  HorizontalAlignment="Center"  Style="{StaticResource BackAppBarButtonStyle}" Visibility="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=BackButtonVisibility}"/>
             <Image Grid.Column="1" Source="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=TitleImageSource}"/>
             <TextBlock x:Name="pageTitle"
                        FontWeight="Bold" 
@@ -28,7 +28,7 @@
                     Grid.Row="0"
                     HorizontalAlignment="Right">
 
-            <Button  VerticalAlignment="Center" Margin="0,0,30,0" Style="{StaticResource AboutAppBarButtonStyle}" Click="ShowAboutPane"  HorizontalAlignment="Center"/>
+            <Button  VerticalAlignment="Center" Margin="0,0,30,0" Style="{StaticResource AssistantAppBarButtonStyle}" Click="ShowAboutPane"  HorizontalAlignment="Center"/>
             <Button  Click="GoToSonarSettings" Margin="0,0,30,0" VerticalAlignment="Center" Style="{StaticResource SettingsAppBarButtonStyle}"  HorizontalAlignment="Center"/>
             <Button  Click="Minimize"  Margin="0,0,30,0" VerticalAlignment="Center" Style="{StaticResource MinimizeAppBarButtonStyle}"  HorizontalAlignment="Center"/>
             <Button  Click="ExitProgram"  Margin="0,0,10,0" VerticalAlignment="Center" Style="{StaticResource CloseAppBarButtonStyle}"  HorizontalAlignment="Center"/>

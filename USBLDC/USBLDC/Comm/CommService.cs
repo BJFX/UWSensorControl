@@ -59,7 +59,7 @@ namespace USBLDC.Comm
         /// <returns>成功or失败</returns>
         private bool CreateSerialService(BasicConf configure)
         {
-            _serialPort = new SerialPort(configure.GetCommPort(),int.Parse(configure.GetCommDataRate()));
+            _serialPort = new SerialPort(configure.GetCommGPS(),int.Parse(configure.GetGPSDataRate()));
             if (!SerialService.Init(_serialPort) || !SerialService.Start()) return false;
             SerialService.Register(CommDataObserver);
             return true;

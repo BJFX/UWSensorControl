@@ -3,7 +3,7 @@ using TinyMetroWpfLibrary.Controller;
 using USBLDC.Core;
 using USBLDC.Events;
 using USBLDC.ViewModel;
-
+using System.Windows;
 namespace USBLDC.Views
 {
     /// <summary>
@@ -26,6 +26,16 @@ namespace USBLDC.Views
             ProgressDialogController remote = null;
             UnitCore.Instance.Start();
             UnitCore.Instance.EventAggregator.PublishMessage(new GoHomePageNavigationEvent());
+        }
+
+        private void MetroWindow_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (this.WindowState == WindowState.Maximized)
+                this.WindowState = WindowState.Normal;
+            else
+            {
+                this.WindowState = WindowState.Maximized;
+            }
         }
     }
 }

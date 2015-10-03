@@ -121,7 +121,7 @@
     <value>USBL显控程序</value>
   </data>
   <data name="SonarConfigPageName" xml:space="preserve">
-    <value>声纳参数设置</value>
+    <value>参数设置</value>
   </data>
   <data name="SPLASH_COPY_RIGHT" xml:space="preserve">
     <value>© 2015 *********</value>
@@ -134,5 +134,8 @@
   </data>
   <data name="USBL_Running" xml:space="preserve">
     <value>已经有一个USBL正在工作</value>
+  </data>
+  <data name="AppBarButton_Save" xml:space="preserve">
+    <value>保存</value>
   </data>
 </root>

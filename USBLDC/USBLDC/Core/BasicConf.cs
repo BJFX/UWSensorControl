@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using TinyMetroWpfLibrary.Utility;
@@ -12,7 +13,7 @@ namespace USBLDC.Core
 
         //配置文件
         private string xmldoc = "BasicConf.xml"; //const
-
+        public static string MyExecPath;
         public static BasicConf GetInstance()
         {
             lock (SyncObject)
@@ -23,7 +24,7 @@ namespace USBLDC.Core
 
         protected BasicConf()
         {
-            string MyExecPath = System.IO.Path.GetDirectoryName(
+            MyExecPath = System.IO.Path.GetDirectoryName(
                 System.Reflection.Assembly.GetExecutingAssembly().GetModules()[0].FullyQualifiedName);
             xmldoc = MyExecPath + "\\" + xmldoc;
 
@@ -33,29 +34,69 @@ namespace USBLDC.Core
         {
             return XmlHelper.GetConfigValue(xmldoc, str);
         }
-
+        protected bool SetValue(string[] str,string value)
+        {
+            return XmlHelper.SetConfigValue(xmldoc, str,value);
+        }
         public string GetIP()
         {
-            string[] str = {"USBL", "Net", "IP"};
+            string[] str = {"Net", "IP"};
             return GetValue(str);
         }
-
+        public bool SetIP(string newip)
+        {
+            string[] str = {"Net", "IP" };
+            return SetValue(str, newip);
+        }
         public string GetNetPort()
         {
-            string[] str = {"USBL", "Net", "DataPort"};
+            string[] str = {"Net", "DataPort"};
             return GetValue(str);
         }
-
-        public string GetCommPort()
+        public bool SetNetPort(string newport)
         {
-            string[] str = {"USBL", "Comm", "ComPort"};
+            string[] str = {"Net", "DataPort" };
+            return SetValue(str, newport);
+        }
+        public string GetPoseIP()
+        {
+            string[] str = {"Net", "PoseIP" };
             return GetValue(str);
         }
-
-        public string GetCommDataRate()
+        public bool SetPoseIP(string newPoseIp)
         {
-            string[] str = {"USBL", "Comm", "DataRate"};
+            string[] str = {"Net", "PoseIP" };
+            return SetValue(str, newPoseIp);
+        }
+        public string GetPosePort()
+        {
+            string[] str = {"Net", "PosePort" };
             return GetValue(str);
+        }
+        public bool SetPosePort(string newport)
+        {
+            string[] str = {"Net", "PosePort" };
+            return SetValue(str, newport);
+        }
+        public string GetCommGPS()
+        {
+            string[] str = {"GPS", "ComPort"};
+            return GetValue(str);
+        }
+        public bool SetCommGPS(string newgpscomm)
+        {
+            string[] str = {"GPS", "ComPort" };
+            return SetValue(str, newgpscomm);
+        }
+        public string GetGPSDataRate()
+        {
+            string[] str = {"GPS", "DataRate" };
+            return GetValue(str);
+        }
+        public bool SetGPSDataRate(string datarate)
+        {
+            string[] str = {"GPS", "DataRate" };
+            return SetValue(str, datarate);
         }
 
     }
