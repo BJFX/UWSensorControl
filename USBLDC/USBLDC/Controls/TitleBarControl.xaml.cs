@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using MahApps.Metro.Controls.Dialogs;
 using TinyMetroWpfLibrary.Controls;
 using USBLDC.ViewModel;
 
@@ -69,9 +70,16 @@ namespace USBLDC.Controls
             }
         }
 
-        private void ExitProgram(object sender, RoutedEventArgs e)
+        private async void ExitProgram(object sender, RoutedEventArgs e)
         {
-            VM.ExitProgram();
+            var md = new MetroDialogSettings();
+            md.AffirmativeButtonText = "退出";
+            md.NegativeButtonText = "取消";
+            md.ColorScheme = MetroDialogColorScheme.Accented;
+            var result = await VM.DialogCoordinator.ShowMessageAsync(VM, "退出程序",
+                "真的要退出程序吗？", MessageDialogStyle.AffirmativeAndNegative, md);
+            if (result == MessageDialogResult.Affirmative)
+                VM.ExitProgram();
         }
 
         private void ShowAboutPane(object sender, RoutedEventArgs e)

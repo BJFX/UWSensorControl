@@ -98,6 +98,14 @@ namespace USBLDC.Core
             string[] str = {"GPS", "DataRate" };
             return SetValue(str, datarate);
         }
-
+        /// <summary>
+        /// model的相对路径
+        /// </summary>
+        /// <returns></returns>
+        public string GetModelPath(string name)
+        {
+            string[] str = { "Model", name };
+            return GetValue(str);
+        }
     }
 }

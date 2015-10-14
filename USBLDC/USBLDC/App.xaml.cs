@@ -32,8 +32,7 @@ namespace USBLDC
             //AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionHandler;
             /////
             ///加入比较耗费时间的载入操作
-            /// 
-            Thread.Sleep(3000);
+            
             //  初始化框架
             //派生接口单实例
             UnitKernal.Instance = new UnitKernal();
@@ -43,6 +42,7 @@ namespace USBLDC
             // 初始化消息处理函数
             UnitKernal.Instance.Controller.Init();//导航消息响应
             UnitKernal.Instance.MessageController.Init();//系统消息响应
+            UnitCore.Instance.Start();
             LogHelper.WriteLog("程序启动");
 
             base.OnStartup(e);

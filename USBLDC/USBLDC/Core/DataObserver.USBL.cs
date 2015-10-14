@@ -8,48 +8,42 @@ namespace USBLDC.Core
 {
     public class USBLDataObserver : Comm.Observer<DataEventArgs>
     {
+        StructureInterface gpsInfo = new GPSInfo();
+        StructureInterface adInfo = new ADInfo();
+        StructureInterface poseInfo = new PosetureInfo();
+        StructureInterface RawposInfo = new RawPositionInfo();
+        StructureInterface AjustposInfo = new AjustPositionInfo();
+        StructureInterface scInfo = new SonarConfig();
+
         public void Handle(object sender, DataEventArgs e)
         {
-            StructureInterface Info;
+            StructureInterface info = null;
             switch (e.Id)
             {
                 case (int)TypeId.GPS:
-                    Info = new GPSInfo();
-                    if (Info.Parse(e.Bytes))
-                    {
-                        UnitCore.Instance.EventAggregator.PublishMessage(new ShowGPSInfo(Info));
-                    }
+                    info = gpsInfo;
                     break;
                 case (int)TypeId.ADINFO:
-                    Info = new ADInfo();
-                    if (Info.Parse(e.Bytes))
-                    {
-                        UnitCore.Instance.EventAggregator.PublishMessage(new ShowGPSInfo(Info));
-                    }
+                    info = adInfo;
                     break;
                 case (int)TypeId.Pose:
-                    Info = new PosetureInfo();
-                    if (Info.Parse(e.Bytes))
-                    {
-                        UnitCore.Instance.EventAggregator.PublishMessage(new ShowGPSInfo(Info));
-                    }
+                    info = poseInfo;
                     break;
                 case (int)TypeId.RawPos:
-                    Info = new RawPositionInfo();
-                    if (Info.Parse(e.Bytes))
-                    {
-                        UnitCore.Instance.EventAggregator.PublishMessage(new ShowGPSInfo(Info));
-                    }
+                    info = RawposInfo;
                     break;
                 case (int)TypeId.SONARCONFIG:
-                    Info = new SonarConfig();
-                    if (Info.Parse(e.Bytes))
-                    {
-                        UnitCore.Instance.EventAggregator.PublishMessage(new ShowGPSInfo(Info));
-                    }
+                    info = scInfo;
+                    break;
+                case (int)TypeId.AjustPos:
+                    info = AjustposInfo;
                     break;
                 default:
                     break;
+            }
+            if (info.Parse(e.Bytes))
+            {
+                UnitCore.Instance.EventAggregator.PublishMessage(new ShowStructureInfo(info, e.Id));
             }
         }
     }

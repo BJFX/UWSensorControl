@@ -19,5 +19,6 @@ namespace USBLDC.Structure
         RawPos = 0x0007,        
         Pose = 0x0009,
         GPS = 0x0011,
+        AjustPos = 0x0099,
     }
 }

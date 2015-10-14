@@ -11,16 +11,16 @@ namespace USBLDC.Core
     public class TraceFile
     {
         private readonly static object SyncObject = new object();
-        public static string  ProjectName { get; set; }
-        public static string Path { get; set; }
-        public static string  Errormsg { get; set; }
-        public static LogFile GpsFile { get; set; }
-        public static LogFile PoseFile { get; set; }
-        public static PingFile ADFile { get; set; }
-        public static PingFile PosFile { get; set; }
-        public static FileStream SonarSetting { get; set; }
-        public static int GPSFileSize { get; set; }
-        public static int PoseFileSize { get; set; }
+        public  string  ProjectName { get; set; }
+        public  string Path { get; set; }
+        public  string  Errormsg { get; set; }
+        public  LogFile GpsFile { get; set; }
+        public  LogFile PoseFile { get; set; }
+        public  PingFile ADFile { get; set; }
+        public  PingFile PosFile { get; set; }
+        public  FileStream SonarSetting { get; set; }
+        public  int GPSFileSize { get; set; }
+        public  int PoseFileSize { get; set; }
         //静态接口
         private static TraceFile _instance;
 
@@ -48,7 +48,22 @@ namespace USBLDC.Core
             }
         }
 
-        public static void CloseALL()
+        public bool Start(string name,string path)
+        {
+            try
+            {
+                SetProject(name);
+                SetPath(path);
+                return true;
+            }
+            catch (Exception exception)
+            {
+                Errormsg = exception.Message;
+                return false;
+            }
+            
+        }
+        public  void Close()
         {
             if (GpsFile != null)
                 GpsFile.Close();
@@ -61,18 +76,18 @@ namespace USBLDC.Core
             if (SonarSetting != null)
                 SonarSetting.Close();
         }
-        public static void SetProject(string name)
+        public  void SetProject(string name)
         {
             ProjectName = name;
             
         }
 
-        public static void SetPath(string path)
+        public  void SetPath(string path)
         {
             Path = path + "\\" + ProjectName;
             try
             {
-                File.Create(Path);
+                Directory.CreateDirectory(Path);
             }
             catch (Exception)
             {
@@ -80,7 +95,7 @@ namespace USBLDC.Core
                 throw new Exception("创建文件夹失败！");
             }
         }
-        public static void SaveGPS(string str)
+        public  void SaveGPS(string str)
         {
             if (GpsFile == null)
             {
@@ -93,7 +108,7 @@ namespace USBLDC.Core
             if(GpsFile.Write(str)==0)
                 throw new Exception("创建GPS文件失败！");
         }
-        public static void SavePose(string str)
+        public  void SavePose(string str)
         {
             if (PoseFile == null)
             {
@@ -106,7 +121,7 @@ namespace USBLDC.Core
             if (PoseFile.Write(str) == 0)
                 throw new Exception("创建Pose文件失败！");
         }
-        public static void SaveAD(ADInfo info)
+        public  void SaveAD(ADInfo info)
         {
             if (ADFile == null)
             {
@@ -130,7 +145,7 @@ namespace USBLDC.Core
             }
         }
 
-        public static void SaveSonarSetting(SonarConfig scConfig)
+        public  void SaveSonarSetting(SonarConfig scConfig)
         {
             if (SonarSetting == null)
             {

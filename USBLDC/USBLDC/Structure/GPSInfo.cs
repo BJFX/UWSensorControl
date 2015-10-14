@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TinyMetroWpfLibrary.Utility;
+using USBLDC.Helpers;
 namespace USBLDC.Structure
 {
 
@@ -20,8 +21,55 @@ namespace USBLDC.Structure
         public uint[] Reserved = new uint[7];
         public bool Parse(byte[] bytes)
         {
-            BitConverter.ToString(bytes);
-            return false;
+                string newcomming = BitConverter.ToString(bytes);
+                char[] charSeparators = new char[] {',','*','#','$',';'};
+                try
+                {
+                    string[] gpsinfo = newcomming.Split(charSeparators, StringSplitOptions.None);
+                    switch (gpsinfo[1])
+                    {
+                        case "GPRMC":
+                            if (GpsHelper.CalculateCheckSum(newcomming).ToUpper() == gpsinfo[gpsinfo.Length - 1])
+                            {
+                                if (gpsinfo[3] == "A")//数据有效
+                                {
+                                    
+                                    int Year = UInt16.Parse(gpsinfo[10].Substring(4))+2000;
+                                    int Month = UInt16.Parse(gpsinfo[10].Substring(2, 2));
+                                    int Day = UInt16.Parse(gpsinfo[10].Substring(0, 2));
+                                    int Hour = UInt16.Parse(gpsinfo[2].Substring(0, 2));
+                                    int Minute = UInt16.Parse(gpsinfo[2].Substring(2, 2));
+                                    int Second = UInt16.Parse(gpsinfo[2].Substring(4, 2));
+                                    DateTime tm = new DateTime(Year, Month, Day, Hour, Minute, Second);
+                                }
+                                else
+                                {
+                                    
+                                }
+                                return false;
+                            }
+                            
+                            break;
+                        case "BESTPOSA":
+                            if (GpsHelper.CalculateBlockCRC32(newcomming.Substring(1, newcomming.Length-10)) == gpsinfo[gpsinfo.Length - 1])
+                            {
+                                
+                            }
+                            return true;
+                            break;
+
+                        default:
+                            return false;
+                            break;
+
+                    }
+                    return false;
+            }
+            catch (Exception)
+            {
+                
+                return false;
+            }
         }
 
         public byte[] SavePakage()

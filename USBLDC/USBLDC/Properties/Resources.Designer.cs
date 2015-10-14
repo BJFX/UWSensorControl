@@ -70,6 +70,24 @@ namespace USBLDC.Properties {
         }
         
         /// <summary>
+        ///   查找类似 保存 的本地化字符串。
+        /// </summary>
+        public static string AppBarButton_SaveResult {
+            get {
+                return ResourceManager.GetString("AppBarButton_SaveResult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 开始工作 的本地化字符串。
+        /// </summary>
+        public static string AppBarButton_Start {
+            get {
+                return ResourceManager.GetString("AppBarButton_Start", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 USBL显控程序 的本地化字符串。
         /// </summary>
         public static string Home_Title_ApplicationName {

@@ -6,7 +6,9 @@ using USBLDC.Comm;
 using USBLDC.Events;
 using USBLDC.Helpers;
 using USBLDC.Structure;
-
+using HelixToolkit.Wpf;
+using System.Windows.Media.Media3D;
+using System.Threading.Tasks;
 namespace USBLDC.Core
 {
     /// <summary>
@@ -58,24 +60,38 @@ namespace USBLDC.Core
 
         protected UnitCore()
         {
-            
+            CurrentModel = null;
             ACMMutex = new Mutex();
 
         }
-
-        public bool UpdateSonarConfig()
+        /// <summary>
+        /// 更新声纳配置，true从文件中读出，false更新到文件
+        /// </summary>
+        /// <param name="bRead"></param>
+        /// <returns></returns>
+        public bool UpdateSonarConfig(bool bRead=true)
         {
             string conf = BasicConf.MyExecPath + "\\" + "DefConf.dat";
-            if (File.Exists(conf))
+
+            if (File.Exists(conf)&&bRead)
             {
-                return SonarConfiguration.Parse(File.ReadAllBytes(conf));
+                 return SonarConfiguration.Parse(File.ReadAllBytes(conf));
             }
             else
             {
-                var bw = new FileStream(conf,FileMode.OpenOrCreate);
-                bw.Write(SonarConfiguration.SavePakage(), 0, SonarConfiguration.SavePakage().Length);
-                bw.Close();
-                return true;
+                try
+                {
+                    var bw = new FileStream(conf, FileMode.OpenOrCreate);
+                    bw.Write(SonarConfiguration.SavePakage(), 0, SonarConfiguration.SavePakage().Length);
+                    bw.Close();
+                    return true;
+                }
+                catch (Exception)
+                {
+                    
+                    return false;
+                }
+                
             }
         }
         public bool LoadConfiguration()
@@ -112,11 +128,19 @@ namespace USBLDC.Core
             get { return _iCommCore ?? (_iCommCore = CommService.GetInstance(_appConf, Observer)); }
         }
 
-        public bool Start()
+        public async Task<bool> Start()
         {
             try
             {
+                //USBLTraceService.StartService();
                 LoadConfiguration();
+                var shippath = _appConf.GetModelPath("Ship");
+                if (shippath == null)
+                    throw new Exception("未找到模型组件！");
+                shippath = BasicConf.MyExecPath+"\\"+shippath;//found
+                CurrentModel = await LoadAsync(shippath, false);
+                if (CurrentModel==null)
+                    throw new Exception("加载模型组件失败！");
                 NetCore.Initialize();
                 NetCore.Start();
                 CommCore.Initialize();
@@ -141,6 +165,7 @@ namespace USBLDC.Core
                 NetCore.Stop();
             if(CommCore.IsWorking)
                 CommCore.Stop();
+            USBLTraceService.Stop();
             _serviceStarted = false;
         }
         public bool IsWorking
@@ -168,10 +193,21 @@ namespace USBLDC.Core
             get { return _iFileCore; }
             set { _iFileCore = value; }
         }
-
+        public Model3D CurrentModel { get; set; }
         public static UnitCore Instance
         {
             get { return GetInstance(); }
+        }
+        private async Task<Model3DGroup> LoadAsync(string model3DPath, bool freeze)
+        {
+            return await Task.Factory.StartNew(() =>
+            {
+                var mi = new ModelImporter();
+
+                    // Alt 1. - freeze the model 
+                    return mi.Load(model3DPath, null, true);
+
+            });
         }
     }
 }

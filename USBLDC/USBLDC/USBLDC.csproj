@@ -33,9 +33,18 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>ValidityLogo.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="De.TorstenMandelkow.MetroChart">
       <HintPath>..\..\..\DeckUnit\Tools\De.TorstenMandelkow.MetroChart.dll</HintPath>
+    </Reference>
+    <Reference Include="HelixToolkit.Wpf">
+      <HintPath>..\..\..\DeckUnit\Tools\HelixToolkit.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="HelixToolkit.Wpf.Input">
+      <HintPath>..\..\..\DeckUnit\Tools\HelixToolkit.Wpf.Input.dll</HintPath>
     </Reference>
     <Reference Include="log4net">
       <HintPath>..\..\..\DeckUnit\Tools\log4net.dll</HintPath>
@@ -112,8 +121,14 @@
     <Compile Include="Events\GoConnectViewEvent.cs" />
     <Compile Include="Events\GoHomePageNavigationEvent.cs" />
     <Compile Include="Events\GoSonarConfigEvent.cs" />
-    <Compile Include="Events\ShowGPSInfo.cs" />
+    <Compile Include="Events\ShowStructureInfo.cs" />
+    <Compile Include="Helpers\GpsHelper.cs" />
+    <Compile Include="Helpers\TreeHelper.cs" />
     <Compile Include="Helpers\USBLTraceService.cs" />
+    <Compile Include="Splasher.cs" />
+    <Compile Include="SplashWindow.xaml.cs">
+      <DependentUpon>SplashWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\SonarConfigViewModel.cs" />
     <Compile Include="Views\SonarConfig.xaml.cs">
       <DependentUpon>SonarConfig.xaml</DependentUpon>
@@ -133,6 +148,10 @@
     <Page Include="Resources\SkinStyle.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="SplashWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MainFrame.xaml">
       <SubType>Designer</SubType>
@@ -300,6 +319,9 @@
     <Resource Include="Assets\ico_zoomout_p.png" />
     <Resource Include="Assets\Logo.jpg" />
     <Resource Include="Assets\Work.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ValidityLogo.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />

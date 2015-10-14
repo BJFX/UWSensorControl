@@ -138,4 +138,10 @@
   <data name="AppBarButton_Save" xml:space="preserve">
     <value>保存</value>
   </data>
+  <data name="AppBarButton_SaveResult" xml:space="preserve">
+    <value>保存</value>
+  </data>
+  <data name="AppBarButton_Start" xml:space="preserve">
+    <value>开始工作</value>
+  </data>
 </root>

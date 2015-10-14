@@ -7,6 +7,7 @@ namespace USBLDC.Structure
 {
     public class PosetureInfo : StructureInterface
     {
+        public uint Status { get; set; }
         public uint EpochSecond { get; set; }
         public uint EpochMicSecond { get; set; }
         public float Pitch { get; set; }

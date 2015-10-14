@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Windows.Input;
+using MahApps.Metro.Controls.Dialogs;
 using TinyMetroWpfLibrary.ViewModel;
 using USBLDC.Core;
 using USBLDC.Events;
@@ -261,20 +263,62 @@ namespace USBLDC.ViewModel
             set { SetPropertyValue(() => SonarGPSz, value); }
         }
 
-        ICommand SaveCommand
+        public ICommand SaveCommand
         {
             get { return GetPropertyValue(() => SaveCommand); }
             set { SetPropertyValue(() => SaveCommand, value); }
         }
         private void CanExecutesaveCommand(object sender, CanExecuteRoutedEventArgs eventArgs)
         {
-            eventArgs.CanExecute = false;
+            eventArgs.CanExecute = true;
         }
 
 
         private void ExecutesaveCommand(object sender, ExecutedRoutedEventArgs eventArgs)
         {
-            
+            try
+            {
+                if (!BasicConf.GetInstance().SetIP(IpAddr)) throw new Exception("保存IP地址失败");
+                if (!BasicConf.GetInstance().SetNetPort(IpPort.ToString())) throw new Exception("保存IP端口失败");
+                if(!BasicConf.GetInstance().SetPoseIP(IpPoseAddr)) throw new Exception("保存姿态传感器IP地址失败");
+                if (!BasicConf.GetInstance().SetPosePort(IpPosePort.ToString())) throw new Exception("保存姿态传感器IP端口失败");
+                if (SelectComm != -1)
+                    if(!BasicConf.GetInstance().SetCommGPS(CommInfo[SelectComm])) throw new Exception("保存串口端口失败");
+                if (SelectRate != -1)
+                    if (!BasicConf.GetInstance().SetGPSDataRate(RateInfo[SelectRate])) throw new Exception("保存串口速率失败");
+                var sc = UnitCore.Instance.SonarConfiguration;
+                sc.VelCmd = SurVelSrcIndex;
+                if (AvgVelIndex == 1)
+                    sc.VelCmd = sc.VelCmd | 0x0100;
+                sc.SurVel = SurVel;
+                sc.AvgVel = AvgVel;
+                sc.FixedGain = FixedGain;
+                sc.TVGCmd = TVGCmd;
+                sc.FixedTVG = FixedTVG;
+                sc.TVGSampling = TVGSampling;
+                sc.TVGSamples = TVGSamples;
+                sc.TVGA1 = TVGA1;
+                sc.TVGA2 = TVGA2;
+                sc.TVGA3 = TVGA3;
+                sc.PingPeriod = PingPeriod;
+                sc.ADSaved = ADSaved;
+                sc.PoseSaved = PoseSaved;
+                sc.PosSaved = PosSaved;
+                sc.SonarDepth = SonarDepth;
+                sc.SonarGPSx = SonarGPSx;
+                sc.SonarGPSy = SonarGPSy;
+                sc.SonarGPSz = SonarGPSz;
+                if(!UnitCore.Instance.UpdateSonarConfig(false)) throw new Exception("声纳参数保存失败");
+            }
+            catch (Exception ex)
+            {
+                UnitCore.Instance.EventAggregator.PublishMessage(new LogEvent(ex.Message, ex, LogType.Error));
+                return;
+            }
+            var md = new MetroDialogSettings();
+            md.AffirmativeButtonText = "好的";
+            MainFrameViewModel.pMainFrame.DialogCoordinator.ShowMessageAsync(MainFrameViewModel.pMainFrame, "保存成功",
+                "修改后的IP地址和端口配置将在下次启动程序时应用", MessageDialogStyle.Affirmative, md);
         }
     }
 }

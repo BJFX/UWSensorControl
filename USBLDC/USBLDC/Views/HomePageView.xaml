@@ -10,18 +10,22 @@
       xmlns:MetroControl="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
       xmlns:ViewControls="clr-namespace:USBLDC.Controls"
       xmlns:adp="clr-namespace:USBLDC.AttachedProperty"
+      xmlns:h="clr-namespace:HelixToolkit.Wpf;assembly=HelixToolkit.Wpf"
       xmlns:Converters="clr-namespace:USBLDC.Converters"
       Background="{StaticResource DefaultBackgroundBrush}"
       DataContext="{Binding HomePageViewModel, Source={StaticResource ViewModelLocator}}" 
       mc:Ignorable="d" 
-      d:DesignHeight="718" d:DesignWidth="1024"
-        Title="HomePage">
+      d:DesignHeight="748" d:DesignWidth="1024"
+        Title="HomePage" Loaded="Page_Loaded">
+    <Page.Resources>
+        <Converters:VisibilityBoolToggleConverter x:Key="VisibilityBoolToggleConverter"/>
+        </Page.Resources>
     <Controls:MetroContentControl>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="80"/>
+                <RowDefinition Height="70"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="40"/>
@@ -42,7 +46,187 @@
                     Grid.ColumnSpan ="2"
                     HorizontalAlignment ="Stretch"/>
             </Grid>
-            
+            <Grid Grid.Row="1" Grid.ColumnSpan="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="80"/>
+                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="3*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="GPS时间:" Grid.Row="0" Grid.Column="0"/>
+                <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Vertical" >
+                    <UniformGrid Columns="2">
+                        <StackPanel Margin ="5,2,2,2" Orientation="Horizontal">
+                            <TextBlock Text="姿态传感器状态:"/>
+                            <TextBlock Text="{Binding PoseTime}"/>
+                        </StackPanel>
+                        <StackPanel Margin ="5,2,2,2" Orientation="Horizontal">
+                            <TextBlock Text="时间:"/>
+                            <TextBlock Text="{Binding PoseTime}"/>
+                        </StackPanel>
+                        <StackPanel Margin ="5,2,2,2" Orientation="Horizontal">
+                            <TextBlock Text="艏向角:"/>
+                            <TextBlock Text="{Binding Heading}"/>
+                        </StackPanel>
+                        <StackPanel Margin ="5,2,2,2" Orientation="Horizontal">
+                            <TextBlock Text="纵倾:"/>
+                            <TextBlock Text="{Binding Pitch}"/>
+                        </StackPanel>
+                        <StackPanel Margin ="5,2,2,2" Orientation="Horizontal">
+                            <TextBlock Text="横滚:"/>
+                            <TextBlock Text="{Binding Roll}"/>
+                        </StackPanel>
+                        <StackPanel Margin ="5,2,2,2" Orientation="Horizontal">
+                            <TextBlock Text="升沉:"/>
+                            <TextBlock Text="{Binding Heave}"/>
+                        </StackPanel>
+                    </UniformGrid>
+                </StackPanel>
+
+                <TextBlock Text="定位:" Grid.Row="0" Grid.Column="2"/>
+                <h:HelixViewport3D Background="{StaticResource DefaultBackgroundBrush}" 
+                                       IsZoomEnabled="False" 
+                                       IsChangeFieldOfViewEnabled="False" 
+                                       IsMoveEnabled="False" 
+                                       IsPanEnabled="False"
+                                       IsRotationEnabled="False"
+                                       ShowViewCube="False"
+                                       Title="{Binding HeadingChartTitle}"  Grid.Row="1" Grid.Column="0" Margin="4">
+                    <h:HelixViewport3D.DefaultCamera>
+                        <PerspectiveCamera Position="0,0,4000" LookDirection="0,0,-4000" UpDirection="-1,0,0"/>
+                    </h:HelixViewport3D.DefaultCamera>
+                    <h:DefaultLights/>
+                    <ModelVisual3D x:Name ="HeadingVisual3D" Content="{Binding CurrentModel}">
+                        <ModelVisual3D.Transform>
+                            <Transform3DGroup>
+                                <RotateTransform3D>
+                                    <RotateTransform3D.Rotation>
+                                        <AxisAngleRotation3D Axis="0,0,1" Angle="{Binding Heading}"/>
+                                    </RotateTransform3D.Rotation>
+                                </RotateTransform3D>
+                            </Transform3DGroup>
+                        </ModelVisual3D.Transform>
+                    </ModelVisual3D>
+                </h:HelixViewport3D>
+                <h:HelixViewport3D Background="{StaticResource DefaultBackgroundBrush}" 
+                                       IsZoomEnabled="False" 
+                                       IsChangeFieldOfViewEnabled="False" 
+                                       IsMoveEnabled="False" 
+                                       IsPanEnabled="False"
+                                       IsRotationEnabled="False"
+                                       ShowViewCube="False"
+                                       Title ="{Binding PRHTtitle}"  Grid.Row="1" Grid.Column="1" Margin="4">
+                    <h:HelixViewport3D.DefaultCamera>
+                        <PerspectiveCamera Position="0,4000,0" LookDirection="0,-4000,0" UpDirection="0,0,1"/>
+                    </h:HelixViewport3D.DefaultCamera>
+                    <h:SunLight/>
+                    <ModelVisual3D Content="{Binding CurrentModel}">
+                        <ModelVisual3D.Transform>
+                            <Transform3DGroup>
+                                <RotateTransform3D>
+                                    <RotateTransform3D.Rotation>
+                                        <AxisAngleRotation3D Axis="0,0,1" Angle="{Binding Pitch}"/>
+                                    </RotateTransform3D.Rotation>
+                                </RotateTransform3D>
+                                <RotateTransform3D>
+                                    <RotateTransform3D.Rotation>
+                                        <AxisAngleRotation3D Axis="1,0,0" Angle="{Binding Roll}"/>
+                                    </RotateTransform3D.Rotation>
+                                </RotateTransform3D>
+                                <TranslateTransform3D OffsetZ="{Binding Heave}"/>
+                            </Transform3DGroup>
+                        </ModelVisual3D.Transform>
+                    </ModelVisual3D>
+                </h:HelixViewport3D>
+                <h:HelixViewport3D Background="{StaticResource DefaultBackgroundBrush}" Grid.Row="2" Grid.ColumnSpan="2" Margin="4" 
+                                       Title="{Binding xyzTtitle}" 
+                                       x:Name="HelixViewport3D"
+                                       ShowViewCube="False" 
+                                       ShowCameraTarget="False" 
+                                       IsTouchZoomEnabled="False"
+                                       IsChangeFieldOfViewEnabled="False">
+                    <h:HelixViewport3D.DefaultCamera>
+                        <PerspectiveCamera x:Name ="XYZCamera" Position="0,0,6000" LookDirection="0,0,-6000" UpDirection="-1,0,0" NearPlaneDistance="3000" FarPlaneDistance="60000"/>
+                    </h:HelixViewport3D.DefaultCamera>
+                    <h:SunLight/>
+                    <!--h:GridLinesVisual3D  Fill="Cornsilk" Length ="12000" Width="12000" MinorDistance="1000" MajorDistance="20000" Thickness="10"/-->
+                    <ModelVisual3D x:Name="XyzModelVisual3D" Content="{Binding CurrentModel}">
+                        <ModelVisual3D.Transform>
+                            <Transform3DGroup>
+                                <TranslateTransform3D OffsetZ="100"/>
+                            </Transform3DGroup>
+                        </ModelVisual3D.Transform>
+                    </ModelVisual3D>
+                    <h:SphereVisual3D x:Name="ObjectD"  Fill="Crimson" Radius="200" Center="{Binding ObjectCenter}"/>
+                    <h:ArrowVisual3D Point1="6000 0 -100" Point2="-6000 0 -100" Diameter="30" Fill="Red"  HeadLength="20" ThetaDiv="36"  />
+                    <h:ArrowVisual3D Point1="0 6000 -100" Point2="0 -6000 -100" Diameter="30" Fill="Green" HeadLength="20" ThetaDiv="36"  />
+                </h:HelixViewport3D>
+                <StackPanel Grid.Row="2" VerticalAlignment="Bottom" HorizontalAlignment="Left">
+                    <RadioButton x:Name="LookDownButton"  Margin="5,0,0,5" Content="俯视" Foreground="DarkGray" Checked="RadioButton_Checked"/>
+                    <RadioButton  Margin="5,0,0,5" Content="左视" Foreground="DarkGray" Checked="RadioButton_Checked_1"/>
+                    <RadioButton  Margin="5,0,0,5" Content="后视" Foreground="DarkGray" Checked="RadioButton_Checked_2"/>
+                </StackPanel>
+
+                <h:HelixViewport3D x:Name="PosViewport3D" Background="{StaticResource DefaultBackgroundBrush}" 
+                                       ShowViewCube="False" 
+                                       ShowCameraTarget="False" 
+                                       ShowCoordinateSystem="False" 
+                                       Grid.Row="1" Grid.Column ="2" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="4">
+                    <h:HelixViewport3D.DefaultCamera>
+                        <PerspectiveCamera x:Name ="PosCamera" Position="0,0,6000" LookDirection="0,0,-6000" UpDirection="-1,0,0" NearPlaneDistance="3000" FarPlaneDistance="60000"/>
+                    </h:HelixViewport3D.DefaultCamera>
+                    <h:SunLight/>
+                    <h:GridLinesVisual3D  Fill="Cornsilk" Length ="12000" Width="12000" MinorDistance="1000" MajorDistance="20000" Thickness="10">
+                        <h:GridLinesVisual3D.Transform>
+                            <Transform3DGroup>
+                                <TranslateTransform3D OffsetZ="-100"/>
+                            </Transform3DGroup>
+                        </h:GridLinesVisual3D.Transform>
+                    </h:GridLinesVisual3D>
+                    <ModelVisual3D Content="{Binding CurrentModel}">
+                        <ModelVisual3D.Transform>
+                            <Transform3DGroup>
+                                <TranslateTransform3D OffsetZ="100"/>
+                                <RotateTransform3D>
+                                    <RotateTransform3D.Rotation>
+                                        <AxisAngleRotation3D Axis="0,0,1" Angle="{Binding Heading}"/>
+                                    </RotateTransform3D.Rotation>
+                                </RotateTransform3D>
+                            </Transform3DGroup>
+                        </ModelVisual3D.Transform>
+                    </ModelVisual3D>
+                    <h:SphereVisual3D x:Name="TargetD"  Fill="Crimson" Radius="200" Center="{Binding ObjectCenter}">
+                        <h:SphereVisual3D.Transform>
+                            <Transform3DGroup>
+                                <RotateTransform3D>
+                                    <RotateTransform3D.Rotation>
+                                        <AxisAngleRotation3D Axis="0,0,1" Angle="{Binding Heading}"/>
+                                    </RotateTransform3D.Rotation>
+                                </RotateTransform3D>
+                            </Transform3DGroup>
+                        </h:SphereVisual3D.Transform>
+                    </h:SphereVisual3D>
+                    <h:ArrowVisual3D Point1="6000 0 -100" Point2="-6000 0 -100" Diameter="30" Fill="Red"  HeadLength="20" ThetaDiv="36"  />
+                    <h:ArrowVisual3D Point1="0 6000 -100" Point2="0 -6000 -100" Diameter="30" Fill="Green" HeadLength="20" ThetaDiv="36"  />
+                </h:HelixViewport3D>
+                <StackPanel Grid.Row="2" Grid.Column ="2" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                    <Button Style="{DynamicResource MetroWindowButtonStyle }" x:Name="NorthButton"  Margin="5,5,10,10" Content="正北" Foreground="DarkGray" Click="NorthButton_Click"/>
+                </StackPanel>
+            </Grid>
+            <Grid Grid.Row="2" Background="{StaticResource AppBarDefaultBrush}" Grid.Column="0" Grid.ColumnSpan="3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" Grid.Column="0" HorizontalAlignment="Left">
+                    <Button x:Name="StartButton" Style="{StaticResource StartAppBarButtonStyle}" Visibility ="{Binding ShowCmd, ConverterParameter=IsCollapsed\=True, Converter={StaticResource VisibilityBoolToggleConverter}}" Command="{Binding StartCMD}"/>
+                    <Button x:Name="StopButton" Style="{StaticResource StopAppBarButtonStyle}" Command="{Binding StopCMD}" Visibility="{Binding ShowCmd, ConverterParameter=IsReversed\=True;IsCollapsed\=True, Converter={StaticResource VisibilityBoolToggleConverter}}"/>
+                </StackPanel>
+            </Grid>
         </Grid>
     </Controls:MetroContentControl>
 </Page>

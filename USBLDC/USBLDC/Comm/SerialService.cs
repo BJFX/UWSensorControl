@@ -115,9 +115,13 @@ namespace USBLDC.Comm
         {
             var bytes = new byte[queue.Count];
             queue.CopyTo(bytes);
-            var strcmd = Encoding.ASCII.GetString(bytes);
-            var arg = new DataEventArgs((int) TypeId.GPS, strcmd, bytes);
-            OnParsed(arg);
+            if((bytes[queue.Count-2]=='\r')&&(bytes[queue.Count-1]=='\n'))
+
+            {
+                var strcmd = Encoding.ASCII.GetString(bytes);
+                var arg = new DataEventArgs((int) TypeId.GPS, strcmd, bytes);
+                OnParsed(arg);
+            }
         }
 
     }

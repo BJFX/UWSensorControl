@@ -20,22 +20,16 @@ namespace USBLDC.Views
             Kernel.Instance.Controller.SetRootFrame(ContentFrame);
         }
 
-        private void ContentFrame_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        private  void ContentFrame_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-
-            ProgressDialogController remote = null;
-            UnitCore.Instance.Start();
             UnitCore.Instance.EventAggregator.PublishMessage(new GoHomePageNavigationEvent());
         }
 
         private void MetroWindow_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if (this.WindowState == WindowState.Maximized)
-                this.WindowState = WindowState.Normal;
-            else
-            {
+            if (this.WindowState != WindowState.Maximized)
                 this.WindowState = WindowState.Maximized;
-            }
+            
         }
     }
 }

@@ -168,7 +168,7 @@ namespace USBLDC.Structure
             Buffer.BlockCopy(BitConverter.GetBytes(Noise), 0, bytes, offset, 4);
             return bytes;
         }
-        public byte[] SaveAjustPakage(SonarConfig scConfig,float Long,float Lat)//归位后的定位数据打包，需要配置信息
+        public byte[] SaveAjustPakage(SonarConfig scConfig, float x, float y, float z, float Long, float Lat)//归位后的定位数据打包，需要配置信息
         {
             byte[] bytes = new byte[256];
             Array.Clear(bytes, 0, 256);
@@ -209,11 +209,11 @@ namespace USBLDC.Structure
             offset += 4;
             Buffer.BlockCopy(BitConverter.GetBytes(scConfig.SonarGPSz), 0, bytes, offset, 4);
             offset += 4;
-            Buffer.BlockCopy(BitConverter.GetBytes(XDistance), 0, bytes, offset, 4);
+            Buffer.BlockCopy(BitConverter.GetBytes(x), 0, bytes, offset, 4);
             offset += 4;
-            Buffer.BlockCopy(BitConverter.GetBytes(YDistance), 0, bytes, offset, 4);
+            Buffer.BlockCopy(BitConverter.GetBytes(y), 0, bytes, offset, 4);
             offset += 4;
-            Buffer.BlockCopy(BitConverter.GetBytes(ZDistance), 0, bytes, offset, 4);
+            Buffer.BlockCopy(BitConverter.GetBytes(z), 0, bytes, offset, 4);
             offset += 4;
             Buffer.BlockCopy(BitConverter.GetBytes(Long), 0, bytes, offset, 4);
             offset += 4;
@@ -243,4 +243,25 @@ namespace USBLDC.Structure
             return bytes;
         }
     }
+    public class AjustPositionInfo : StructureInterface
+    {
+        public uint Status { get; set; }
+        public float XAjust { get; set; }
+        public float YAjust { get; set; }
+        public float ZAjust { get; set; }
+        public float AjustLong { get; set; }
+        public float AjustLat { get; set; }
+        public float Noise { get; set; }
+        public bool Parse(byte[] bytes)
+        {
+            throw new NotImplementedException();
+        }
+
+        public byte[] SavePakage()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+
 }

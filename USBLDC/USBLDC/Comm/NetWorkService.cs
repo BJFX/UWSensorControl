@@ -11,10 +11,10 @@ namespace USBLDC.Comm
     {
         private readonly static object SyncObject = new object();
         private static INetCore _netInstance;
-        ///private ITCPClientService _tcpShellService;
+        private ITCPClientService _tcpPoseService;
         private ITCPClientService _tcpDataService;
 
-        //private TcpClient _shelltcpClient;
+        private TcpClient _posetcpClient;
         private TcpClient _datatcpClient;
         private BasicConf _conf;
         private Observer<DataEventArgs> _dataObserver;
@@ -41,13 +41,18 @@ namespace USBLDC.Comm
         {
             get { return _tcpDataService ?? (_tcpDataService = new TcpService()); }
         }
-
+        public ITCPClientService TCPPoseService
+        {
+            get { return _tcpPoseService ?? (_tcpPoseService = new TcpService()); }
+        }
         private bool CreateTCPService(BasicConf conf)
         {
             // 同步方法，会阻塞进程，调用init用task
             TCPDataService.ConnectSync();
+            TCPPoseService.ConnectSync();
             TCPDataService.Register(NetDataObserver);
-            if (TCPDataService.Connected && TCPDataService.Start())
+            TCPPoseService.Register(NetDataObserver);
+            if (TCPDataService.Connected && TCPDataService.Start() && TCPPoseService.Connected && TCPPoseService.Start())
                 return true;
             return false;
         }
@@ -73,10 +78,13 @@ namespace USBLDC.Comm
                 throw new Exception("已初始化");
             }
             _datatcpClient = new TcpClient { SendTimeout = 1000 };
+            _posetcpClient = new TcpClient {SendTimeout = 1000};
             try
             {
                 if (!TCPDataService.Init(_datatcpClient, IPAddress.Parse(_conf.GetIP()), int.Parse(_conf.GetNetPort())))
                     throw new Exception("通信网络初始化失败");
+                if (!TCPPoseService.Init(_posetcpClient, IPAddress.Parse(_conf.GetPoseIP()), int.Parse(_conf.GetPosePort())))
+                    throw new Exception("姿态传感器网络初始化失败");
             }
             catch (Exception)
             {
@@ -92,6 +100,8 @@ namespace USBLDC.Comm
             {
                 TCPDataService.UnRegister(NetDataObserver);
                 TCPDataService.Stop();
+                TCPPoseService.UnRegister(NetDataObserver);
+                TCPPoseService.Stop();
             }
             IsWorking = false;
             IsInitialize = false;
