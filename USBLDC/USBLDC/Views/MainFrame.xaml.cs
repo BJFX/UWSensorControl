@@ -4,6 +4,7 @@ using USBLDC.Core;
 using USBLDC.Events;
 using USBLDC.ViewModel;
 using System.Windows;
+using System.Threading.Tasks;
 namespace USBLDC.Views
 {
     /// <summary>
@@ -22,7 +23,19 @@ namespace USBLDC.Views
 
         private  void ContentFrame_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
+            Application.Current.MainWindow = this;
+            UnitCore.Instance.Start();
+            Task.Factory.StartNew(() =>
+            {
+                UnitCore.Instance.NetCore.Initialize();
+                UnitCore.Instance.NetCore.Start();
+                UnitCore.Instance.CommCore.Initialize();
+                UnitCore.Instance.CommCore.Start();
+            });
+            Splasher.Splash = new ConnectWindow();
+            Splasher.ShowSplash();
             UnitCore.Instance.EventAggregator.PublishMessage(new GoHomePageNavigationEvent());
+            
         }
 
         private void MetroWindow_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)

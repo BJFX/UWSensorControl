@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media.Media3D;
@@ -28,11 +29,13 @@ namespace USBLDC.ViewModel
             Heave = 100;
             StartCMD = RegisterCommand(ExecuteStartCMD, CanExecuteStartCMD, true);
             StopCMD = RegisterCommand(ExecuteStopCMD, CanExecuteStopCMD, true);
-            HeadingChartTitle = "艏向角=" + Heading.ToString("F02") + "°";
-            PRHTtitle = "纵倾=" + Pitch.ToString("F02") + "°" + " " + "横摇=" + Roll.ToString("F02") + "°" + " " + "升沉=" +
-                        Heave.ToString("F02") + "m";
+            HeadingChartTitle = "X=" + coordinateX.ToString("F02") + "m" + "\n" + "Y=" + coordinateY.ToString("F02") +
+                                "m" + "\n" +
+                                "Z=" + coordinateZ.ToString("F02") + "m";
             ShowCmd = true;
             CurrentModel = null;
+            gpsTime = "GPS";
+            ObjectVisibility = false;
         }
 
         public override void InitializePage(object extraData)
@@ -167,6 +170,11 @@ namespace USBLDC.ViewModel
             get { return GetPropertyValue(() => ObjectCenter); }
             set { SetPropertyValue(() => ObjectCenter, value); }
         }
+        public bool ObjectVisibility
+        {
+            get { return GetPropertyValue(() => ObjectVisibility); }
+            set { SetPropertyValue(() => ObjectVisibility, value); }
+        }
         public uint PoseStatus
         {
             get { return GetPropertyValue(() => PoseStatus); }
@@ -176,16 +184,6 @@ namespace USBLDC.ViewModel
         {
             get { return GetPropertyValue(() => PoseTime); }
             set { SetPropertyValue(() => PoseTime, value); }
-        }
-        public string xyzTtitle
-        {
-            get { return GetPropertyValue(() => xyzTtitle); }
-            set { SetPropertyValue(() => xyzTtitle, value); }
-        }
-        public string PRHTtitle
-        {
-            get { return GetPropertyValue(() => PRHTtitle); }
-            set { SetPropertyValue(() => PRHTtitle, value); }
         }
 
         public bool ShowCmd
@@ -206,9 +204,21 @@ namespace USBLDC.ViewModel
 
         private async void ExecuteStartCMD(object sender, ExecutedRoutedEventArgs eventArgs)
         {
-            
-            if(!UnitCore.Instance.NetCore.IsWorking)
-                return;
+
+            if (!UnitCore.Instance.NetCore.SonarIsOK || !UnitCore.Instance.NetCore.PoseIsOK)
+            {
+                UnitCore.Instance.NetCore.Initialize();
+                UnitCore.Instance.NetCore.Start();
+            }
+            if (!UnitCore.Instance.CommCore.IsWorking)
+            {
+                UnitCore.Instance.CommCore.Initialize();
+                UnitCore.Instance.CommCore.Start();
+            }
+            if (UnitCore.Instance.NetCore.SonarIsOK != true)
+            {
+                UnitCore.Instance.EventAggregator.PublishMessage(new LogEvent("无法与声纳通信，请检查网络连接！", LogType.OnlyInfo));
+            }
             Task<bool> ret;
             UnitCore.Instance.SonarConfiguration.Cmd = 1;
             ret =  UnitCore.Instance.NetCore.SendCMD(UnitCore.Instance.SonarConfiguration.SavePakage());
@@ -304,12 +314,10 @@ namespace USBLDC.ViewModel
             //PoseTime = info.EpochSecond;
             Heading = info.Heading;
             Pitch = info.Pitch;
-            Roll = -info.Roll;//坐标轴x相反，反方向旋转
+            Roll = info.Roll;
             Heave = info.Heave;
             PoseStatus = info.Status;
-            HeadingChartTitle = "艏向角=" + Heading.ToString("F02") + "°";
-            PRHTtitle = "纵倾=" + Pitch.ToString("F02") + "°" + " " + "横摇=" + Roll.ToString("F02") + "°" + " " + "升沉=" +
-                        Heave.ToString("F02") + "m";
+            
         }
 
         private void UpdatePositionView(ShowStructureInfo message)
@@ -326,8 +334,8 @@ namespace USBLDC.ViewModel
             var y = -coordinateY;//坐标轴y相反，取反
             var z = -coordinateY;//坐标轴z相反，取反
             ObjectCenter = x.ToString("F02") +","+ y.ToString("F02")+"," + z.ToString("F02");
-            xyzTtitle = "X = "+coordinateX.ToString("F02")+" Y = "+coordinateY.ToString("F02")+" Z = "+
-            coordinateZ.ToString("F02");
+            if((x*x+y*y+z*z)>1)
+                ObjectVisibility = true;
         }
 
         private void UpdateGpsView(ShowStructureInfo message)

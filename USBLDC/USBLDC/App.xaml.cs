@@ -25,6 +25,7 @@ namespace USBLDC
                 String strTitle = ResourcesHelper.TryFindResourceString("USBL_Name");
                 String strErrMsg = ResourcesHelper.TryFindResourceString("USBL_Running");
                 MessageBox.Show(strErrMsg, strTitle);
+                Application.Current.Shutdown();  
                 return;
             }
 
@@ -42,9 +43,8 @@ namespace USBLDC
             // 初始化消息处理函数
             UnitKernal.Instance.Controller.Init();//导航消息响应
             UnitKernal.Instance.MessageController.Init();//系统消息响应
-            UnitCore.Instance.Start();
             LogHelper.WriteLog("程序启动");
-
+            
             base.OnStartup(e);
         }
         private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

@@ -1,0 +1,125 @@
+﻿<Window
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:metroControl="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+      xmlns:picker="clr-namespace:TinyMetroWpfLibrary.FrameControls.Picker;assembly=TinyMetroWpfLibrary"
+      xmlns:Controls="clr-namespace:TinyMetroWpfLibrary.Controls;assembly=TinyMetroWpfLibrary.Controls"
+      xmlns:converters="clr-namespace:USBLDC.Converters"
+      DataContext="{Binding ConnectWindowModel, Source={StaticResource ViewModelLocator}}" 
+      x:Class="USBLDC.Views.ConnectWindow" 
+      mc:Ignorable="d" WindowStyle="None"
+        Title="ConnectWindow"
+        WindowStartupLocation="CenterScreen" ShowInTaskbar="False" ResizeMode="NoResize" TextBlock.Foreground="White"
+	     Width="700" Height="350" Loaded="Window_Loaded" Topmost="True">
+
+    <Window.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </Window.Resources>
+    <Grid>
+        <Border BorderThickness="2" BorderBrush="#133456">
+        <Grid Background="#0B3B6B">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="80"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="80"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                    <TextBlock Text="超短基线"
+					    Foreground="White" 
+					    FontSize="28" 
+					    HorizontalAlignment="Center" 
+					    VerticalAlignment="Center"
+					    />
+                </StackPanel>
+                <Button Name="CloseButton"  Grid.Column="1" Style="{StaticResource CloseAppBarButtonStyle}" Click="CloseButton_Click"/>
+            </Grid>
+            <StackPanel Grid.Row="1" Orientation="Horizontal">
+             <TextBlock Text="声纳通信" FontSize="20" Margin="20,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                <ProgressBar Name="SonarBar" VerticalAlignment="Center" HorizontalAlignment="Left" Visibility="{Binding IsProcessing, Converter={StaticResource BooleanToVisibilityConverter}}"
+					Style="{StaticResource PerformanceProgressBar}" Foreground="Black" Width="200" Height="30" Margin="100,0,0,0" />
+                <TextBlock Name="SonarConnectStatus" FontSize="23" Margin="100,0,0,0" VerticalAlignment="Center" Visibility="Collapsed">通信已建立</TextBlock>
+                <Button Name="TCPOK" Style="{StaticResource DoneAppBarButtonStyle}"  Grid.Row="4" Width="80" BorderThickness="0" Height="80"   VerticalAlignment="Center" HorizontalAlignment="Left" Margin="100,0,0,0" IsEnabled="False" Visibility="Hidden" />
+            </StackPanel>
+            <StackPanel Grid.Row="2" Orientation="Horizontal">
+                <TextBlock Text="运动传感器" FontSize="20" Margin="20,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                <ProgressBar Name="PoserBar" VerticalAlignment="Center" HorizontalAlignment="Left" Visibility="{Binding IsProcessing, Converter={StaticResource BooleanToVisibilityConverter}}"
+					Style="{StaticResource PerformanceProgressBar}" Foreground="Black" Width="200" Height="30" Margin="80,0,0,0" />
+                <TextBlock Name="POSEConnectStatus" FontSize="23" Margin="80,0,0,0" VerticalAlignment="Center" Visibility="Collapsed">通信已建立</TextBlock>
+                <Button Name="POSEOK" Style="{StaticResource DoneAppBarButtonStyle}"  Grid.Row="4" Width="80" BorderThickness="0" Height="80"   VerticalAlignment="Center" HorizontalAlignment="Left" Margin="100,0,0,0" IsEnabled="False" Visibility="Hidden" />
+            </StackPanel>
+            <StackPanel Grid.Row="3" Orientation="Horizontal">
+                <TextBlock Text="GPS数据" FontSize="20" Margin="20,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                <ProgressBar Name="GPSBar" VerticalAlignment="Center" HorizontalAlignment="Left" Visibility="{Binding IsProcessing, Converter={StaticResource BooleanToVisibilityConverter}}"
+					Style="{StaticResource PerformanceProgressBar}" Foreground="Black" Width="200" Height="30" Margin="100,0,0,0" />
+                <TextBlock Name="GPSConnectStatus" FontSize="23" Margin="100,0,0,0" VerticalAlignment="Center" Visibility="Collapsed">端口已打开</TextBlock>
+                <Button Name="CommOK" Style="{StaticResource DoneAppBarButtonStyle}"  Grid.Row="4" Width="80" BorderThickness="0" Height="80"  VerticalAlignment="Center" HorizontalAlignment="Left" Margin="100,0,0,0" IsEnabled="False" Visibility="Hidden" />
+            </StackPanel>
+            <UniformGrid Grid.Row="4" Columns="3">
+                <Button Name="ModifyPara" FontSize ="22" Foreground ="White" Style="{StaticResource ChromeButtonStyle}" Content="修改参数" VerticalAlignment="Center" FontFamily="Microsoft YaHei UI" Click="ModifyPara_Click"  />
+                <Button Name="StartWork" FontSize ="22" Foreground ="White" Style="{StaticResource ChromeButtonStyle}" Grid.Row="4"  Content="开始工作" VerticalAlignment="Center" FontFamily="Microsoft YaHei UI" Click="StartWork_Click" Visibility="Hidden" />
+                <Button Name="ModifyNet" FontSize ="22" Foreground ="White" Style="{StaticResource ChromeButtonStyle}" Grid.Row="4" Content="修改连接" VerticalAlignment="Center" FontFamily="Microsoft YaHei UI" Click="ModifyNet_Click"/>
+                
+            </UniformGrid>
+        </Grid>
+    </Border>
+        <Controls:PopupMessageControl Background="#0B3B6B" Name="SetPopUpControl" IsOpen="True">
+            <StackPanel Orientation="Vertical">
+                <StackPanel>
+                    <ToggleButton x:Name="Connection" Foreground="White" Background="{StaticResource DefaultBackgroundBrush}"
+                                  IsChecked ="True"
+                                  Content="网络连接与传感器连接设置" FontFamily="Microsoft YaHei UI"/>
+                    <UniformGrid Columns="1" Visibility="{Binding IsChecked, ConverterParameter=TrueToVisible, Converter={StaticResource BoolToVisibilityConverter}, ElementName=Connection}">
+                        <StackPanel Orientation="Horizontal" Margin="4,4,0,4">
+                            <TextBlock Margin="15,0,0,0" FontSize="16" VerticalAlignment="Center" Text=" 声纳地址："/>
+                            <TextBox Name="IpAddrBox" Margin="15,4,4,4" Width="200" Background="{x:Null}" Foreground="White"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="4,4,0,4">
+                            <TextBlock Margin="15,0,0,0" FontSize="16" VerticalAlignment="Center" Text=" 数据端口："/>
+                            <TextBox Name="IpPortBox" Margin="15,4,4,4" Width="100" Background="{x:Null}" Foreground="White"/>
+                                <TextBlock Margin="15,0,0,0" FontSize="16" VerticalAlignment="Center" Text=" 命令端口："/>
+                            <TextBox Name="IpCmdPortBox" Margin="15,4,4,4" Width="100"  Background="{x:Null}" Foreground="White"/>
+                            </StackPanel>
+
+                    </UniformGrid>
+                    
+                    <UniformGrid Columns="2" Visibility="{Binding IsChecked, ConverterParameter=TrueToVisible, Converter={StaticResource BoolToVisibilityConverter}, ElementName=Connection}">
+                        <StackPanel Orientation="Horizontal" Margin="4,4,0,4">
+                            <TextBlock FontSize="16" VerticalAlignment="Center" Text=" 姿态传感器地址："/>
+                            <TextBox Name="IpPoseAddrBox" Margin="31,4,4,4" Width="180" Background="{x:Null}" Foreground="White"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="4,4,0,4">
+                            <TextBlock Margin="15,0,0,0" FontSize="16" VerticalAlignment="Center" Text=" 姿态传感器端口："/>
+                            <TextBox Name="IpPosePortBox" Margin="31,4,4,4" Width="100" Background="{x:Null}" Foreground="White"/>
+                        </StackPanel>
+                    </UniformGrid>
+                    <UniformGrid Columns="2" Visibility="{Binding IsChecked, ConverterParameter=TrueToVisible, Converter={StaticResource BoolToVisibilityConverter}, ElementName=Connection}">
+                        <StackPanel Orientation="Horizontal" Margin="4,4,0,4">
+                            <TextBlock FontSize="16" VerticalAlignment="Center" Text=" GPS串行端口："/>
+                            <Controls:MetroComboBox Name="GpsBox" Margin="50,4,4,4" Width="120"
+                             VerticalAlignment="Center" HorizontalAlignment="Center" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="4,4,0,4">
+                            <TextBlock Margin="15,0,0,0" FontSize="16" VerticalAlignment="Center" Text=" GPS端口速率："/>
+                            <Controls:MetroComboBox Name="GpsRateBox" Margin="34,4,4,4" Width="120"
+                             VerticalAlignment="Center"  HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </UniformGrid>
+                    <Button Content="保存并重新连接" Name  ="SaveConnBtn" Style="{StaticResource ChromeButtonStyle}" FontFamily="Microsoft YaHei UI" FontSize="18" Click="SaveConnBtn_Click" Height="60"/>
+                    <Button Content="取消" Name ="CancelButton" Style="{StaticResource ChromeButtonStyle}" FontFamily="Microsoft YaHei UI" FontSize="18" Click="CancelButton_Click" Height="60"/>
+                </StackPanel>
+            </StackPanel>
+        </Controls:PopupMessageControl>
+    </Grid>
+    
+</Window>

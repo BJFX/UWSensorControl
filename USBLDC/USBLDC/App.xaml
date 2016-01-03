@@ -17,19 +17,19 @@
                     <viewModels:ViewModelLocator x:Key="ViewModelLocator"/>
 
                 </ResourceDictionary>
-                <ResourceDictionary Source="Resources/ControlStyle.xaml"/>
-                <!-- Important to include the Metro Styles Resource Dictionary -->
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.Buttons.xaml"/>
                 <ResourceDictionary Source="/TinyMetroWpfLibrary;component/Styles/MetroStyles.xaml" />
                 <ResourceDictionary Source="/TinyMetroWpfLibrary.Controls;component/Styles/ControlStyles.xaml"/>
-                <ResourceDictionary Source="/TinyMetroWpfLibrary.Controls;component/Styles/Colours.xaml"/>
+                <ResourceDictionary Source="Resources/ControlStyle.xaml"/>
+                <ResourceDictionary Source="Resources/Fonts.xaml"/>
+                <ResourceDictionary Source="Resources/SkinStyle.xaml"/>
+                <ResourceDictionary Source="Resources/Image.xaml"/>
+                <!-- Important to include the Metro Styles Resource Dictionary -->
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
                 
                 
-                <ResourceDictionary Source="Resources/SkinStyle.xaml"/>
-                <ResourceDictionary Source="Resources/Image.xaml"/>
+                
                 
         </ResourceDictionary.MergedDictionaries>
             </ResourceDictionary>

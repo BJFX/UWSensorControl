@@ -140,8 +140,8 @@ namespace USBLDC.Comm
             }
             catch (Exception exception)
             {
-                UnitCore.Instance.EventAggregator.PublishMessage(new LogEvent(exception.Message, exception,
-                    LogType.Error));
+                UnitCore.Instance.EventAggregator.PublishMessage(new ErrorEvent( exception,
+                    LogType.Both));
             }
             finally
             {

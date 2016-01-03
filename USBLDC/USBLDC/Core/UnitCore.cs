@@ -69,9 +69,12 @@ namespace USBLDC.Core
         /// </summary>
         /// <param name="bRead"></param>
         /// <returns></returns>
-        public bool UpdateSonarConfig(bool bRead=true)
+        public bool UpdateSonarConfig(bool bRead=true,string configfile=null)
         {
-            string conf = BasicConf.MyExecPath + "\\" + "DefConf.dat";
+
+            string conf = configfile;
+            if (conf == null)
+                conf = BasicConf.MyExecPath + "\\" + "DefConf.dat";
 
             if (File.Exists(conf)&&bRead)
             {
@@ -141,10 +144,11 @@ namespace USBLDC.Core
                 CurrentModel = await LoadAsync(shippath, false);
                 if (CurrentModel==null)
                     throw new Exception("加载模型组件失败！");
-                NetCore.Initialize();
-                NetCore.Start();
-                CommCore.Initialize();
-                CommCore.Start();
+                //this part replace to the connection splash
+                //NetCore.Initialize();
+                //NetCore.Start();
+                //CommCore.Initialize();
+                //CommCore.Start();
                 _serviceStarted = true;//if failed never get here
                 
                 return _serviceStarted;
@@ -152,7 +156,7 @@ namespace USBLDC.Core
             catch (Exception ex)
             {
                 Error = ex.Message;
-                EventAggregator.PublishMessage(new LogEvent(ex.Message, ex, LogType.Error));
+                EventAggregator.PublishMessage(new ErrorEvent(ex, LogType.Both));
                 return false;
             }
             
@@ -161,10 +165,8 @@ namespace USBLDC.Core
 
         public void Stop()
         {
-            if(NetCore.IsWorking)
-                NetCore.Stop();
-            if(CommCore.IsWorking)
-                CommCore.Stop();
+            NetCore.Stop();
+            CommCore.Stop();
             USBLTraceService.Stop();
             _serviceStarted = false;
         }

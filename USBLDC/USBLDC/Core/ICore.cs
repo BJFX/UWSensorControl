@@ -20,7 +20,7 @@ namespace USBLDC.Core
         //将错误信息写入文件
         void ErrorLog(string message, Exception ex);
         //发送消息到界面
-        void Alert(string message);
+        void Alert(string message, Exception ex = null);
         //通过UDP调试端口广播信息，用于调试
         void BroadCast(string message);
     }
@@ -39,7 +39,8 @@ namespace USBLDC.Core
 
         //TCP客户端接收数据服务
         ITCPClientService TCPDataService { get; }
-
+        bool SonarIsOK { get; }
+        bool PoseIsOK { get; }
         Task<bool> SendCMD(byte[] buf);
 
         /// <summary>

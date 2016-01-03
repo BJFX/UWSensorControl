@@ -12,10 +12,10 @@
       xmlns:adp="clr-namespace:USBLDC.AttachedProperty"
       xmlns:h="clr-namespace:HelixToolkit.Wpf;assembly=HelixToolkit.Wpf"
       xmlns:Converters="clr-namespace:USBLDC.Converters"
-      Background="{StaticResource DefaultBackgroundBrush}"
+      Background="{StaticResource AccentColorBrush}"
       DataContext="{Binding HomePageViewModel, Source={StaticResource ViewModelLocator}}" 
       mc:Ignorable="d" 
-      d:DesignHeight="748" d:DesignWidth="1024"
+      d:DesignHeight="748" d:DesignWidth="1024" 
         Title="HomePage" Loaded="Page_Loaded">
     <Page.Resources>
         <Converters:VisibilityBoolToggleConverter x:Key="VisibilityBoolToggleConverter"/>
@@ -40,7 +40,7 @@
                 <ViewControls:TitleBarControl 
                     Title="{Binding Home_Title_ApplicationName, Mode=OneWay, Source={StaticResource Resources}}"
                     Grid.Row ="0"
-                    TitleImageSource="/Assets/ico_coordinate.png"
+                    TitleImageSource="/Assets/ico_calibrate_n.png"
                     BackButtonVisibility="Collapsed"
                     Grid.Column ="1"
                     Grid.ColumnSpan ="2"
@@ -57,91 +57,44 @@
                     <ColumnDefinition/>
                     <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="GPS时间:" Grid.Row="0" Grid.Column="0"/>
-                <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Vertical" >
-                    <UniformGrid Columns="2">
-                        <StackPanel Margin ="5,2,2,2" Orientation="Horizontal">
-                            <TextBlock Text="姿态传感器状态:"/>
-                            <TextBlock Text="{Binding PoseTime}"/>
-                        </StackPanel>
-                        <StackPanel Margin ="5,2,2,2" Orientation="Horizontal">
-                            <TextBlock Text="时间:"/>
-                            <TextBlock Text="{Binding PoseTime}"/>
-                        </StackPanel>
-                        <StackPanel Margin ="5,2,2,2" Orientation="Horizontal">
-                            <TextBlock Text="艏向角:"/>
-                            <TextBlock Text="{Binding Heading}"/>
-                        </StackPanel>
-                        <StackPanel Margin ="5,2,2,2" Orientation="Horizontal">
-                            <TextBlock Text="纵倾:"/>
-                            <TextBlock Text="{Binding Pitch}"/>
-                        </StackPanel>
-                        <StackPanel Margin ="5,2,2,2" Orientation="Horizontal">
-                            <TextBlock Text="横滚:"/>
-                            <TextBlock Text="{Binding Roll}"/>
-                        </StackPanel>
-                        <StackPanel Margin ="5,2,2,2" Orientation="Horizontal">
-                            <TextBlock Text="升沉:"/>
-                            <TextBlock Text="{Binding Heave}"/>
-                        </StackPanel>
-                    </UniformGrid>
-                </StackPanel>
+                <GroupBox Header="{Binding gpsTime}" Grid.Row="1" Grid.Column="0" FontSize="18">
+                    <UniformGrid Columns="2" >
+                        <TextBlock Text="状态:" />
+                        <TextBlock Text="{Binding gpsStatus}"/>
 
+                        <TextBlock Text="卫星数:"/>
+                        <TextBlock Text="{Binding Satelites}"/>
+
+                        <TextBlock Text="速度(m/s):"/>
+                        <TextBlock Text="{Binding gpsSpeed}"/>
+
+                        <TextBlock Text="经度(船):"/>
+                        <TextBlock Text="{Binding shipLong}"/>
+
+                        <TextBlock Text="纬度(船):"/>
+                        <TextBlock Text="{Binding shipLat}"/>
+                    </UniformGrid>
+                </GroupBox>
+                <GroupBox Header="姿态传感器" Grid.Row="1" Grid.Column="1" FontSize="18">
+                    <UniformGrid Columns="2" >
+                    <TextBlock Text="状态:" />
+                    <TextBlock Text="{Binding PoseStatus}"/>
+
+                    
+                    <TextBlock Text="艏向角(°):"/>
+                    <TextBlock Text="{Binding Heading}" />
+
+                        <TextBlock Text="纵倾(°):"/>
+                    <TextBlock Text="{Binding Pitch}"/>
+
+                        <TextBlock Text="横滚(°):"/>
+                    <TextBlock Text="{Binding Roll}"/>
+
+                    <TextBlock Text="升沉(m):"/>
+                    <TextBlock Text="{Binding Heave}"/>
+                </UniformGrid>
+                </GroupBox>
                 <TextBlock Text="定位:" Grid.Row="0" Grid.Column="2"/>
-                <h:HelixViewport3D Background="{StaticResource DefaultBackgroundBrush}" 
-                                       IsZoomEnabled="False" 
-                                       IsChangeFieldOfViewEnabled="False" 
-                                       IsMoveEnabled="False" 
-                                       IsPanEnabled="False"
-                                       IsRotationEnabled="False"
-                                       ShowViewCube="False"
-                                       Title="{Binding HeadingChartTitle}"  Grid.Row="1" Grid.Column="0" Margin="4">
-                    <h:HelixViewport3D.DefaultCamera>
-                        <PerspectiveCamera Position="0,0,4000" LookDirection="0,0,-4000" UpDirection="-1,0,0"/>
-                    </h:HelixViewport3D.DefaultCamera>
-                    <h:DefaultLights/>
-                    <ModelVisual3D x:Name ="HeadingVisual3D" Content="{Binding CurrentModel}">
-                        <ModelVisual3D.Transform>
-                            <Transform3DGroup>
-                                <RotateTransform3D>
-                                    <RotateTransform3D.Rotation>
-                                        <AxisAngleRotation3D Axis="0,0,1" Angle="{Binding Heading}"/>
-                                    </RotateTransform3D.Rotation>
-                                </RotateTransform3D>
-                            </Transform3DGroup>
-                        </ModelVisual3D.Transform>
-                    </ModelVisual3D>
-                </h:HelixViewport3D>
-                <h:HelixViewport3D Background="{StaticResource DefaultBackgroundBrush}" 
-                                       IsZoomEnabled="False" 
-                                       IsChangeFieldOfViewEnabled="False" 
-                                       IsMoveEnabled="False" 
-                                       IsPanEnabled="False"
-                                       IsRotationEnabled="False"
-                                       ShowViewCube="False"
-                                       Title ="{Binding PRHTtitle}"  Grid.Row="1" Grid.Column="1" Margin="4">
-                    <h:HelixViewport3D.DefaultCamera>
-                        <PerspectiveCamera Position="0,4000,0" LookDirection="0,-4000,0" UpDirection="0,0,1"/>
-                    </h:HelixViewport3D.DefaultCamera>
-                    <h:SunLight/>
-                    <ModelVisual3D Content="{Binding CurrentModel}">
-                        <ModelVisual3D.Transform>
-                            <Transform3DGroup>
-                                <RotateTransform3D>
-                                    <RotateTransform3D.Rotation>
-                                        <AxisAngleRotation3D Axis="0,0,1" Angle="{Binding Pitch}"/>
-                                    </RotateTransform3D.Rotation>
-                                </RotateTransform3D>
-                                <RotateTransform3D>
-                                    <RotateTransform3D.Rotation>
-                                        <AxisAngleRotation3D Axis="1,0,0" Angle="{Binding Roll}"/>
-                                    </RotateTransform3D.Rotation>
-                                </RotateTransform3D>
-                                <TranslateTransform3D OffsetZ="{Binding Heave}"/>
-                            </Transform3DGroup>
-                        </ModelVisual3D.Transform>
-                    </ModelVisual3D>
-                </h:HelixViewport3D>
                 <h:HelixViewport3D Background="{StaticResource DefaultBackgroundBrush}" Grid.Row="2" Grid.ColumnSpan="2" Margin="4" 
                                        Title="{Binding xyzTtitle}" 
                                        x:Name="HelixViewport3D"
@@ -161,7 +114,7 @@
                             </Transform3DGroup>
                         </ModelVisual3D.Transform>
                     </ModelVisual3D>
-                    <h:SphereVisual3D x:Name="ObjectD"  Fill="Crimson" Radius="200" Center="{Binding ObjectCenter}"/>
+                    <h:SphereVisual3D x:Name="ObjectD"  Fill="Crimson" Radius="200" Center="{Binding ObjectCenter}" Visible="{Binding ObjectVisibility}"/>
                     <h:ArrowVisual3D Point1="6000 0 -100" Point2="-6000 0 -100" Diameter="30" Fill="Red"  HeadLength="20" ThetaDiv="36"  />
                     <h:ArrowVisual3D Point1="0 6000 -100" Point2="0 -6000 -100" Diameter="30" Fill="Green" HeadLength="20" ThetaDiv="36"  />
                 </h:HelixViewport3D>
@@ -175,12 +128,20 @@
                                        ShowViewCube="False" 
                                        ShowCameraTarget="False" 
                                        ShowCoordinateSystem="False" 
-                                       Grid.Row="1" Grid.Column ="2" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="4">
+                                       Grid.Row="1" Grid.Column ="2" 
+                                   Grid.RowSpan="2" Grid.ColumnSpan="2" 
+                                   Margin="4" 
+                                   Title="定位视图"
+                                   TitleSize="20"
+                                   SubTitleSize="16"
+                                   TitleBackground="WhiteSmoke"
+                                   SubTitle="{Binding HeadingChartTitle}">
+                    
                     <h:HelixViewport3D.DefaultCamera>
                         <PerspectiveCamera x:Name ="PosCamera" Position="0,0,6000" LookDirection="0,0,-6000" UpDirection="-1,0,0" NearPlaneDistance="3000" FarPlaneDistance="60000"/>
                     </h:HelixViewport3D.DefaultCamera>
                     <h:SunLight/>
-                    <h:GridLinesVisual3D  Fill="Cornsilk" Length ="12000" Width="12000" MinorDistance="1000" MajorDistance="20000" Thickness="10">
+                    <h:GridLinesVisual3D  Fill="Cornsilk" Length ="12000" Width="12000" MinorDistance="1000" MajorDistance="20000" Thickness="5">
                         <h:GridLinesVisual3D.Transform>
                             <Transform3DGroup>
                                 <TranslateTransform3D OffsetZ="-100"/>
@@ -199,7 +160,7 @@
                             </Transform3DGroup>
                         </ModelVisual3D.Transform>
                     </ModelVisual3D>
-                    <h:SphereVisual3D x:Name="TargetD"  Fill="Crimson" Radius="200" Center="{Binding ObjectCenter}">
+                    <h:SphereVisual3D x:Name="TargetD"  Fill="Crimson" Radius="180" Center="{Binding ObjectCenter}" Visible="{Binding ObjectVisibility}">
                         <h:SphereVisual3D.Transform>
                             <Transform3DGroup>
                                 <RotateTransform3D>
@@ -214,19 +175,90 @@
                     <h:ArrowVisual3D Point1="0 6000 -100" Point2="0 -6000 -100" Diameter="30" Fill="Green" HeadLength="20" ThetaDiv="36"  />
                 </h:HelixViewport3D>
                 <StackPanel Grid.Row="2" Grid.Column ="2" VerticalAlignment="Bottom" HorizontalAlignment="Right">
-                    <Button Style="{DynamicResource MetroWindowButtonStyle }" x:Name="NorthButton"  Margin="5,5,10,10" Content="正北" Foreground="DarkGray" Click="NorthButton_Click"/>
+                    <Button Style="{DynamicResource MetroWindowButtonStyle }" x:Name="NorthButton"  Margin="5,5,10,10" Content="正北" Foreground="Black" Click="NorthButton_Click"/>
                 </StackPanel>
+                
             </Grid>
-            <Grid Grid.Row="2" Background="{StaticResource AppBarDefaultBrush}" Grid.Column="0" Grid.ColumnSpan="3">
+            <Grid Grid.Row="2" Background="{StaticResource DefaultBackgroundBrush}" Grid.Column="0" Grid.ColumnSpan="3">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <StackPanel Orientation="Horizontal" Grid.Column="0" HorizontalAlignment="Left">
+                <StackPanel Name="WorkPanel" Orientation="Horizontal" Grid.Column="0" HorizontalAlignment="Left">
                     <Button x:Name="StartButton" Style="{StaticResource StartAppBarButtonStyle}" Visibility ="{Binding ShowCmd, ConverterParameter=IsCollapsed\=True, Converter={StaticResource VisibilityBoolToggleConverter}}" Command="{Binding StartCMD}"/>
                     <Button x:Name="StopButton" Style="{StaticResource StopAppBarButtonStyle}" Command="{Binding StopCMD}" Visibility="{Binding ShowCmd, ConverterParameter=IsReversed\=True;IsCollapsed\=True, Converter={StaticResource VisibilityBoolToggleConverter}}"/>
+                
                 </StackPanel>
             </Grid>
+            <Controls:MetroPopup  Name="DeleteConfirmPopup" StaysOpen="False" AllowsTransparency="True" PopupAnimation="Fade" PlacementTarget="{Binding ElementName=WorkPanel}" Placement="Top">
+                <Controls:AnimationContentControl Placement="Bottom">
+                    <Border BorderThickness="2" BorderBrush="Black">
+                        <Grid Width="340" Height="120"  Background="White">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="{Binding UX_Message_ConfirmDeleteProfile, Source={StaticResource Resources}}"
+                                   Foreground="Black"
+                                   VerticalAlignment="Top" 
+                                   HorizontalAlignment="Left"
+                                   FontSize="{StaticResource Small}" 
+                                   TextWrapping="Wrap"
+                                   Margin="20,20,0,0"
+                                   Grid.Row="0"/>
+
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="1">
+                                <Button
+                                    Foreground="Black" 
+                                    Style="{StaticResource MetroAccentButton}"
+                                    Content="{Binding Button_Yes, Source={StaticResource Resources}}" 
+                                    Width="90"
+                                    Height="35" 
+                                    HorizontalAlignment="Right"
+                                    Margin="0,0,10,10" 
+                                    VerticalAlignment="Bottom"
+                                    Grid.Row="1">
+                                    <Button.Triggers>
+                                        <EventTrigger RoutedEvent="Button.Click">
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <BooleanAnimationUsingKeyFrames Storyboard.TargetName="DeleteConfirmPopup" Storyboard.TargetProperty="IsOpen">
+                                                        <DiscreteBooleanKeyFrame KeyTime="0" Value="False"/>
+                                                    </BooleanAnimationUsingKeyFrames>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                    </Button.Triggers>
+                                </Button>
+
+                                <Button 
+                                    Foreground="Black" 
+                                    Style="{StaticResource MetroAccentButton}"
+                                    Content="{Binding Button_No, Source={StaticResource Resources}}" 
+                                    Width="90"
+                                    Height="35" 
+                                    HorizontalAlignment="Right"
+                                    Margin="0,0,10,10" 
+                                    VerticalAlignment="Bottom"
+                                    Grid.Row="1">
+                                    <Button.Triggers>
+                                        <EventTrigger RoutedEvent="Button.Click">
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <BooleanAnimationUsingKeyFrames Storyboard.TargetName="DeleteConfirmPopup" Storyboard.TargetProperty="IsOpen">
+                                                        <DiscreteBooleanKeyFrame KeyTime="0" Value="False"/>
+                                                    </BooleanAnimationUsingKeyFrames>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                    </Button.Triggers>
+                                </Button>
+                            </StackPanel>
+
+                        </Grid>
+                    </Border>
+                </Controls:AnimationContentControl>
+            </Controls:MetroPopup>
         </Grid>
     </Controls:MetroContentControl>
 </Page>

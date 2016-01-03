@@ -17,7 +17,7 @@
         <Converters:DoubleMultiConverter x:Key="DoubleMultiConverter"/>
     </Page.Resources>
     <Page.Background>
-        <StaticResource ResourceKey="DefaultBackgroundBrush"/>
+        <StaticResource ResourceKey="AccentColorBrush"/>
     </Page.Background>
 
     <controls:MetroContentControl>
@@ -37,10 +37,11 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="5"/>
                 </Grid.RowDefinitions>
-                <controls1:TitleBarControl 
+                <controls1:TitleBarControl
 					Title="{Binding SonarConfigPageName, Mode=OneWay, Source={StaticResource Resources}}"
 					Grid.Row ="0"
 					Grid.Column ="0"
+                    BackButtonVisibility="Hidden"
 					Grid.ColumnSpan ="2"
 					HorizontalAlignment ="Stretch"/>
             </Grid>
@@ -50,18 +51,21 @@
 				PanningMode="VerticalOnly">
                 <StackPanel Width="{Binding ActualWidth, ConverterParameter=0.8, Converter={StaticResource DoubleMultiConverter}, ElementName=RootGrid, Mode=OneWay}">
                     <!--端口-->
-                    <ToggleButton x:Name="Connection" Background="{StaticResource AccentColorBrush4}"
+                    <!--StackPanel  Visibility="{Binding ShowInPage, ConverterParameter=TrueToVisible, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <ToggleButton x:Name="Connection" Foreground="White" Background="{StaticResource DefaultBackgroundBrush}"
                                   IsChecked ="False"
-                                  Content="网络连接与传感器连接设置"/>
+                                  Content="网络连接与传感器连接设置" FontFamily="Microsoft YaHei UI"/>
                     <UniformGrid Columns="2" Visibility="{Binding IsChecked, ConverterParameter=TrueToVisible, Converter={StaticResource BoolToVisibilityConverter}, ElementName=Connection}">
                         <StackPanel Orientation="Horizontal" Margin="4,4,0,4">
                             <TextBlock FontSize="16" VerticalAlignment="Center" Text=" 声纳主控网络地址："/>
                             <TextBox  Margin="15,4,4,4" Width="200" Text="{Binding IpAddr}" Background="{x:Null}" Foreground="White"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="4,4,0,4">
-                            <TextBlock Margin="15,0,0,0" FontSize="16" VerticalAlignment="Center" Text=" 声纳主控网络端口："/>
+                            <TextBlock Margin="15,0,0,0" FontSize="16" VerticalAlignment="Center" Text=" 声纳数据端口："/>
                             <TextBox  Margin="15,4,4,4" Width="100" Text="{Binding IpPort}" Background="{x:Null}" Foreground="White"/>
-                        </StackPanel>
+                                <TextBlock Margin="15,0,0,0" FontSize="16" VerticalAlignment="Center" Text=" 声纳命令端口："/>
+                                <TextBox  Margin="15,4,4,4" Width="100" Text="{Binding IpCmdPort}" Background="{x:Null}" Foreground="White"/>
+                            </StackPanel>
 
                     </UniformGrid>
                     
@@ -87,10 +91,11 @@
                              VerticalAlignment="Center" SelectedIndex="{Binding SelectRate}" HorizontalAlignment="Center" />
                         </StackPanel>
                     </UniformGrid>
+                    </-->
                     <!--sonar-->
-                    <ToggleButton x:Name="SonarConfigButton" Background="{StaticResource AccentColorBrush4}"
+                    <ToggleButton x:Name="SonarConfigButton" Foreground="White" Background="{StaticResource DefaultBackgroundBrush}"
                                   IsChecked ="False"
-                                  Content="声纳参数设置"/>
+                                  Content="声纳参数设置" FontFamily="Microsoft YaHei UI"/>
                     <StackPanel Visibility="{Binding IsChecked, ConverterParameter=TrueToVisible, Converter={StaticResource BoolToVisibilityConverter}, ElementName=SonarConfigButton}">
                         <UniformGrid Columns="2">
                             <StackPanel Orientation="Horizontal" Margin="4,4,0,4">
@@ -188,13 +193,23 @@
                     </StackPanel>
                 </StackPanel>
             </ScrollViewer>
-            <Grid Grid.Row="2" Background="{StaticResource AppBarDefaultBrush}" Grid.Column="0" Grid.ColumnSpan="3">
+            <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <StackPanel Orientation="Horizontal" Grid.Column="1" HorizontalAlignment="Right">
-                    <Button x:Name="SaveGlobalSetting" Style="{StaticResource SaveResultAppBarButtonStyle}" Command="{Binding SaveCommand}"/>
+                <StackPanel Orientation="Horizontal" Visibility="{Binding ShowInPage, ConverterParameter=TrueToVisible, Converter={StaticResource BoolToVisibilityConverter}}" Grid.Column="0" HorizontalAlignment="Center">
+                    <Button x:Name="SelectSetting"  Style="{StaticResource SelectAppBarButtonStyle}" Command="{Binding LoadCommand}"/>
+                    <TextBlock VerticalAlignment="Bottom" FontSize="16" Margin="-80,0,0,0">载入参数</TextBlock>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal"  Visibility="{Binding ShowInPage, ConverterParameter=TrueToVisible, Converter={StaticResource BoolToVisibilityConverter}}" Grid.Column="1" HorizontalAlignment="Center">
+                    <Button x:Name="SaveASSetting"  Style="{StaticResource SaveResultAppBarButtonStyle}" Command="{Binding SaveAsCommand}" />
+                    <TextBlock VerticalAlignment="Bottom" FontSize="16" Margin="-75,0,0,0">另存为</TextBlock>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal"  Visibility="{Binding ShowInPage, ConverterParameter=TrueToVisible, Converter={StaticResource BoolToVisibilityConverter}}"  Grid.Column="2" HorizontalAlignment="Center">
+                    <Button x:Name="SavePara" Style="{StaticResource DoneAppBarButtonStyle}" Command="{Binding SaveAndRun}"/>
+                    <TextBlock VerticalAlignment="Bottom" FontSize="16" Margin="-95,0,0,0">使用当前参数</TextBlock>
                 </StackPanel>
             </Grid>
         </Grid>

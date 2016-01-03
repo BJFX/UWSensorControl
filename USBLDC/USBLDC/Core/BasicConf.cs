@@ -53,9 +53,19 @@ namespace USBLDC.Core
             string[] str = {"Net", "DataPort"};
             return GetValue(str);
         }
+        public string GetNetCmdPort()
+        {
+            string[] str = { "Net", "CmdPort" };
+            return GetValue(str);
+        }
         public bool SetNetPort(string newport)
         {
             string[] str = {"Net", "DataPort" };
+            return SetValue(str, newport);
+        }
+        public bool SetCmdPort(string newport)
+        {
+            string[] str = { "Net", "CmdPort" };
             return SetValue(str, newport);
         }
         public string GetPoseIP()

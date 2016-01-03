@@ -48,5 +48,6 @@
                 return _SonarConfigViewModel;
             }
         }
+        
     }
 }

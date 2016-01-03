@@ -13,9 +13,10 @@ namespace USBLDC.Comm
         private static INetCore _netInstance;
         private ITCPClientService _tcpPoseService;
         private ITCPClientService _tcpDataService;
-
+        private ITCPClientService _tcpCmdService;
         private TcpClient _posetcpClient;
         private TcpClient _datatcpClient;
+        private TcpClient _cmdtcpClient;
         private BasicConf _conf;
         private Observer<DataEventArgs> _dataObserver;
 
@@ -36,10 +37,15 @@ namespace USBLDC.Comm
         {
             _conf = conf;
             _dataObserver = observe;
+
         }
         public ITCPClientService TCPDataService
         {
             get { return _tcpDataService ?? (_tcpDataService = new TcpService()); }
+        }
+        public ITCPClientService TCPCmdService
+        {
+            get { return _tcpCmdService ?? (_tcpCmdService = new TcpService()); }
         }
         public ITCPClientService TCPPoseService
         {
@@ -48,11 +54,21 @@ namespace USBLDC.Comm
         private bool CreateTCPService(BasicConf conf)
         {
             // 同步方法，会阻塞进程，调用init用task
-            TCPDataService.ConnectSync();
-            TCPPoseService.ConnectSync();
-            TCPDataService.Register(NetDataObserver);
-            TCPPoseService.Register(NetDataObserver);
-            if (TCPDataService.Connected && TCPDataService.Start() && TCPPoseService.Connected && TCPPoseService.Start())
+            if (!SonarIsOK)
+            {
+                TCPDataService.ConnectSync();
+                TCPDataService.Register(NetDataObserver);
+                TCPCmdService.ConnectSync();
+                TCPCmdService.Register(NetDataObserver);
+                
+            }
+            if (!PoseIsOK)
+            {
+                TCPPoseService.ConnectSync();
+                TCPPoseService.Register(NetDataObserver);
+                
+            }
+            if (SonarIsOK && PoseIsOK)
                 return true;
             return false;
         }
@@ -77,21 +93,33 @@ namespace USBLDC.Comm
             {
                 throw new Exception("已初始化");
             }
+
             _datatcpClient = new TcpClient { SendTimeout = 1000 };
+            _cmdtcpClient = new TcpClient { SendTimeout = 1000 };
             _posetcpClient = new TcpClient {SendTimeout = 1000};
+            IsInitialize = true;
             try
             {
                 if (!TCPDataService.Init(_datatcpClient, IPAddress.Parse(_conf.GetIP()), int.Parse(_conf.GetNetPort())))
-                    throw new Exception("通信网络初始化失败");
+                    throw new Exception("数据端口初始化失败");
+                if (!TCPCmdService.Init(_cmdtcpClient, IPAddress.Parse(_conf.GetIP()), int.Parse(_conf.GetNetCmdPort())))
+                    throw new Exception("命令端口初始化失败");
+            }
+            catch (Exception)
+            {
+                IsInitialize = false;
+            }
+            try
+            {
+                
                 if (!TCPPoseService.Init(_posetcpClient, IPAddress.Parse(_conf.GetPoseIP()), int.Parse(_conf.GetPosePort())))
                     throw new Exception("姿态传感器网络初始化失败");
             }
             catch (Exception)
             {
-                throw new Exception("网络配置初始化失败");
+                IsInitialize = false;
             }
-
-            IsInitialize = true;
+            
         }
 
         public void Stop()
@@ -100,6 +128,7 @@ namespace USBLDC.Comm
             {
                 TCPDataService.UnRegister(NetDataObserver);
                 TCPDataService.Stop();
+                TCPCmdService.Stop();
                 TCPPoseService.UnRegister(NetDataObserver);
                 TCPPoseService.Stop();
             }
@@ -110,10 +139,8 @@ namespace USBLDC.Comm
         public void Start()
         {
             IsWorking = false;
-            if (_conf == null || _dataObserver == null)
-                throw new Exception("无法设置网络通信");
-            if (!CreateTCPService(_conf)) throw new Exception("通信服务无法启动");
-            IsWorking = true;
+            IsWorking = CreateTCPService(_conf);
+
         }
 
         public bool IsWorking { get; set; }
@@ -124,6 +151,25 @@ namespace USBLDC.Comm
 
 
 
-      
+
+
+
+        public bool SonarIsOK
+        {
+            get
+            {
+                return (TCPDataService.Connected&& TCPCmdService.Connected);
+            }
+        }
+
+
+        public bool PoseIsOK
+        {
+            get
+            {
+                return TCPPoseService.Connected;
+            }
+        }
+        
     }
 }
