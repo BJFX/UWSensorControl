@@ -158,7 +158,7 @@ namespace USBLDC.Comm
         {
             get
             {
-                return (TCPDataService.Connected&& TCPCmdService.Connected);
+                return (TCPDataService.Connected && TCPCmdService.Connected);
             }
         }
 

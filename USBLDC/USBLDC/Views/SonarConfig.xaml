@@ -94,7 +94,7 @@
                     </-->
                     <!--sonar-->
                     <ToggleButton x:Name="SonarConfigButton" Foreground="White" Background="{StaticResource DefaultBackgroundBrush}"
-                                  IsChecked ="False"
+                                  IsChecked ="True"
                                   Content="声纳参数设置" FontFamily="Microsoft YaHei UI"/>
                     <StackPanel Visibility="{Binding IsChecked, ConverterParameter=TrueToVisible, Converter={StaticResource BoolToVisibilityConverter}, ElementName=SonarConfigButton}">
                         <UniformGrid Columns="2">

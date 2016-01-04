@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
@@ -16,6 +17,7 @@ using USBLDC.Events;
 using USBLDC.Structure;
 using USBLDC.Helpers;
 using System.Windows.Controls;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 namespace USBLDC.ViewModel
 {
@@ -205,8 +207,9 @@ namespace USBLDC.ViewModel
         private async void ExecuteStartCMD(object sender, ExecutedRoutedEventArgs eventArgs)
         {
 
-            if (!UnitCore.Instance.NetCore.SonarIsOK || !UnitCore.Instance.NetCore.PoseIsOK)
+            if (!UnitCore.Instance.NetCore.SonarIsOK)
             {
+                UnitCore.Instance.NetCore.Stop();
                 UnitCore.Instance.NetCore.Initialize();
                 UnitCore.Instance.NetCore.Start();
             }
@@ -215,9 +218,39 @@ namespace USBLDC.ViewModel
                 UnitCore.Instance.CommCore.Initialize();
                 UnitCore.Instance.CommCore.Start();
             }
+            await TaskEx.Delay(2000);
             if (UnitCore.Instance.NetCore.SonarIsOK != true)
             {
                 UnitCore.Instance.EventAggregator.PublishMessage(new LogEvent("无法与声纳通信，请检查网络连接！", LogType.OnlyInfo));
+                return;
+            }
+            var sc = UnitCore.Instance.SonarConfiguration;
+            uint velcmd = sc.VelCmd;
+            if ((velcmd & 0x03) == 0 || ((velcmd>>2) & 0x01)==1)
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.CheckFileExists = true;
+                openFileDialog.CheckPathExists = true;
+                openFileDialog.Title = "选择声速剖面文件";
+                openFileDialog.Filter = "txt文件|*.txt|所有文件(*.*)|*.*";
+                if (openFileDialog.ShowDialog() == true)
+                {
+                    SettleSoundFile SoundFile = null;
+                    try
+                    {
+                        SoundFile = new SettleSoundFile(openFileDialog.FileName);//整理声速剖面文件
+                    }
+                    catch (Exception)
+                    {
+                        UnitCore.Instance.EventAggregator.PublishMessage(new LogEvent("读取声速剖面文件失败！", LogType.OnlyInfo));
+                        return;
+                    }
+                    UnitCore.Instance.SoundFile = SoundFile;
+                }
+                else
+                {
+                    return;
+                }
             }
             Task<bool> ret;
             UnitCore.Instance.SonarConfiguration.Cmd = 1;
@@ -227,7 +260,7 @@ namespace USBLDC.ViewModel
             {
                 var md = new MetroDialogSettings();
                 md.AffirmativeButtonText = "关闭";
-                await MainFrameViewModel.pMainFrame.DialogCoordinator.ShowMessageAsync(MainFrameViewModel.pMainFrame, "开始工作",
+                await MainFrameViewModel.pMainFrame.DialogCoordinator.ShowMessageAsync(MainFrameViewModel.pMainFrame, "开始工作失败",
                     UnitCore.Instance.NetCore.Error, MessageDialogStyle.Affirmative, md);
             }
             else
@@ -240,7 +273,7 @@ namespace USBLDC.ViewModel
                 var textBlock = dialog.FindChild<TextBlock>("MessageTextBlock");
                 textBlock.Text = "命令发送成功！";
 
-                await TaskEx.Delay(2000);
+                await TaskEx.Delay(1000);
                 ShowCmd = false;
                 await MainFrameViewModel.pMainFrame.DialogCoordinator.HideMetroDialogAsync(MainFrameViewModel.pMainFrame, dialog);
             }
@@ -300,6 +333,7 @@ namespace USBLDC.ViewModel
                     UpdatePoseView(message);
                     break;
                 case (int)TypeId.AjustPos:
+                case (int)TypeId.RawPos:
                     UpdatePositionView(message);
                     break;
 
@@ -322,20 +356,25 @@ namespace USBLDC.ViewModel
 
         private void UpdatePositionView(ShowStructureInfo message)
         {
-            var info = message.Info as AjustPositionInfo;
-            coordinateX = info.XAjust;
-            coordinateY = info.YAjust;
-            coordinateZ = info.ZAjust;
-            SonarStatus = info.Status;
-            targetLat = info.AjustLat;
-            targetLong = info.AjustLong;
-            Noise = info.Noise;
-            var x = -coordinateX;//坐标轴x相反，取反,5是画图系数
-            var y = -coordinateY;//坐标轴y相反，取反
-            var z = -coordinateY;//坐标轴z相反，取反
-            ObjectCenter = x.ToString("F02") +","+ y.ToString("F02")+"," + z.ToString("F02");
-            if((x*x+y*y+z*z)>1)
-                ObjectVisibility = true;
+            if (message.Id == (int) TypeId.AjustPos)
+            {
+                var info = message.Info as AjustPositionInfo;
+                coordinateX = info.XAjust;
+                coordinateY = info.YAjust;
+                coordinateZ = info.ZAjust;
+                SonarStatus = info.Status;
+                targetLat = info.AjustLat;
+                targetLong = info.AjustLong;
+                Noise = info.Noise;
+                var x = -coordinateX;//坐标轴x相反，取反,5是画图系数
+                var y = -coordinateY;//坐标轴y相反，取反
+                var z = -coordinateY;//坐标轴z相反，取反
+                ObjectCenter = x.ToString("F02") + "," + y.ToString("F02") + "," + z.ToString("F02");
+                if ((x * x + y * y + z * z) > 1)
+                    ObjectVisibility = true;
+            }
+           
+            
         }
 
         private void UpdateGpsView(ShowStructureInfo message)

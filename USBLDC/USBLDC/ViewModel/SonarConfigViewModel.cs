@@ -7,6 +7,7 @@ using System.IO.Ports;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Windows.Forms;
 using System.Windows.Input;
 using MahApps.Metro.Controls.Dialogs;
 using TinyMetroWpfLibrary.Events;
@@ -14,6 +15,7 @@ using TinyMetroWpfLibrary.ViewModel;
 using USBLDC.Core;
 using USBLDC.Events;
 using USBLDC.Structure;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 namespace USBLDC.ViewModel
 {
@@ -42,8 +44,8 @@ namespace USBLDC.ViewModel
                 
                 var sc = UnitCore.Instance.SonarConfiguration;
                 uint velcmd = sc.VelCmd;
-                SurVelSrcIndex = velcmd & 0x11;
-                AvgVelIndex = velcmd & 0x100;
+                SurVelSrcIndex = velcmd & 0x03;
+                AvgVelIndex = (velcmd>>2) & 0x01;
                 SurVel = sc.SurVel;
                 AvgVel = sc.AvgVel;
                 FixedGain = sc.FixedGain;
@@ -191,11 +193,10 @@ namespace USBLDC.ViewModel
         {
             try
             {
-                
-                var sc = UnitCore.Instance.SonarConfiguration;
+                var sc = new SonarConfig();
                 sc.VelCmd = SurVelSrcIndex;
                 if (AvgVelIndex == 1)
-                    sc.VelCmd = sc.VelCmd | 0x0100;
+                    sc.VelCmd = sc.VelCmd | 0x04;
                 sc.SurVel = SurVel;
                 sc.AvgVel = AvgVel;
                 sc.FixedGain = FixedGain;
@@ -214,17 +215,29 @@ namespace USBLDC.ViewModel
                 sc.SonarGPSx = SonarGPSx;
                 sc.SonarGPSy = SonarGPSy;
                 sc.SonarGPSz = SonarGPSz;
-                if(!UnitCore.Instance.UpdateSonarConfig(false)) throw new Exception("声纳参数保存失败");
+                /////////////////////////////////////////////////////////////////////////////////////
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Filter = "参数文件 (*.dat)|*.dat";
+                saveFileDialog.FilterIndex = 2;
+                saveFileDialog.Title = "保存参数文件";
+                saveFileDialog.RestoreDirectory = true;
+                saveFileDialog.OverwritePrompt = true;
+                saveFileDialog.ValidateNames = true;
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    if (saveFileDialog.FileName!="")
+                    {
+                        var bw = new FileStream(saveFileDialog.FileName, FileMode.OpenOrCreate);
+                        bw.Write(sc.SavePakage(), 0, sc.SavePakage().Length);
+                        bw.Close();
+                    }
+                } 
             }
             catch (Exception ex)
             {
                 UnitCore.Instance.EventAggregator.PublishMessage(new ErrorEvent(ex, LogType.Both));
                 return;
             }
-            var md = new MetroDialogSettings();
-            md.AffirmativeButtonText = "好的";
-            MainFrameViewModel.pMainFrame.DialogCoordinator.ShowMessageAsync(MainFrameViewModel.pMainFrame, "保存成功",
-                "修改后的IP地址和端口配置将在下次启动程序时应用", MessageDialogStyle.Affirmative, md);
         }
 
 
@@ -241,29 +254,42 @@ namespace USBLDC.ViewModel
         {
             try
             {
-                var sc = UnitCore.Instance.SonarConfiguration;
-                sc.VelCmd = SurVelSrcIndex;
-                if (AvgVelIndex == 1)
-                    sc.VelCmd = sc.VelCmd | 0x0100;
-                sc.SurVel = SurVel;
-                sc.AvgVel = AvgVel;
-                sc.FixedGain = FixedGain;
-                sc.TVGCmd = TVGCmd;
-                sc.FixedTVG = FixedTVG;
-                sc.TVGSampling = TVGSampling;
-                sc.TVGSamples = TVGSamples;
-                sc.TVGA1 = TVGA1;
-                sc.TVGA2 = TVGA2;
-                sc.TVGA3 = TVGA3;
-                sc.PingPeriod = PingPeriod;
-                sc.ADSaved = ADSaved;
-                sc.PoseSaved = PoseSaved;
-                sc.PosSaved = PosSaved;
-                sc.SonarDepth = SonarDepth;
-                sc.SonarGPSx = SonarGPSx;
-                sc.SonarGPSy = SonarGPSy;
-                sc.SonarGPSz = SonarGPSz;
-                if (!UnitCore.Instance.UpdateSonarConfig(false)) throw new Exception("声纳参数保存失败");
+                var sc = new SonarConfig();
+                Microsoft.Win32.OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.CheckFileExists = true;
+                openFileDialog.CheckPathExists = true;
+                openFileDialog.Title = "选择参数文件";
+                openFileDialog.Filter = "参数文件 (*.dat)|*.dat";
+                if (openFileDialog.ShowDialog() == true)
+                {
+                    if (!sc.Parse(File.ReadAllBytes(openFileDialog.FileName))) throw new Exception("声纳参数读取失败");
+                }
+                else
+                {
+                    return;
+                }
+                uint velcmd = sc.VelCmd;
+                SurVelSrcIndex = velcmd & 0x03;
+                AvgVelIndex = (velcmd>>2) & 0x01;
+                SurVel = sc.SurVel;
+                AvgVel = sc.AvgVel;
+                FixedGain = sc.FixedGain;
+                TVGCmd = sc.TVGCmd;
+                FixedTVG = sc.FixedTVG;
+                TVGSampling = sc.TVGSampling;
+                TVGSamples = sc.TVGSamples;
+                TVGA1 = sc.TVGA1;
+                TVGA2 = sc.TVGA2;
+                TVGA3 = sc.TVGA3;
+                PingPeriod = sc.PingPeriod;
+                ADSaved = sc.ADSaved;
+                PoseSaved = sc.PoseSaved;
+                PosSaved = sc.PosSaved;
+                SonarDepth = sc.SonarDepth;
+                SonarGPSx = sc.SonarGPSx;
+                SonarGPSy = sc.SonarGPSy;
+                SonarGPSz = sc.SonarGPSz;
+                
             }
             catch (Exception ex)
             {
@@ -289,7 +315,7 @@ namespace USBLDC.ViewModel
                 var sc = UnitCore.Instance.SonarConfiguration;
                 sc.VelCmd = SurVelSrcIndex;
                 if (AvgVelIndex == 1)
-                    sc.VelCmd = sc.VelCmd | 0x0100;
+                    sc.VelCmd = sc.VelCmd | 0x04;
                 sc.SurVel = SurVel;
                 sc.AvgVel = AvgVel;
                 sc.FixedGain = FixedGain;
@@ -308,8 +334,8 @@ namespace USBLDC.ViewModel
                 sc.SonarGPSx = SonarGPSx;
                 sc.SonarGPSy = SonarGPSy;
                 sc.SonarGPSz = SonarGPSz;
-                if (!UnitCore.Instance.UpdateSonarConfig(false)) throw new Exception("声纳参数保存失败");
-                UnitCore.Instance.EventAggregator.PublishMessage(new GoBackNavigationRequest());
+                if (!UnitCore.Instance.UpdateSonarConfig(false)) throw new Exception("无法保存默认参数");
+                UnitCore.Instance.EventAggregator.PublishMessage(new GoHomePageNavigationEvent());
             }
             catch (Exception ex)
             {

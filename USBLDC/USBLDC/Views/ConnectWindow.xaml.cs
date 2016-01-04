@@ -22,6 +22,7 @@ namespace USBLDC.Views
         private DispatcherTimer t = null;
         List<string> RateInfo = new List<string>();
         List<string> CommInfo = new List<string>();
+        private int exit = -1;//-1：非正常退出，0:正常工作，1：退出程序，2：修改配置
         public ConnectWindow()
         {
             InitializeComponent();
@@ -40,6 +41,8 @@ namespace USBLDC.Views
 
         private void ModifyPara_Click(object sender, RoutedEventArgs e)
         {
+            exit = 2;
+            this.Close();
             UnitCore.Instance.EventAggregator.PublishMessage(new GoSonarConfigEvent(false));
         }
 
@@ -50,11 +53,14 @@ namespace USBLDC.Views
 
         private void StartWork_Click(object sender, RoutedEventArgs e)
         {
+            exit = 0;
+            this.Close();
             UnitCore.Instance.EventAggregator.PublishMessage(new GoHomePageNavigationEvent());
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
+            exit = 1;
             this.Close();
             MainFrameViewModel.pMainFrame.ExitProgram();
         }
@@ -199,6 +205,7 @@ namespace USBLDC.Views
             SonarConnectStatus.Visibility = Visibility.Collapsed;
             POSEConnectStatus.Visibility = Visibility.Collapsed;
             GPSConnectStatus.Visibility = Visibility.Collapsed;
+            StartWork.Visibility = Visibility.Hidden;
             UnitCore.Instance.Start();
             Task.Factory.StartNew(() =>
             {
@@ -213,6 +220,16 @@ namespace USBLDC.Views
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
             SetPopUpControl.IsOpen = false;
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            if (exit == -1)
+            {
+                UnitCore.Instance.Stop();
+                MainFrameViewModel.pMainFrame.ExitProgram();
+            }
+                
         }
 
 

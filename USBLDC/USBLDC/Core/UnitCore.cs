@@ -35,7 +35,7 @@ namespace USBLDC.Core
         private Comm.Observer<DataEventArgs> _observer; 
         private bool _serviceStarted = false;
         public string Error { get; private set; }
-
+        public SettleSoundFile SoundFile = null;
         public Mutex ACMMutex { get; set; }//全局解析锁
 
 
@@ -76,7 +76,7 @@ namespace USBLDC.Core
             if (conf == null)
                 conf = BasicConf.MyExecPath + "\\" + "DefConf.dat";
 
-            if (File.Exists(conf)&&bRead)
+            if (bRead)
             {
                  return SonarConfiguration.Parse(File.ReadAllBytes(conf));
             }

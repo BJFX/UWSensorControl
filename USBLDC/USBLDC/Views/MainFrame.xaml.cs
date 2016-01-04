@@ -16,8 +16,6 @@ namespace USBLDC.Views
         {
             InitializeComponent();
             MainFrameViewModel.pMainFrame.DialogCoordinator = DialogCoordinator.Instance;
-            //DataContext = MainFrameViewModel.pMainFrame;
-
             Kernel.Instance.Controller.SetRootFrame(ContentFrame);
         }
 
@@ -34,8 +32,7 @@ namespace USBLDC.Views
             });
             Splasher.Splash = new ConnectWindow();
             Splasher.ShowSplash();
-            UnitCore.Instance.EventAggregator.PublishMessage(new GoHomePageNavigationEvent());
-            
+            //UnitCore.Instance.EventAggregator.PublishMessage(new GoHomePageNavigationEvent());
         }
 
         private void MetroWindow_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)

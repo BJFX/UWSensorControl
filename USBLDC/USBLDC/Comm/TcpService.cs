@@ -48,13 +48,13 @@ namespace USBLDC.Comm
         }
         public void ConnectSync()
         {
-            if (_tcpClient == null) return;
+            if (_tcpClient == null || _tcpClient.Client==null) return;
             try
             {
                 // _tcpClient.Connect(IP, port);
                 var result = _tcpClient.BeginConnect(IP, port, null, null);
                 var success = result.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(1));
-                if (!_tcpClient.Connected)
+                if (_tcpClient.Client == null||!_tcpClient.Connected)
                 {
                     throw new Exception("连接失败");
                 }
@@ -106,7 +106,7 @@ namespace USBLDC.Comm
             }
         }
 
-        public bool Connected { get { return ReturnTcpClient().Connected; } }
+        public bool Connected { get { return (ReturnTcpClient().Client != null && ReturnTcpClient().Connected); } }
     }
     public class TcpService : TCPBaseService
     {

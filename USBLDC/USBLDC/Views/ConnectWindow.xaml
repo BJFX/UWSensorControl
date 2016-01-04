@@ -7,12 +7,11 @@
       xmlns:picker="clr-namespace:TinyMetroWpfLibrary.FrameControls.Picker;assembly=TinyMetroWpfLibrary"
       xmlns:Controls="clr-namespace:TinyMetroWpfLibrary.Controls;assembly=TinyMetroWpfLibrary.Controls"
       xmlns:converters="clr-namespace:USBLDC.Converters"
-      DataContext="{Binding ConnectWindowModel, Source={StaticResource ViewModelLocator}}" 
       x:Class="USBLDC.Views.ConnectWindow" 
       mc:Ignorable="d" WindowStyle="None"
         Title="ConnectWindow"
         WindowStartupLocation="CenterScreen" ShowInTaskbar="False" ResizeMode="NoResize" TextBlock.Foreground="White"
-	     Width="700" Height="350" Loaded="Window_Loaded" Topmost="True">
+	     Width="700" Height="350" Loaded="Window_Loaded" Topmost="True" Closed="Window_Closed">
 
     <Window.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
@@ -73,7 +72,7 @@
             </UniformGrid>
         </Grid>
     </Border>
-        <Controls:PopupMessageControl Background="#0B3B6B" Name="SetPopUpControl" IsOpen="True">
+        <Controls:PopupMessageControl Background="#0B3B6B" Name="SetPopUpControl" IsOpen="False">
             <StackPanel Orientation="Vertical">
                 <StackPanel>
                     <ToggleButton x:Name="Connection" Foreground="White" Background="{StaticResource DefaultBackgroundBrush}"

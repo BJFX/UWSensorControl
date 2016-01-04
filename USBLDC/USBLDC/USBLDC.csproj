@@ -138,6 +138,7 @@
     <Compile Include="Events\GoSonarConfigEvent.cs" />
     <Compile Include="Events\ShowStructureInfo.cs" />
     <Compile Include="Helpers\GpsHelper.cs" />
+    <Compile Include="Helpers\SettleSoundFile.cs" />
     <Compile Include="Helpers\TreeHelper.cs" />
     <Compile Include="Helpers\USBLTraceService.cs" />
     <Compile Include="Splasher.cs" />

@@ -8,6 +8,9 @@ namespace USBLDC.Core
 {
     public class USBLDataObserver : Comm.Observer<DataEventArgs>
     {
+        const int maxDepth = 13000;//最大深度
+        int[] SVPd = new int[maxDepth + 31];
+        double[] SVPc = new double[maxDepth + 31];
         StructureInterface gpsInfo = new GPSInfo();
         StructureInterface adInfo = new ADInfo();
         StructureInterface poseInfo = new PosetureInfo();
@@ -35,14 +38,21 @@ namespace USBLDC.Core
                 case (int)TypeId.SONARCONFIG:
                     info = scInfo;
                     break;
-                case (int)TypeId.AjustPos:
-                    info = AjustposInfo;
-                    break;
                 default:
                     break;
             }
             if (info.Parse(e.Bytes))
             {
+                var sc = UnitCore.Instance.SonarConfiguration;
+                uint velcmd = sc.VelCmd;
+                if ((velcmd & 0x11) == 0)
+                {
+
+                }
+                else if ((velcmd & 0x11) == 1)
+                {
+                    
+                }
                 UnitCore.Instance.EventAggregator.PublishMessage(new ShowStructureInfo(info, e.Id));
             }
         }
