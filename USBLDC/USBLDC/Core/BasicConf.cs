@@ -38,6 +38,16 @@ namespace USBLDC.Core
         {
             return XmlHelper.SetConfigValue(xmldoc, str,value);
         }
+        public string GetVelProfileName()
+        {
+            string[] str = { "Profile", "Name" };
+            return GetValue(str);
+        }
+        public bool SetVelProfileName(string filename)
+        {
+            string[] str = { "Profile", "Name" };
+            return SetValue(str, filename);
+        }
         public string GetIP()
         {
             string[] str = {"Net", "IP"};

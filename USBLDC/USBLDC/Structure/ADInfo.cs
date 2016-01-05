@@ -76,7 +76,7 @@ namespace USBLDC.Structure
             Length = BitConverter.ToUInt32(bytes, 8);
             return Length;
         }
-        public byte[] SavePakage()//没有包头
+        public byte[] SavePackage()//没有包头
         {
             byte[] bytes = new byte[18480];
             int offset = 0;

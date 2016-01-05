@@ -224,37 +224,42 @@ namespace USBLDC.ViewModel
                 UnitCore.Instance.EventAggregator.PublishMessage(new LogEvent("无法与声纳通信，请检查网络连接！", LogType.OnlyInfo));
                 return;
             }
+            if (UnitCore.Instance.SoundFile == null)
+            {
+                UnitCore.Instance.EventAggregator.PublishMessage(new LogEvent("没有可用的声速剖面文件！", LogType.OnlyInfo));
+                return;
+            }
+            if (!UnitCore.Instance.USBLTraceService.StartService())
+            {
+                UnitCore.Instance.EventAggregator.PublishMessage(new LogEvent("工程设置失败！", LogType.OnlyInfo));
+                return;
+            }
             var sc = UnitCore.Instance.SonarConfiguration;
             uint velcmd = sc.VelCmd;
-            if ((velcmd & 0x03) == 0 || ((velcmd>>2) & 0x01)==1)
+            
+            //处理声速剖面
+            var velarray = UnitCore.Instance.SoundFile.SVPc;
+            var deparray = UnitCore.Instance.SoundFile.SVPd;
+            if ((velcmd & 0x11) == 0)
             {
-                OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.CheckFileExists = true;
-                openFileDialog.CheckPathExists = true;
-                openFileDialog.Title = "选择声速剖面文件";
-                openFileDialog.Filter = "txt文件|*.txt|所有文件(*.*)|*.*";
-                if (openFileDialog.ShowDialog() == true)
+                int id = 0;
+                foreach (var d in deparray)
                 {
-                    SettleSoundFile SoundFile = null;
-                    try
+                    if (d == sc.SonarDepth)
                     {
-                        SoundFile = new SettleSoundFile(openFileDialog.FileName);//整理声速剖面文件
+                        break;
                     }
-                    catch (Exception)
-                    {
-                        UnitCore.Instance.EventAggregator.PublishMessage(new LogEvent("读取声速剖面文件失败！", LogType.OnlyInfo));
-                        return;
-                    }
-                    UnitCore.Instance.SoundFile = SoundFile;
+                    id++;
                 }
-                else
-                {
-                    return;
-                }
+                sc.SurVel = (float)velarray[id];
+            }
+            if ((velcmd & 0x11) == 1)
+            {
+                sc.AvgVel = (float) velarray.Average();
             }
             Task<bool> ret;
             UnitCore.Instance.SonarConfiguration.Cmd = 1;
-            ret =  UnitCore.Instance.NetCore.SendCMD(UnitCore.Instance.SonarConfiguration.SavePakage());
+            ret =  UnitCore.Instance.NetCore.SendCMD(UnitCore.Instance.SonarConfiguration.SavePackage());
             await ret;
             if (ret.Result == false)
             {
@@ -298,7 +303,7 @@ namespace USBLDC.ViewModel
                 return;
             Task<bool> ret;
             UnitCore.Instance.SonarConfiguration.Cmd = 0;
-            ret = UnitCore.Instance.NetCore.SendCMD(UnitCore.Instance.SonarConfiguration.SavePakage());
+            ret = UnitCore.Instance.NetCore.SendCMD(UnitCore.Instance.SonarConfiguration.SavePackage());
             await ret;
             if (ret.Result == false)
             {

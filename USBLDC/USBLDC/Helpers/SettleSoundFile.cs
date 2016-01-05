@@ -73,8 +73,7 @@ namespace USBLDC.Helpers
                 }
                 if (count < 11)
                 { 
-                    System.Windows.Forms.MessageBox.Show("声速剖面数据过少或有问题!");
-                    return;
+                    throw  new Exception("声速剖面数据过少或有问题!");
                 }
 
                 double[] DepthVector4 = new double[11];

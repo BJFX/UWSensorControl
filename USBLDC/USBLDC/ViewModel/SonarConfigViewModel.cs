@@ -14,6 +14,7 @@ using TinyMetroWpfLibrary.Events;
 using TinyMetroWpfLibrary.ViewModel;
 using USBLDC.Core;
 using USBLDC.Events;
+using USBLDC.Helpers;
 using USBLDC.Structure;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
@@ -41,7 +42,7 @@ namespace USBLDC.ViewModel
             
             try
             {
-                
+                Profile = BasicConf.GetInstance().GetVelProfileName();
                 var sc = UnitCore.Instance.SonarConfiguration;
                 uint velcmd = sc.VelCmd;
                 SurVelSrcIndex = velcmd & 0x03;
@@ -177,7 +178,11 @@ namespace USBLDC.ViewModel
             get { return GetPropertyValue(() => SonarGPSz); }
             set { SetPropertyValue(() => SonarGPSz, value); }
         }
-
+        public string Profile
+        {
+            get { return GetPropertyValue(() => Profile); }
+            set { SetPropertyValue(() => Profile, value); }
+        }
         public ICommand SaveAsCommand
         {
             get { return GetPropertyValue(() => SaveAsCommand); }
@@ -228,7 +233,7 @@ namespace USBLDC.ViewModel
                     if (saveFileDialog.FileName!="")
                     {
                         var bw = new FileStream(saveFileDialog.FileName, FileMode.OpenOrCreate);
-                        bw.Write(sc.SavePakage(), 0, sc.SavePakage().Length);
+                        bw.Write(sc.SavePackage(), 0, sc.SavePackage().Length);
                         bw.Close();
                     }
                 } 
@@ -312,6 +317,26 @@ namespace USBLDC.ViewModel
         {
             try
             {
+                FileInfo fi = new FileInfo(Profile);
+                if (fi.Exists)
+                {
+                    SettleSoundFile SoundFile = null;
+                    try
+                    {
+                        SoundFile = new SettleSoundFile(Profile);//整理声速剖面文件
+                    }
+                    catch (Exception)
+                    {
+                        UnitCore.Instance.EventAggregator.PublishMessage(new LogEvent("读取声速剖面文件失败！", LogType.OnlyInfo));
+                        return;
+                    }
+                    UnitCore.Instance.SoundFile = SoundFile;
+                    BasicConf.GetInstance().SetVelProfileName(Profile);
+                }
+                else
+                {
+                    throw new Exception("声速剖面文件不存在！");
+                }
                 var sc = UnitCore.Instance.SonarConfiguration;
                 sc.VelCmd = SurVelSrcIndex;
                 if (AvgVelIndex == 1)
@@ -339,7 +364,7 @@ namespace USBLDC.ViewModel
             }
             catch (Exception ex)
             {
-                UnitCore.Instance.EventAggregator.PublishMessage(new ErrorEvent(ex, LogType.Both));
+                UnitCore.Instance.EventAggregator.PublishMessage(new LogEvent(ex.Message, LogType.OnlyInfo));
                 return;
             }
 

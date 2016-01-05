@@ -42,7 +42,7 @@ namespace USBLDC.Structure
             return false;
         }
 
-        public byte[] SavePakage()
+        public byte[] SavePackage()
         {
             byte[] bytes = new byte[64];
             int offset = 0;

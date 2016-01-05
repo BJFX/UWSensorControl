@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using USBLDC.Core;
+using USBLDC.Structure;
 
 namespace USBLDC.Helpers
 {
@@ -20,6 +21,27 @@ namespace USBLDC.Helpers
             }
            Error = TraceFile.Instance.Errormsg;
             return false;
+        }
+
+        public void SaveAD(ADInfo adInfo)
+        {
+            TraceFile.Instance.SaveAD(adInfo);
+        }
+        public void SaveGPS(GPSInfo gpsInfo)
+        {
+            TraceFile.Instance.SaveGPS(gpsInfo);
+        }
+        public void SavePosition(AjustPositionInfo ajInfo)
+        {
+            TraceFile.Instance.SavePosition(ajInfo);
+        }
+        public void SavePose(PosetureInfo poseinfo)
+        {
+            TraceFile.Instance.SavePose(poseinfo);
+        }
+        public void SaveSonarSetting(SonarConfig scConfig)
+        {
+            TraceFile.Instance.SaveSonarSetting(scConfig);
         }
 
         public void Stop()

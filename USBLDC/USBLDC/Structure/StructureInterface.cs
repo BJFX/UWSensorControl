@@ -8,7 +8,7 @@ namespace USBLDC.Structure
     public interface StructureInterface
     {
         bool Parse(byte[] bytes);
-        byte[] SavePakage();
+        byte[] SavePackage();
 
     }
 

@@ -14,8 +14,8 @@ namespace USBLDC.Core
         public  string  ProjectName { get; set; }
         public  string Path { get; set; }
         public  string  Errormsg { get; set; }
-        public  LogFile GpsFile { get; set; }
-        public  LogFile PoseFile { get; set; }
+        public ADFile GpsFile { get; set; }
+        public ADFile PoseFile { get; set; }
         public  PingFile ADFile { get; set; }
         public  PingFile PosFile { get; set; }
         public  FileStream SonarSetting { get; set; }
@@ -95,56 +95,69 @@ namespace USBLDC.Core
                 throw new Exception("创建文件夹失败！");
             }
         }
-        public  void SaveGPS(string str)
+        public  void SaveGPS(GPSInfo gpsInfo)
         {
             if (GpsFile == null)
             {
-                GpsFile = new LogFile("GPS","dat");
+                GpsFile = new ADFile("GPS","dat");
                 GpsFile.SetFileSizeLimit(GPSFileSize);
                 GpsFile.SetPath(new DirectoryInfo(Path));
                 GpsFile.Create();
 
             }
-            if(GpsFile.Write(str)==0)
+            if (GpsFile.Write(gpsInfo.SavePackage()) == 0)
                 throw new Exception("创建GPS文件失败！");
         }
-        public  void SavePose(string str)
+        public void SavePose(PosetureInfo poseinfo)
         {
             if (PoseFile == null)
             {
-                PoseFile = new LogFile("Pose", "dat");
+                PoseFile = new ADFile("Pose", "dat");
                 PoseFile.SetFileSizeLimit(PoseFileSize);
                 PoseFile.SetPath(new DirectoryInfo(Path));
                 PoseFile.Create();
 
             }
-            if (PoseFile.Write(str) == 0)
+            if (PoseFile.Write(poseinfo.SavePackage()) == 0)
                 throw new Exception("创建Pose文件失败！");
         }
         public  void SaveAD(ADInfo info)
         {
             if (ADFile == null)
             {
-                ADFile = new PingFile(ProjectName,"dat");
+                ADFile = new PingFile(ProjectName,"ad");
                 ADFile.SetPath(new DirectoryInfo(Path));
                 ADFile.Create();
+                ADFile.Write(info.SavePackage());
+                return;
             }
-            if (ADFile.PingID == 0) //还未写入数据
-            {
-                ADFile.Write(info.SavePakage());
-            }
-            else if (ADFile.PingID != info.PingNum) //新的ping号
+            if (ADFile.PingID != info.PingNum) //新的ping号
             {
                 ADFile.Close();
                 ADFile.Create();
-                ADFile.Write(info.SavePakage());
+                
             }
-            else
-            {
-                ADFile.Write(info.SavePakage());
-            }
-        }
+            ADFile.Write(info.SavePackage());
 
+        }
+        public void SavePosition(AjustPositionInfo info)
+        {
+            if (PosFile == null)
+            {
+                PosFile = new PingFile(ProjectName, "pos");
+                PosFile.SetPath(new DirectoryInfo(Path));
+                PosFile.Create();
+                PosFile.Write(info.SavePackage());
+                return;
+            }
+            if (PosFile.PingID != info.raw.PingNum) //新的ping号
+            {
+                PosFile.Close();
+                PosFile.Create();
+            }
+            PosFile.Write(info.SavePackage());
+
+        }
         public  void SaveSonarSetting(SonarConfig scConfig)
         {
             if (SonarSetting == null)
@@ -154,7 +167,7 @@ namespace USBLDC.Core
                 MyExecPath += "SonarConfig";
                 SonarSetting = new FileStream(MyExecPath,FileMode.OpenOrCreate);
             }
-            SonarSetting.Write(scConfig.SavePakage(), 0, 288);
+            SonarSetting.Write(scConfig.SavePackage(), 0, 288);
         }
     }
 }

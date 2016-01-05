@@ -117,7 +117,7 @@ namespace USBLDC.Structure
             return Length;
         }
 
-        public byte[] SavePakage()//带head
+        public byte[] SavePackage()//带head
         {
             byte[] bytes = new byte[288];
             int offset = 0;

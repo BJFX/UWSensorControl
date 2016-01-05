@@ -85,7 +85,7 @@ namespace USBLDC.Core
                 try
                 {
                     var bw = new FileStream(conf, FileMode.OpenOrCreate);
-                    bw.Write(SonarConfiguration.SavePakage(), 0, SonarConfiguration.SavePakage().Length);
+                    bw.Write(SonarConfiguration.SavePackage(), 0, SonarConfiguration.SavePackage().Length);
                     bw.Close();
                     return true;
                 }

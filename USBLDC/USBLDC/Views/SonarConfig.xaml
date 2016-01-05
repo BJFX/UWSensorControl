@@ -190,6 +190,11 @@
                                 <metrocontrol:ToggleSwitch Margin="31,4,4,4" IsChecked="{Binding PosSaved}" OffLabel="不保存" OnLabel="保存" />
                             </StackPanel>
                         </UniformGrid>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Margin="15,0,0,0" FontSize="16" VerticalAlignment="Center" Text="声速剖面文件："/>
+                            <TextBox Name ="ProfileBox" Text="{Binding Profile}" Width="600" Background="{x:Null}" Foreground="White"/>
+                            <Button Name ="SelectProfile" Style="{StaticResource ChromeButtonStyle}" Width="60" Content="···" FontSize="28" Click="SelectProfile_Click" />
+                        </StackPanel>
                     </StackPanel>
                 </StackPanel>
             </ScrollViewer>
