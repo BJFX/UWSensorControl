@@ -19,6 +19,7 @@ namespace USBLDC.Comm
         private TcpClient _cmdtcpClient;
         private BasicConf _conf;
         private Observer<DataEventArgs> _dataObserver;
+        private  string _error;
 
         public static INetCore GetInstance(BasicConf conf, Observer<DataEventArgs> observer)
         {
@@ -74,9 +75,14 @@ namespace USBLDC.Comm
         }
   
 
-        public Task<bool> SendCMD(byte[] buf)
+        public bool SendCMD(byte[] buf)
         {
-            throw new NotImplementedException();
+            if (SonarIsOK)
+            {
+                var cmd = new TcpCommand(_cmdtcpClient, buf);
+                return cmd.Send(out _error);
+            }
+            return false;
         }
 
 
@@ -146,8 +152,12 @@ namespace USBLDC.Comm
         public bool IsWorking { get; set; }
 
         public bool IsInitialize{ get; set; }
-        
-        public string Error{ get; set; }
+
+        public string Error
+        {
+            get { return _error; }
+            set { _error = value; }
+        }
 
 
 

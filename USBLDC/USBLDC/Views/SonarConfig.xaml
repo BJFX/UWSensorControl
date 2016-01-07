@@ -9,16 +9,13 @@
       xmlns:Converters="clr-namespace:USBLDC.Converters" x:Class="USBLDC.Views.SonarConfig"
       mc:Ignorable="d"
     DataContext="{Binding SonarConfigViewModel, Source={StaticResource ViewModelLocator}}" 
-       d:DesignHeight="718" d:DesignWidth="1024"
+       d:DesignHeight="718" d:DesignWidth="1024" Background="#0B3B6B" Foreground="White"
 	Title="SonarConfig">
 
     <Page.Resources>
         <Converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         <Converters:DoubleMultiConverter x:Key="DoubleMultiConverter"/>
     </Page.Resources>
-    <Page.Background>
-        <StaticResource ResourceKey="AccentColorBrush"/>
-    </Page.Background>
 
     <controls:MetroContentControl>
         <Grid x:Name="RootGrid">
@@ -40,16 +37,16 @@
                 <controls1:TitleBarControl
 					Title="{Binding SonarConfigPageName, Mode=OneWay, Source={StaticResource Resources}}"
 					Grid.Row ="0"
+                    TitleImageSource="../Assets/appbar.settings.png"
 					Grid.Column ="0"
-                    BackButtonVisibility="Hidden"
-					Grid.ColumnSpan ="2"
-					HorizontalAlignment ="Stretch"/>
+                    BackButtonVisibility="Collapsed"
+					Grid.ColumnSpan ="2"/>
             </Grid>
             <!--Main content-->
             <ScrollViewer Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" FontSize="18"
 				VerticalScrollBarVisibility="Auto"
 				PanningMode="VerticalOnly">
-                <StackPanel Width="{Binding ActualWidth, ConverterParameter=0.8, Converter={StaticResource DoubleMultiConverter}, ElementName=RootGrid, Mode=OneWay}">
+                <StackPanel Width="{Binding ActualWidth, ConverterParameter=0.9, Converter={StaticResource DoubleMultiConverter}, ElementName=RootGrid, Mode=OneWay}">
                     <!--端口-->
                     <!--StackPanel  Visibility="{Binding ShowInPage, ConverterParameter=TrueToVisible, Converter={StaticResource BoolToVisibilityConverter}}">
                     <ToggleButton x:Name="Connection" Foreground="White" Background="{StaticResource DefaultBackgroundBrush}"
@@ -192,7 +189,7 @@
                         </UniformGrid>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Margin="15,0,0,0" FontSize="16" VerticalAlignment="Center" Text="声速剖面文件："/>
-                            <TextBox Name ="ProfileBox" Text="{Binding Profile}" Width="600" Background="{x:Null}" Foreground="White"/>
+                            <TextBox Name ="ProfileBox" Text="{Binding Profile}" Width="700" Background="{x:Null}" Foreground="White"/>
                             <Button Name ="SelectProfile" Style="{StaticResource ChromeButtonStyle}" Width="60" Content="···" FontSize="28" Click="SelectProfile_Click" />
                         </StackPanel>
                     </StackPanel>

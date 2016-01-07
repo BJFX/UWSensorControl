@@ -195,7 +195,7 @@ namespace USBLDC.Structure
                 {
                     scConfig = sc;
                     this.raw = raw;
-                    USBL_GuiWei Position_Guiwei = new USBL_GuiWei(raw.XDistance, raw.YDistance, raw.ZDistance, raw.Heave, raw.Heading, raw.Pitch, raw.Roll, longitude, latitude, sc.SonarGPSx, sc.SonarGPSy, sc.SonarGPSz, 11, sc.SonarDepth, settleSoundFile.SVPd, settleSoundFile.SVPc);
+                    USBL_GuiWei Position_Guiwei = new USBL_GuiWei(raw.XDistance, raw.YDistance, raw.ZDistance, raw.Heave, raw.Heading, raw.Pitch, raw.Roll, longitude, latitude, sc.SonarGPSx, sc.SonarGPSy, sc.SonarGPSz, raw.TravelTime, sc.SonarDepth, settleSoundFile.SVPd, settleSoundFile.SVPc);
                     AjustLat = (float)Position_Guiwei.LatTarget;
                     AjustLong = (float)Position_Guiwei.LonTarget;
                     Noise = raw.Noise;

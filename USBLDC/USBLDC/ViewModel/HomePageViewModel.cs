@@ -257,11 +257,10 @@ namespace USBLDC.ViewModel
             {
                 sc.AvgVel = (float) velarray.Average();
             }
-            Task<bool> ret;
+            bool ret = false;
             UnitCore.Instance.SonarConfiguration.Cmd = 1;
             ret =  UnitCore.Instance.NetCore.SendCMD(UnitCore.Instance.SonarConfiguration.SavePackage());
-            await ret;
-            if (ret.Result == false)
+            if (ret == false)
             {
                 var md = new MetroDialogSettings();
                 md.AffirmativeButtonText = "关闭";
@@ -301,11 +300,10 @@ namespace USBLDC.ViewModel
         {
             if(!UnitCore.Instance.NetCore.IsWorking || ShowCmd)
                 return;
-            Task<bool> ret;
+            bool ret = false;
             UnitCore.Instance.SonarConfiguration.Cmd = 0;
             ret = UnitCore.Instance.NetCore.SendCMD(UnitCore.Instance.SonarConfiguration.SavePackage());
-            await ret;
-            if (ret.Result == false)
+            if (ret == false)
             {
                 var md = new MetroDialogSettings();
                 md.AffirmativeButtonText = "关闭";

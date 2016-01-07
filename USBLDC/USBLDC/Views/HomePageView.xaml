@@ -12,9 +12,10 @@
       xmlns:adp="clr-namespace:USBLDC.AttachedProperty"
       xmlns:h="clr-namespace:HelixToolkit.Wpf;assembly=HelixToolkit.Wpf"
       xmlns:Converters="clr-namespace:USBLDC.Converters"
-      Background="{StaticResource AccentColorBrush}"
+      Background="#0B3B6B"
       DataContext="{Binding HomePageViewModel, Source={StaticResource ViewModelLocator}}" 
       mc:Ignorable="d" 
+      Foreground="White"
       d:DesignHeight="748" d:DesignWidth="1024" 
         Title="HomePage" Loaded="Page_Loaded">
     <Page.Resources>
@@ -40,6 +41,7 @@
                 <ViewControls:TitleBarControl 
                     Title="{Binding Home_Title_ApplicationName, Mode=OneWay, Source={StaticResource Resources}}"
                     Grid.Row ="0"
+                    Foreground="White"
                     TitleImageSource="/Assets/ico_calibrate_n.png"
                     BackButtonVisibility="Collapsed"
                     Grid.Column ="1"
@@ -57,6 +59,73 @@
                     <ColumnDefinition/>
                     <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
+                <Grid Grid.Row="0" Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal" Grid.Row="0"  Margin="20,0,0,0">
+                        <TextBlock VerticalAlignment="Center" FontSize="24" Foreground="White">
+                    <Run>声纳状态：</Run>
+                        </TextBlock>
+                        <TextBlock  VerticalAlignment="Center" FontSize="24" Text="{Binding SonarStatus}" Foreground="White"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="20,0,0,0">
+                        <TextBlock VerticalAlignment="Center" FontSize="24" Foreground="White">
+                    <Run>环境噪声：</Run>
+                        </TextBlock>
+                        <TextBlock  VerticalAlignment="Center" FontSize="24" Text="{Binding SonarStatus}" Foreground="White"/>
+                        <TextBlock  VerticalAlignment="Center" FontSize="18" Text="dB" Foreground="White" Margin="5,0,0,0"/>
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Row="0" Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal" Grid.Row="0"  Margin="20,0,0,0">
+                        <TextBlock VerticalAlignment="Center" FontSize="24" Foreground="White">
+                    <Run>目标经度：</Run>
+                        </TextBlock>
+                        <TextBlock  VerticalAlignment="Center" FontSize="24" Text="{Binding targetLong}" Foreground="White"/>
+                        <TextBlock  VerticalAlignment="Center" FontSize="24" Text="°" Foreground="White"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="20,0,0,0">
+                        <TextBlock VerticalAlignment="Center" FontSize="24" Foreground="White">
+                    <Run>目标纬度：</Run>
+                        </TextBlock>
+                        <TextBlock  VerticalAlignment="Center" FontSize="24" Text="{Binding targetLat}" Foreground="White"/>
+                        <TextBlock  VerticalAlignment="Center" FontSize="24" Text="°" Foreground="White"/>
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Row="0" Grid.Column="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Horizontal" Grid.Column="0"  Margin="20,0,0,0">
+                        <TextBlock VerticalAlignment="Center" FontSize="24" Foreground="White">
+                    <Run>X方向：</Run>
+                        </TextBlock>
+                        <TextBlock  VerticalAlignment="Center" FontSize="24" Text="{Binding coordinateX}" Foreground="White"/>
+                        <TextBlock  VerticalAlignment="Center" FontSize="24" Text="m" Foreground="White"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Grid.Column="1" Margin="20,0,0,0">
+                        <TextBlock VerticalAlignment="Center" FontSize="24" Foreground="White">
+                    <Run>Y方向：</Run>
+                        </TextBlock>
+                        <TextBlock  VerticalAlignment="Center" FontSize="24" Text="{Binding coordinateY}" Foreground="White"/>
+                        <TextBlock  VerticalAlignment="Center" FontSize="24" Text="m" Foreground="White"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Grid.Column="2" Margin="20,0,0,0">
+                            <TextBlock VerticalAlignment="Center" FontSize="24" Foreground="White">
+                    <Run>Z方向：</Run>
+                            </TextBlock>
+                            <TextBlock  VerticalAlignment="Center" FontSize="24" Text="{Binding coordinateZ}" Foreground="White"/>
+                            <TextBlock  VerticalAlignment="Center" FontSize="24" Text="m" Foreground="White"/>
+                        </StackPanel>
+                </Grid>
                 <GroupBox Header="{Binding gpsTime}" Grid.Row="1" Grid.Column="0" FontSize="18">
                     <UniformGrid Columns="2" >
                         <TextBlock Text="状态:" />
@@ -94,7 +163,6 @@
                     <TextBlock Text="{Binding Heave}"/>
                 </UniformGrid>
                 </GroupBox>
-                <TextBlock Text="定位:" Grid.Row="0" Grid.Column="2"/>
                 <h:HelixViewport3D Background="{StaticResource DefaultBackgroundBrush}" Grid.Row="2" Grid.ColumnSpan="2" Margin="4" 
                                        Title="{Binding xyzTtitle}" 
                                        x:Name="HelixViewport3D"
@@ -131,12 +199,9 @@
                                        Grid.Row="1" Grid.Column ="2" 
                                    Grid.RowSpan="2" Grid.ColumnSpan="2" 
                                    Margin="4" 
-                                   Title="定位视图"
+                                   Title="三维视图"
                                    TitleSize="20"
-                                   SubTitleSize="16"
-                                   TitleBackground="WhiteSmoke"
-                                   SubTitle="{Binding HeadingChartTitle}">
-                    
+                                   SubTitleSize="16">
                     <h:HelixViewport3D.DefaultCamera>
                         <PerspectiveCamera x:Name ="PosCamera" Position="0,0,6000" LookDirection="0,0,-6000" UpDirection="-1,0,0" NearPlaneDistance="3000" FarPlaneDistance="60000"/>
                     </h:HelixViewport3D.DefaultCamera>

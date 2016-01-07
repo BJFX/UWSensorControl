@@ -137,6 +137,8 @@ namespace USBLDC.Core
             {
                 //USBLTraceService.StartService();
                 LoadConfiguration();
+                if(_appConf.GetVelProfileName()!=null)
+                    SoundFile = new SettleSoundFile(_appConf.GetVelProfileName());
                 var shippath = _appConf.GetModelPath("Ship");
                 if (shippath == null)
                     throw new Exception("未找到模型组件！");

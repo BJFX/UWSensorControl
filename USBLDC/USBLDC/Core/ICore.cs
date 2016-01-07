@@ -41,7 +41,7 @@ namespace USBLDC.Core
         ITCPClientService TCPDataService { get; }
         bool SonarIsOK { get; }
         bool PoseIsOK { get; }
-        Task<bool> SendCMD(byte[] buf);
+        bool SendCMD(byte[] buf);
 
         /// <summary>
         /// 数据观察类，主要负责数据的解析和保存
