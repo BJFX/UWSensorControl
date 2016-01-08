@@ -122,7 +122,9 @@
     <Compile Include="AttachedProperty\ListBoxSelectBringIntoView.cs" />
     <Compile Include="AttachedProperty\ScreenModelPropertys.cs" />
     <Compile Include="Comm\IDataService.cs" />
+    <Compile Include="Comm\NerWorkServer.cs" />
     <Compile Include="Comm\SerialService.cs" />
+    <Compile Include="Comm\TcpListenerService.cs" />
     <Compile Include="Controls\TitleBarControl.xaml.cs">
       <DependentUpon>TitleBarControl.xaml</DependentUpon>
     </Compile>

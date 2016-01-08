@@ -53,4 +53,19 @@ namespace USBLDC.Comm
 
         }
     }
+    public interface ITCPServerService
+    {
+        TcpClient LinkerClient //只保留最后一个链接
+        { get; }
+        bool Init(TcpListener tcpListener, int listenport);
+        void Register(Observer<DataEventArgs> observer);
+        void UnRegister(Observer<DataEventArgs> observer);
+        bool Start();
+        void Stop();
+        bool Connected
+        {
+            get;
+
+        }
+    }
 }

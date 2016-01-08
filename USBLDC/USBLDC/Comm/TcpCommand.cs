@@ -101,4 +101,23 @@ namespace USBLDC.Comm
             return SendData(out error);
         }
     }
+    public class ServerTcpCmd : TCPBaseComm
+    {
+        public ServerTcpCmd(TcpListener tcpClient, byte[] bytes)
+        {
+            if (!base.Init(tcpClient)) return;
+            if (bytes == null) return;
+            base.LoadData(bytes);
+        }
+
+        public bool Init(TcpClient tcpClient)
+        {
+            return base.Init(tcpClient);
+        }
+
+        public override bool Send(out string error)
+        {
+            return SendData(out error);
+        }
+    }
 }

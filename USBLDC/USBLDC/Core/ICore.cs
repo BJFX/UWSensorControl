@@ -38,7 +38,6 @@ namespace USBLDC.Core
     {
 
         //TCP客户端接收数据服务
-        ITCPClientService TCPDataService { get; }
         bool SonarIsOK { get; }
         bool PoseIsOK { get; }
         bool SendCMD(byte[] buf);
