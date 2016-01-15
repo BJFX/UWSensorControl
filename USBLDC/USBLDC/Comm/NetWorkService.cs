@@ -180,6 +180,17 @@ namespace USBLDC.Comm
                 return TCPPoseService.Connected;
             }
         }
-        
+
+
+
+        public bool SonarIsLink
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public bool PoseIsLink
+        {
+            get { throw new NotImplementedException(); }
+        }
     }
 }

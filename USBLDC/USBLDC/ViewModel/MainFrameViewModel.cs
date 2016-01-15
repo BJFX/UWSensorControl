@@ -23,7 +23,9 @@ namespace USBLDC.ViewModel
         private  void UpdateStatus(object sender, EventArgs e)
         {
             if (UnitCore.Instance.NetCore != null && UnitCore.Instance.NetCore.IsWorking)
-                NetworkStatus = "网络状态：已连接";
+            {
+                NetworkStatus = "网络状态：正在监听";
+            }
             else
             {
                 NetworkStatus = "网络状态：无连接";
@@ -34,7 +36,6 @@ namespace USBLDC.ViewModel
                 var time = GPS.UTCTime.ToString();
                 GPSLastUpdateTime = "GPS数据更新时间(UTC)："+time;
             }
-
             else
             {
                 CommStatus = "GPS端口信息：关闭";
@@ -52,7 +53,7 @@ namespace USBLDC.ViewModel
             NetworkStatus = "网络状态：无连接";
             CommStatus = "GPS端口信息：关闭";
             GPSLastUpdateTime = "GPS数据更新时间：暂无数据";
-            PosLastUpdateTime = "定位数据更新时间：暂无数据";
+            
         }
 
         #region action
@@ -108,11 +109,6 @@ namespace USBLDC.ViewModel
         {
             get { return GetPropertyValue(() => CommStatus); }
             set { SetPropertyValue(() => CommStatus, value); }
-        }
-        public string PosLastUpdateTime
-        {
-            get { return GetPropertyValue(() => PosLastUpdateTime); }
-            set { SetPropertyValue(() => PosLastUpdateTime, value); }
         }
 
         public string GPSLastUpdateTime

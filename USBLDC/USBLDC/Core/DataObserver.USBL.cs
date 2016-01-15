@@ -76,15 +76,18 @@ namespace USBLDC.Core
                     break;
                 case (int)TypeId.ADINFO:
                     var ad = info as ADInfo;
-                    ut.SaveAD(ad);
+                    if(UnitCore.Instance.SonarConfiguration.ADSaved==1)
+                        ut.SaveAD(ad);
                     break;
                 case (int)TypeId.Pose:
                     var pose = info as PosetureInfo;
-                    ut.SavePose(pose);
+                    if(UnitCore.Instance.SonarConfiguration.PoseSaved==1)
+                        ut.SavePose(pose);
                     break;
                 case (int)TypeId.AjustPos:
                     var adj = info as AjustPositionInfo;
-                    ut.SavePosition(adj);
+                    if(UnitCore.Instance.SonarConfiguration.PosSaved==1)
+                        ut.SavePosition(adj);
                     break;
                 default:
                     break;

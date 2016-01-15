@@ -57,7 +57,7 @@ namespace USBLDC.Comm
     {
         TcpClient LinkerClient //只保留最后一个链接
         { get; }
-        bool Init(TcpListener tcpListener, int listenport);
+        bool Init(int listenport);
         void Register(Observer<DataEventArgs> observer);
         void UnRegister(Observer<DataEventArgs> observer);
         bool Start();

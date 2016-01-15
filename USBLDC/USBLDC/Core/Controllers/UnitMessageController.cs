@@ -57,6 +57,12 @@ namespace USBLDC.Core.Controllers
         {
             var md = new MetroDialogSettings();
             md.AffirmativeButtonText = "确定";
+            if (App.Current==null)
+                return;
+            if (MainFrameViewModel.pMainFrame==null)
+                return;
+            if(MainFrameViewModel.pMainFrame.DialogCoordinator==null)
+                return;
             App.Current.Dispatcher.Invoke(new Action(() =>
             {
                 if(ex==null)

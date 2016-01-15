@@ -19,8 +19,10 @@
       d:DesignHeight="748" d:DesignWidth="1024" 
         Title="HomePage" Loaded="Page_Loaded">
     <Page.Resources>
+        <Converters:GpsStatusConverter x:Key="GpsStatusConverter"/>
+        <Converters:SonarStatusConverter x:Key="SonarStatusConverter"/>
         <Converters:VisibilityBoolToggleConverter x:Key="VisibilityBoolToggleConverter"/>
-        </Page.Resources>
+    </Page.Resources>
     <Controls:MetroContentControl>
         <Grid>
             <Grid.RowDefinitions>
@@ -64,19 +66,19 @@
                         <RowDefinition />
                         <RowDefinition/>
                     </Grid.RowDefinitions>
-                    <StackPanel Orientation="Horizontal" Grid.Row="0"  Margin="20,0,0,0">
+                    <StackPanel Orientation="Horizontal" Grid.Row="0"  Margin="20,0,0,0" Grid.RowSpan="2">
                         <TextBlock VerticalAlignment="Center" FontSize="24" Foreground="White">
                     <Run>声纳状态：</Run>
                         </TextBlock>
-                        <TextBlock  VerticalAlignment="Center" FontSize="24" Text="{Binding SonarStatus}" Foreground="White"/>
+                        <TextBlock  VerticalAlignment="Center" FontSize="24" Text="{Binding SonarStatus, Converter={StaticResource SonarStatusConverter}}" Foreground="White"/>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="20,0,0,0">
+                    <!--StackPanel Orientation="Horizontal" Grid.Row="1" Margin="20,0,0,0">
                         <TextBlock VerticalAlignment="Center" FontSize="24" Foreground="White">
                     <Run>环境噪声：</Run>
-                        </TextBlock>
-                        <TextBlock  VerticalAlignment="Center" FontSize="24" Text="{Binding SonarStatus}" Foreground="White"/>
+                        </>
+                        <TextBlock  VerticalAlignment="Center" FontSize="24" Text="{Binding Noise}" Foreground="White"/>
                         <TextBlock  VerticalAlignment="Center" FontSize="18" Text="dB" Foreground="White" Margin="5,0,0,0"/>
-                    </StackPanel>
+                    </StackPanel-->
                 </Grid>
                 <Grid Grid.Row="0" Grid.Column="1">
                     <Grid.RowDefinitions>
@@ -126,10 +128,10 @@
                             <TextBlock  VerticalAlignment="Center" FontSize="24" Text="m" Foreground="White"/>
                         </StackPanel>
                 </Grid>
-                <GroupBox Header="{Binding gpsTime}" Grid.Row="1" Grid.Column="0" FontSize="18">
+                <GroupBox Header="{Binding gpsTime}" Grid.Row="1" Grid.Column="0" FontSize="18" Foreground="White">
                     <UniformGrid Columns="2" >
                         <TextBlock Text="状态:" />
-                        <TextBlock Text="{Binding gpsStatus}"/>
+                        <TextBlock Text="{Binding gpsStatus, Converter={StaticResource GpsStatusConverter}}"/>
 
                         <TextBlock Text="卫星数:"/>
                         <TextBlock Text="{Binding Satelites}"/>
@@ -144,7 +146,7 @@
                         <TextBlock Text="{Binding shipLat}"/>
                     </UniformGrid>
                 </GroupBox>
-                <GroupBox Header="姿态传感器" Grid.Row="1" Grid.Column="1" FontSize="18">
+                <GroupBox Header="姿态传感器" Grid.Row="1" Grid.Column="1" FontSize="18" Foreground="White">
                     <UniformGrid Columns="2" >
                     <TextBlock Text="状态:" />
                     <TextBlock Text="{Binding PoseStatus}"/>
@@ -206,7 +208,7 @@
                         <PerspectiveCamera x:Name ="PosCamera" Position="0,0,6000" LookDirection="0,0,-6000" UpDirection="-1,0,0" NearPlaneDistance="3000" FarPlaneDistance="60000"/>
                     </h:HelixViewport3D.DefaultCamera>
                     <h:SunLight/>
-                    <h:GridLinesVisual3D  Fill="Cornsilk" Length ="12000" Width="12000" MinorDistance="1000" MajorDistance="20000" Thickness="5">
+                    <h:GridLinesVisual3D  Fill="Cornsilk" Length ="12000" Width="12000" MinorDistance="1500" MajorDistance="20000" Thickness="5">
                         <h:GridLinesVisual3D.Transform>
                             <Transform3DGroup>
                                 <TranslateTransform3D OffsetZ="-100"/>
@@ -236,8 +238,9 @@
                             </Transform3DGroup>
                         </h:SphereVisual3D.Transform>
                     </h:SphereVisual3D>
-                    <h:ArrowVisual3D Point1="6000 0 -100" Point2="-6000 0 -100" Diameter="30" Fill="Red"  HeadLength="20" ThetaDiv="36"  />
-                    <h:ArrowVisual3D Point1="0 6000 -100" Point2="0 -6000 -100" Diameter="30" Fill="Green" HeadLength="20" ThetaDiv="36"  />
+                    <h:ArrowVisual3D Point1="3000 0 -100" Point2="-3000 0 -100" Diameter="30" Fill="Red"  HeadLength="20" ThetaDiv="36"  />
+                    <h:ArrowVisual3D Point1="0 3000 -100" Point2="0 -3000 -100" Diameter="30" Fill="Green" HeadLength="20" ThetaDiv="36"  />
+                    
                 </h:HelixViewport3D>
                 <StackPanel Grid.Row="2" Grid.Column ="2" VerticalAlignment="Bottom" HorizontalAlignment="Right">
                     <Button Style="{DynamicResource MetroWindowButtonStyle }" x:Name="NorthButton"  Margin="5,5,10,10" Content="正北" Foreground="Black" Click="NorthButton_Click"/>
@@ -248,11 +251,30 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel Name="WorkPanel" Orientation="Horizontal" Grid.Column="0" HorizontalAlignment="Left">
                     <Button x:Name="StartButton" Style="{StaticResource StartAppBarButtonStyle}" Visibility ="{Binding ShowCmd, ConverterParameter=IsCollapsed\=True, Converter={StaticResource VisibilityBoolToggleConverter}}" Command="{Binding StartCMD}"/>
                     <Button x:Name="StopButton" Style="{StaticResource StopAppBarButtonStyle}" Command="{Binding StopCMD}" Visibility="{Binding ShowCmd, ConverterParameter=IsReversed\=True;IsCollapsed\=True, Converter={StaticResource VisibilityBoolToggleConverter}}"/>
-                
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="1"  Margin="0,0,0,0">
+                    <TextBlock VerticalAlignment="Center" FontSize="18" Foreground="White">
+                    <Run>声纳：</Run>
+                    </TextBlock>
+                    <TextBlock  VerticalAlignment="Center" FontSize="18" Text="{Binding SonarUpdate}" Foreground="White"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="2"  Margin="0,0,0,0">
+                    <TextBlock VerticalAlignment="Center" FontSize="18" Foreground="White">
+                    <Run>运动传感器：</Run>
+                    </TextBlock>
+                    <TextBlock  VerticalAlignment="Center" FontSize="18" Text="{Binding PoseUpdate}" Foreground="White"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="3"  Margin="0,0,0,0">
+                    <TextBlock VerticalAlignment="Center" FontSize="18" Foreground="White">
+                    <Run>GPS：</Run>
+                    </TextBlock>
+                    <TextBlock  VerticalAlignment="Center" FontSize="18" Text="{Binding GPSLastUpdate}" Foreground="White"/>
                 </StackPanel>
             </Grid>
             <Controls:MetroPopup  Name="DeleteConfirmPopup" StaysOpen="False" AllowsTransparency="True" PopupAnimation="Fade" PlacementTarget="{Binding ElementName=WorkPanel}" Placement="Top">

@@ -44,10 +44,10 @@
                 <Button Name="CloseButton"  Grid.Column="1" Style="{StaticResource CloseAppBarButtonStyle}" Click="CloseButton_Click"/>
             </Grid>
             <StackPanel Grid.Row="1" Orientation="Horizontal">
-             <TextBlock Text="声纳通信" FontSize="20" Margin="20,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+             <TextBlock Text="网络监听" FontSize="20" Margin="20,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                 <ProgressBar Name="SonarBar" VerticalAlignment="Center" HorizontalAlignment="Left" Visibility="{Binding IsProcessing, Converter={StaticResource BooleanToVisibilityConverter}}"
 					Style="{StaticResource PerformanceProgressBar}" Foreground="Black" Width="200" Height="30" Margin="100,0,0,0" />
-                <TextBlock Name="SonarConnectStatus" FontSize="23" Margin="100,0,0,0" VerticalAlignment="Center" Visibility="Collapsed">通信已建立</TextBlock>
+                    <TextBlock Name="SonarConnectStatus" FontSize="23" Margin="100,0,0,0" VerticalAlignment="Center" Visibility="Collapsed">开始监听</TextBlock>
                 <Button Name="TCPOK" Style="{StaticResource DoneAppBarButtonStyle}"  Grid.Row="4" Width="80" BorderThickness="0" Height="80"   VerticalAlignment="Center" HorizontalAlignment="Left" Margin="100,0,0,0" IsEnabled="False" Visibility="Hidden" />
             </StackPanel>
             <StackPanel Grid.Row="2" Orientation="Horizontal">
@@ -78,29 +78,24 @@
                     <ToggleButton x:Name="Connection" Foreground="White" Background="{StaticResource DefaultBackgroundBrush}"
                                   IsChecked ="True"
                                   Content="网络连接与传感器连接设置" FontFamily="Microsoft YaHei UI"/>
-                    <UniformGrid Columns="1" Visibility="{Binding IsChecked, ConverterParameter=TrueToVisible, Converter={StaticResource BoolToVisibilityConverter}, ElementName=Connection}">
+                    <UniformGrid Columns="3" Visibility="{Binding IsChecked, ConverterParameter=TrueToVisible, Converter={StaticResource BoolToVisibilityConverter}, ElementName=Connection}">
                         <StackPanel Orientation="Horizontal" Margin="4,4,0,4">
-                            <TextBlock Margin="15,0,0,0" FontSize="16" VerticalAlignment="Center" Text=" 声纳地址："/>
-                            <TextBox Name="IpAddrBox" Margin="15,4,4,4" Width="200" Background="{x:Null}" Foreground="White"/>
+                            <TextBlock FontSize="16" VerticalAlignment="Center" Text=" 数据端口："/>
+                            <TextBox Name="IpPortBox" Margin="15,4,4,4" Width="100" Background="{x:Null}" Foreground="White"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="4,4,0,4">
-                            <TextBlock Margin="15,0,0,0" FontSize="16" VerticalAlignment="Center" Text=" 数据端口："/>
-                            <TextBox Name="IpPortBox" Margin="15,4,4,4" Width="100" Background="{x:Null}" Foreground="White"/>
-                                <TextBlock Margin="15,0,0,0" FontSize="16" VerticalAlignment="Center" Text=" 命令端口："/>
+                                <TextBlock FontSize="16" VerticalAlignment="Center" Text="命令端口："/>
                             <TextBox Name="IpCmdPortBox" Margin="15,4,4,4" Width="100"  Background="{x:Null}" Foreground="White"/>
                             </StackPanel>
-
+                        <StackPanel Orientation="Horizontal" Margin="4,4,0,4">
+                            <TextBlock FontSize="16" VerticalAlignment="Center" Text=" 姿态传感器端口："/>
+                            <TextBox Name="IpPosePortBox"  Width="100" Background="{x:Null}" Foreground="White"/>
+                        </StackPanel>
                     </UniformGrid>
                     
                     <UniformGrid Columns="2" Visibility="{Binding IsChecked, ConverterParameter=TrueToVisible, Converter={StaticResource BoolToVisibilityConverter}, ElementName=Connection}">
-                        <StackPanel Orientation="Horizontal" Margin="4,4,0,4">
-                            <TextBlock FontSize="16" VerticalAlignment="Center" Text=" 姿态传感器地址："/>
-                            <TextBox Name="IpPoseAddrBox" Margin="31,4,4,4" Width="180" Background="{x:Null}" Foreground="White"/>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="4,4,0,4">
-                            <TextBlock Margin="15,0,0,0" FontSize="16" VerticalAlignment="Center" Text=" 姿态传感器端口："/>
-                            <TextBox Name="IpPosePortBox" Margin="31,4,4,4" Width="100" Background="{x:Null}" Foreground="White"/>
-                        </StackPanel>
+                        
+                        
                     </UniformGrid>
                     <UniformGrid Columns="2" Visibility="{Binding IsChecked, ConverterParameter=TrueToVisible, Converter={StaticResource BoolToVisibilityConverter}, ElementName=Connection}">
                         <StackPanel Orientation="Horizontal" Margin="4,4,0,4">
@@ -114,7 +109,7 @@
                              VerticalAlignment="Center"  HorizontalAlignment="Center" />
                         </StackPanel>
                     </UniformGrid>
-                    <Button Content="保存并重新连接" Name  ="SaveConnBtn" Style="{StaticResource ChromeButtonStyle}" FontFamily="Microsoft YaHei UI" FontSize="18" Click="SaveConnBtn_Click" Height="60"/>
+                    <Button Content="保存并重新初始化" Name  ="SaveConnBtn" Style="{StaticResource ChromeButtonStyle}" FontFamily="Microsoft YaHei UI" FontSize="18" Click="SaveConnBtn_Click" Height="60"/>
                     <Button Content="取消" Name ="CancelButton" Style="{StaticResource ChromeButtonStyle}" FontFamily="Microsoft YaHei UI" FontSize="18" Click="CancelButton_Click" Height="60"/>
                 </StackPanel>
             </StackPanel>

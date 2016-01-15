@@ -123,7 +123,7 @@ namespace USBLDC.Core
 
         public INetCore NetCore
         {
-            get { return _iNetCore ?? (_iNetCore = NetWorkService.GetInstance(_appConf, Observer)); }
+            get { return _iNetCore ?? (_iNetCore = NerWorkServer.GetInstance(_appConf, Observer)); }
         }
 
         public ICommCore CommCore

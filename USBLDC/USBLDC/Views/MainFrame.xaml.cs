@@ -39,7 +39,8 @@ namespace USBLDC.Views
         {
             if (this.WindowState != WindowState.Maximized)
                 this.WindowState = WindowState.Maximized;
-            
+            else
+                this.WindowState = WindowState.Normal;
         }
     }
 }

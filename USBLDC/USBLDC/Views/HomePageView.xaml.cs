@@ -49,10 +49,6 @@ namespace USBLDC.Views
             NorthButton_Click(null,e);
         }
 
-        private void North_Checked(object sender, System.Windows.RoutedEventArgs e)
-        {
-            
-        }
 
         private void NorthButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {

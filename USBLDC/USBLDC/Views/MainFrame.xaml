@@ -13,7 +13,11 @@
         Dialog:DialogParticipation.Register="{Binding}"
         DataContext="{Binding MainFrameViewModel, Source={StaticResource ViewModelLocator}}"
         commands:ApplicationCommands.RegisterCommandBindings="{Binding RegisteredCommands}"
-        ShowTitleBar ="False"  ShowCloseButton="False" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" WindowStyle="None" WindowState="Maximized" MouseDoubleClick="MetroWindow_MouseDoubleClick" FontSize="18" ShowMaxRestoreButton="False" ShowIconOnTitleBar="False" ShowMinButton="False" ShowSystemMenuOnRightClick="False" IsCloseButtonEnabled="False" IsMaxRestoreButtonEnabled="False" IsMinButtonEnabled="False" TitleCaps="False" IsWindowDraggable="False" >
+        ShowTitleBar ="False"  ShowCloseButton="False" WindowStartupLocation="CenterScreen" 
+        ResizeMode="NoResize" WindowStyle="None" WindowState="Maximized" 
+        MouseDoubleClick="MetroWindow_MouseDoubleClick" FontSize="18" ShowMaxRestoreButton="False" 
+        ShowIconOnTitleBar="False" ShowMinButton="False" ShowSystemMenuOnRightClick="False" 
+        IsCloseButtonEnabled="False" IsMaxRestoreButtonEnabled="False" IsMinButtonEnabled="False" TitleCaps="False" IsWindowDraggable="True" >
     <metroControl:MetroWindow.Resources>
         <Converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         <Converters:VisibilityBoolConverter x:Key="vbcvtr"/>
@@ -81,7 +85,6 @@
                     <TextBlock Text="{Binding GPSLastUpdateTime}" TextWrapping="Wrap" HorizontalAlignment="Left"/>
                     <TextBlock />
 
-                    <TextBlock Text="{Binding PosLastUpdateTime}" TextWrapping="Wrap" HorizontalAlignment="Left"/>
                     <TextBlock />
                     <StackPanel VerticalAlignment="Bottom">
                         <TextBlock Text="{Binding SPLASH_COPY_RIGHT, Mode=OneWay, Source={StaticResource Resources}}" TextWrapping="Wrap" Margin="0,10,0,0"/>

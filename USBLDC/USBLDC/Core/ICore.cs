@@ -40,6 +40,8 @@ namespace USBLDC.Core
         //TCP客户端接收数据服务
         bool SonarIsOK { get; }
         bool PoseIsOK { get; }
+        bool SonarIsLink { get; }
+        bool PoseIsLink { get; }
         bool SendCMD(byte[] buf);
 
         /// <summary>

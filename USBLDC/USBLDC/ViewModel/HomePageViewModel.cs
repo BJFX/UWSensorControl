@@ -9,7 +9,9 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media.Media3D;
+using System.Windows.Threading;
 using MahApps.Metro.Controls.Dialogs;
+using NMEA0183;
 using TinyMetroWpfLibrary.EventAggregation;
 using TinyMetroWpfLibrary.ViewModel;
 using USBLDC.Core;
@@ -23,6 +25,24 @@ namespace USBLDC.ViewModel
 {
     public class HomePageViewModel : ViewModelBase, IHandleMessage<ShowStructureInfo>
     {
+        private DispatcherTimer dtTimer = null;
+        private int GpsTickCount = 0;
+        private int PoseTickCount = 0;
+        private int PosTickCount = 0;
+
+        /// 中间变量，负责缓存大量更新数据
+        private PosetureInfo poseture = null;
+
+        private AjustPositionInfo ajustPosition = null;
+
+        private GPSInfo gpsInfo = null;
+
+        /// 
+        private DateTime posetime = new DateTime(1970,1,1);
+
+        private DateTime ajusttime = new DateTime(1970, 1, 1);
+
+        private DateTime gpstime = new DateTime(1970, 1, 1);
         public override void Initialize()
         {
             Heading = 45;
@@ -50,8 +70,88 @@ namespace USBLDC.ViewModel
             pos.YAjust = 3040;
             pos.ZAjust = 2300;
             pos.Noise = 71;
-            UpdatePositionView(new ShowStructureInfo(pos,(int)TypeId.AjustPos));
+            UpdatePositionView(pos);
+            if(dtTimer==null)
+                dtTimer = new DispatcherTimer(TimeSpan.FromSeconds(1), DispatcherPriority.Input,
+            UpdateAllData, Dispatcher.CurrentDispatcher);
+        }
+
+        private void UpdateAllData(object sender, EventArgs e)
+        {
+            PoseTickCount++;
+            UpdateGpsView(gpsInfo);
+            UpdatePoseView(poseture);
             
+            if (PoseTickCount %2==0)
+            {
+                if (ajustPosition!=null)
+                    UpdatePositionView(ajustPosition);
+            }
+            if (UnitCore.Instance.NetCore != null && UnitCore.Instance.NetCore.IsWorking&&UnitCore.Instance.NetCore.SonarIsOK)
+            {
+                if (UnitCore.Instance.NetCore.SonarIsLink)
+                {
+                    if (ajusttime.CompareTo(new DateTime(1970,1,1))<=0)
+                        SonarUpdate = "已连接，无数据 ";
+                    else
+                        SonarUpdate = "已连接，更新时间 " + ajusttime.ToString();
+                }
+                else
+                {
+                    SonarUpdate = "等待连接";
+                }
+                    
+            }
+            else
+            {
+                SonarUpdate = "无连接";
+            }
+            if (UnitCore.Instance.NetCore != null && UnitCore.Instance.NetCore.IsWorking&&UnitCore.Instance.NetCore.PoseIsOK)
+            {
+                if (UnitCore.Instance.NetCore.PoseIsLink)
+                {
+                    if (posetime.CompareTo(new DateTime(1970, 1, 1)) <= 0)
+                        PoseUpdate = "已连接，无数据 ";
+                    else
+                        PoseUpdate = "已连接，更新时间 " + posetime.ToString();
+                }
+                else
+                {
+                    PoseUpdate = "等待连接";
+                }
+                    
+            }
+            else
+            {
+                SonarUpdate = "无连接";
+            }
+            if (UnitCore.Instance.CommCore != null && UnitCore.Instance.CommCore.IsWorking)
+            {
+                if (gpsTime.CompareTo(new DateTime(1970, 1, 1)) <= 0)
+                    GPSLastUpdate = "已连接，无数据 ";
+                else
+                    GPSLastUpdate = "端口打开，更新时间 " + gpsTime.ToString();
+            }
+            else
+            {
+                GPSLastUpdate = "端口关闭";
+            }
+        }
+        public string SonarUpdate
+        {
+            get { return GetPropertyValue(() => SonarUpdate); }
+            set { SetPropertyValue(() => SonarUpdate, value); }
+        }
+        public string PoseUpdate
+        {
+            get { return GetPropertyValue(() => PoseUpdate); }
+            set { SetPropertyValue(() => PoseUpdate, value); }
+        }
+
+        public string GPSLastUpdate
+        {
+            get { return GetPropertyValue(() => GPSLastUpdate); }
+            set { SetPropertyValue(() => GPSLastUpdate, value); }
         }
         public uint SonarStatus
         {
@@ -119,7 +219,7 @@ namespace USBLDC.ViewModel
             set { SetPropertyValue(() => Satelites, value); }
         }
 
-        public uint gpsSpeed
+        public float gpsSpeed
         {
             get { return GetPropertyValue(() => gpsSpeed); }
             set { SetPropertyValue(() => gpsSpeed, value); }
@@ -330,14 +430,21 @@ namespace USBLDC.ViewModel
             switch (message.Id)
             {
                 case (int)TypeId.GPS:
-                    UpdateGpsView(message);
+                    //UpdateGpsView(message);
+                    gpsInfo = message.Info as GPSInfo;
+                    gpstime = DateTime.Now;
                     break;
                 case (int)TypeId.Pose:
-                    UpdatePoseView(message);
+                    //UpdatePoseView(message);
+                    poseture = message.Info as PosetureInfo;
+                    posetime = DateTime.Now;
+                    break;
+                case (int)TypeId.RawPos:
                     break;
                 case (int)TypeId.AjustPos:
-                case (int)TypeId.RawPos:
-                    UpdatePositionView(message);
+                    //UpdatePositionView(message);
+                    ajustPosition = message.Info as AjustPositionInfo;
+                    ajusttime = DateTime.Now;
                     break;
 
                 default:
@@ -345,9 +452,8 @@ namespace USBLDC.ViewModel
             }
         }
 
-        private void UpdatePoseView(ShowStructureInfo message)
+        private void UpdatePoseView(PosetureInfo info)
         {
-            var info = message.Info as PosetureInfo;
             //PoseTime = info.EpochSecond;
             Heading = info.Heading;
             Pitch = info.Pitch;
@@ -357,11 +463,8 @@ namespace USBLDC.ViewModel
             
         }
 
-        private void UpdatePositionView(ShowStructureInfo message)
+        private void UpdatePositionView(AjustPositionInfo info)
         {
-            if (message.Id == (int) TypeId.AjustPos)
-            {
-                var info = message.Info as AjustPositionInfo;
                 coordinateX = info.XAjust;
                 coordinateY = info.YAjust;
                 coordinateZ = info.ZAjust;
@@ -375,14 +478,18 @@ namespace USBLDC.ViewModel
                 ObjectCenter = x.ToString("F02") + "," + y.ToString("F02") + "," + z.ToString("F02");
                 if ((x * x + y * y + z * z) > 1)
                     ObjectVisibility = true;
-            }
-           
             
         }
 
-        private void UpdateGpsView(ShowStructureInfo message)
+        private void UpdateGpsView(GPSInfo info)
         {
-            throw new NotImplementedException();
+            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            gpsTime = "GPS-"+epoch.AddSeconds(info.GPSSecond).AddMilliseconds(info.GPSMicSecond).ToString();
+            gpsStatus = info.GPSStatus;
+            Satelites = info.SatNum;
+            gpsSpeed = info.Velocity;
+            shipLong = info.Long;
+            shipLat = info.Lat;
         }
     }
 }

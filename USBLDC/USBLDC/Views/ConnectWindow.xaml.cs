@@ -69,13 +69,17 @@ namespace USBLDC.Views
         {
             if (CommInfo != null)
                 CommInfo.Clear();
+            GpsBox.Items.Clear();
             CommInfo = SerialPort.GetPortNames().ToList();
-            IpAddrBox.Text = BasicConf.GetInstance().GetIP();
+            foreach (var comm in CommInfo)
+            {
+                GpsBox.Items.Add(comm);
+            }
             IpPortBox.Text = BasicConf.GetInstance().GetNetPort();
             IpCmdPortBox.Text =BasicConf.GetInstance().GetNetCmdPort();
-            IpPoseAddrBox.Text = BasicConf.GetInstance().GetPoseIP();
             IpPosePortBox.Text = BasicConf.GetInstance().GetPosePort();
-            GpsBox.SelectedIndex = CommInfo.IndexOf(BasicConf.GetInstance().GetCommGPS());
+            if(CommInfo.Count>0)
+                GpsBox.SelectedIndex = CommInfo.IndexOf(BasicConf.GetInstance().GetCommGPS());
             GpsRateBox.SelectedIndex = RateInfo.IndexOf(BasicConf.GetInstance().GetGPSDataRate());
             t = new DispatcherTimer(TimeSpan.FromSeconds(1), DispatcherPriority.Background, StartConnect,Dispatcher.CurrentDispatcher);
             t.Start();
@@ -96,7 +100,7 @@ namespace USBLDC.Views
             else
             {
                 SonarConnectStatus.Visibility = Visibility.Visible;
-                SonarConnectStatus.Text = "连接失败";
+                SonarConnectStatus.Text = "初始化失败";
                 SonarBar.Visibility = Visibility.Collapsed;
                 TCPOK.Visibility = Visibility.Collapsed;
             }
@@ -131,20 +135,10 @@ namespace USBLDC.Views
 
         private void SaveConnBtn_Click(object sender, RoutedEventArgs e)
         {
-            string ipaddr;
+            
             int dataport,cmdport;
-            string poseaddr;
             int poseport;
-            IPAddress tempAddress;
-            if (IPAddress.TryParse(IpAddrBox.Text, out tempAddress) == false)
-            {
-                UnitCore.Instance.EventAggregator.PublishMessage(new LogEvent("声纳地址格式不正确！", LogType.OnlyInfo));
-                return;
-            }
-            else
-            {
-                ipaddr = IpAddrBox.Text;
-            }
+           
             if (int.TryParse(IpPortBox.Text, out dataport) && (dataport > 0 || dataport < 65535))
             {
 
@@ -163,15 +157,7 @@ namespace USBLDC.Views
                 UnitCore.Instance.EventAggregator.PublishMessage(new LogEvent("命令端口格式不正确！", LogType.OnlyInfo));
                 return;
             }
-            if (IPAddress.TryParse(IpPoseAddrBox.Text, out tempAddress) == false)
-            {
-                UnitCore.Instance.EventAggregator.PublishMessage(new LogEvent("运动传感器地址格式不正确！", LogType.OnlyInfo));
-                return;
-            }
-            else
-            {
-                poseaddr = IpPoseAddrBox.Text;
-            }
+            
             if (int.TryParse(IpPosePortBox.Text, out poseport) && (poseport > 0 || poseport < 65535))
             {
 
@@ -183,10 +169,10 @@ namespace USBLDC.Views
             }
             try
             {
-                if (!BasicConf.GetInstance().SetIP(ipaddr)) throw new Exception("保存IP地址失败");
+                
                 if (!BasicConf.GetInstance().SetNetPort(dataport.ToString())) throw new Exception("保存数据端口失败");
                 if (!BasicConf.GetInstance().SetCmdPort(cmdport.ToString())) throw new Exception("保存命令端口失败");
-                if (!BasicConf.GetInstance().SetPoseIP(poseaddr)) throw new Exception("保存姿态传感器IP地址失败");
+                
                 if (!BasicConf.GetInstance().SetPosePort(poseport.ToString())) throw new Exception("保存姿态传感器IP端口失败");
                 if (GpsBox.SelectedIndex!=-1)
                     if (!BasicConf.GetInstance().SetCommGPS(CommInfo[GpsBox.SelectedIndex])) throw new Exception("保存串口端口失败");

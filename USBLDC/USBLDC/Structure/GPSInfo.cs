@@ -27,8 +27,9 @@ namespace USBLDC.Structure
             {
                 if (GPS.Status == 1 || GPS.Status==2)
                 {
-                    GPSSecond = GPS.UTCTime.Second;
-                    GPSMicSecond = GPS.UTCTime.Millisecond;
+                    var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+                    GPSSecond = GPS.UTCTime.Subtract(epoch).Seconds;
+                    GPSMicSecond = GPS.UTCTime.Subtract(epoch).Milliseconds; ;
                     Long = GPS.Longitude;
                     Lat = GPS.Latitude;
                     Height = GPS.Height;
