@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using TinyMetroWpfLibrary.EventAggregation;
@@ -37,7 +38,7 @@ namespace USBLDC.Core
         public string Error { get; private set; }
         public SettleSoundFile SoundFile = null;
         public Mutex ACMMutex { get; set; }//全局解析锁
-
+        public Dictionary<DateTime, AjustPositionInfo> ajustPosition = null;
 
         public USBLTraceService USBLTraceService
         {
@@ -198,6 +199,7 @@ namespace USBLDC.Core
             set { _iFileCore = value; }
         }
         public Model3D CurrentModel { get; set; }
+        
         public static UnitCore Instance
         {
             get { return GetInstance(); }

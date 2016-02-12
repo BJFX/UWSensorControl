@@ -57,11 +57,12 @@
                     <RowDefinition Height="3*"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="21*"/>
+                    <ColumnDefinition Width="107*"/>
+                    <ColumnDefinition Width="128*"/>
+                    <ColumnDefinition Width="256*"/>
                 </Grid.ColumnDefinitions>
-                <Grid Grid.Row="0" Grid.Column="0">
+                <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
                     <Grid.RowDefinitions>
                         <RowDefinition />
                         <RowDefinition/>
@@ -80,7 +81,7 @@
                         <TextBlock  VerticalAlignment="Center" FontSize="18" Text="dB" Foreground="White" Margin="5,0,0,0"/>
                     </StackPanel-->
                 </Grid>
-                <Grid Grid.Row="0" Grid.Column="1">
+                <Grid Grid.Row="0" Grid.Column="2">
                     <Grid.RowDefinitions>
                         <RowDefinition />
                         <RowDefinition/>
@@ -100,7 +101,7 @@
                         <TextBlock  VerticalAlignment="Center" FontSize="24" Text="°" Foreground="White"/>
                     </StackPanel>
                 </Grid>
-                <Grid Grid.Row="0" Grid.Column="2">
+                <Grid Grid.Row="0" Grid.Column="3">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
@@ -121,14 +122,14 @@
                         <TextBlock  VerticalAlignment="Center" FontSize="24" Text="m" Foreground="White"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Grid.Column="2" Margin="20,0,0,0">
-                            <TextBlock VerticalAlignment="Center" FontSize="24" Foreground="White">
+                        <TextBlock VerticalAlignment="Center" FontSize="24" Foreground="White">
                     <Run>Z方向：</Run>
-                            </TextBlock>
-                            <TextBlock  VerticalAlignment="Center" FontSize="24" Text="{Binding coordinateZ}" Foreground="White"/>
-                            <TextBlock  VerticalAlignment="Center" FontSize="24" Text="m" Foreground="White"/>
-                        </StackPanel>
+                        </TextBlock>
+                        <TextBlock  VerticalAlignment="Center" FontSize="24" Text="{Binding coordinateZ}" Foreground="White"/>
+                        <TextBlock  VerticalAlignment="Center" FontSize="24" Text="m" Foreground="White"/>
+                    </StackPanel>
                 </Grid>
-                <GroupBox Header="{Binding gpsTime}" Grid.Row="1" Grid.Column="0" FontSize="18" Foreground="White">
+                <GroupBox Header="{Binding gpsTime}" Grid.Row="1" Grid.Column="0" FontSize="18" Foreground="White" Grid.ColumnSpan="2">
                     <UniformGrid Columns="2" >
                         <TextBlock Text="状态:" />
                         <TextBlock Text="{Binding gpsStatus, Converter={StaticResource GpsStatusConverter}}"/>
@@ -146,26 +147,26 @@
                         <TextBlock Text="{Binding shipLat}"/>
                     </UniformGrid>
                 </GroupBox>
-                <GroupBox Header="姿态传感器" Grid.Row="1" Grid.Column="1" FontSize="18" Foreground="White">
+                <GroupBox Header="姿态传感器" Grid.Row="1" Grid.Column="2" FontSize="18" Foreground="White">
                     <UniformGrid Columns="2" >
-                    <TextBlock Text="状态:" />
-                    <TextBlock Text="{Binding PoseStatus}"/>
+                        <TextBlock Text="状态:" />
+                        <TextBlock Text="{Binding PoseStatus}"/>
 
-                    
-                    <TextBlock Text="艏向角(°):"/>
-                    <TextBlock Text="{Binding Heading}" />
+
+                        <TextBlock Text="艏向角(°):"/>
+                        <TextBlock Text="{Binding Heading}" />
 
                         <TextBlock Text="纵倾(°):"/>
-                    <TextBlock Text="{Binding Pitch}"/>
+                        <TextBlock Text="{Binding Pitch}"/>
 
                         <TextBlock Text="横滚(°):"/>
-                    <TextBlock Text="{Binding Roll}"/>
+                        <TextBlock Text="{Binding Roll}"/>
 
-                    <TextBlock Text="升沉(m):"/>
-                    <TextBlock Text="{Binding Heave}"/>
-                </UniformGrid>
+                        <TextBlock Text="升沉(m):"/>
+                        <TextBlock Text="{Binding Heave}"/>
+                    </UniformGrid>
                 </GroupBox>
-                <h:HelixViewport3D Background="{StaticResource DefaultBackgroundBrush}" Grid.Row="2" Grid.ColumnSpan="2" Margin="4" 
+                <h:HelixViewport3D Background="{StaticResource DefaultBackgroundBrush}" Grid.Row="2" Grid.ColumnSpan="3" Margin="4" 
                                        Title="{Binding xyzTtitle}" 
                                        x:Name="HelixViewport3D"
                                        ShowViewCube="False" 
@@ -188,7 +189,7 @@
                     <h:ArrowVisual3D Point1="6000 0 -100" Point2="-6000 0 -100" Diameter="30" Fill="Red"  HeadLength="20" ThetaDiv="36"  />
                     <h:ArrowVisual3D Point1="0 6000 -100" Point2="0 -6000 -100" Diameter="30" Fill="Green" HeadLength="20" ThetaDiv="36"  />
                 </h:HelixViewport3D>
-                <StackPanel Grid.Row="2" VerticalAlignment="Bottom" HorizontalAlignment="Left">
+                <StackPanel Grid.Row="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" Grid.ColumnSpan="2">
                     <RadioButton x:Name="LookDownButton"  Margin="5,0,0,5" Content="俯视" Foreground="DarkGray" Checked="RadioButton_Checked"/>
                     <RadioButton  Margin="5,0,0,5" Content="左视" Foreground="DarkGray" Checked="RadioButton_Checked_1"/>
                     <RadioButton  Margin="5,0,0,5" Content="后视" Foreground="DarkGray" Checked="RadioButton_Checked_2"/>
@@ -198,8 +199,8 @@
                                        ShowViewCube="False" 
                                        ShowCameraTarget="False" 
                                        ShowCoordinateSystem="False" 
-                                       Grid.Row="1" Grid.Column ="2" 
-                                   Grid.RowSpan="2" Grid.ColumnSpan="2" 
+                                       Grid.Row="1" Grid.Column ="3" 
+                                   Grid.RowSpan="2" 
                                    Margin="4" 
                                    Title="三维视图"
                                    TitleSize="20"
@@ -238,14 +239,27 @@
                             </Transform3DGroup>
                         </h:SphereVisual3D.Transform>
                     </h:SphereVisual3D>
+                    <ModelVisual3D Content="{Binding TrackModel}" x:Name="Visual3D">
+                        <ModelVisual3D.Transform>
+                            <Transform3DGroup>
+                                <RotateTransform3D>
+                                    <RotateTransform3D.Rotation>
+                                        <AxisAngleRotation3D Axis="0,0,1" Angle="{Binding Heading}"/>
+                                    </RotateTransform3D.Rotation>
+                                </RotateTransform3D>
+                            </Transform3DGroup>
+                        </ModelVisual3D.Transform>
+                    </ModelVisual3D>
                     <h:ArrowVisual3D Point1="3000 0 -100" Point2="-3000 0 -100" Diameter="30" Fill="Red"  HeadLength="20" ThetaDiv="36"  />
                     <h:ArrowVisual3D Point1="0 3000 -100" Point2="0 -3000 -100" Diameter="30" Fill="Green" HeadLength="20" ThetaDiv="36"  />
-                    
+
                 </h:HelixViewport3D>
-                <StackPanel Grid.Row="2" Grid.Column ="2" VerticalAlignment="Bottom" HorizontalAlignment="Right">
-                    <Button Style="{DynamicResource MetroWindowButtonStyle }" x:Name="NorthButton"  Margin="5,5,10,10" Content="正北" Foreground="Black" Click="NorthButton_Click"/>
+                <StackPanel Grid.Row="2" Grid.Column ="3" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                    <Button Style="{DynamicResource MetroWindowButtonStyle }" x:Name="NorthButton"  Margin="5,5,10,10" Content="正北" Foreground="Black" Click="NorthButton_Click" Width="50" Height="25" FontSize="16"/>
                 </StackPanel>
-                
+                <CheckBox Grid.Row="2" Grid.Column ="3"  x:Name="ShowTrack"  Margin="5,0,0,10"  Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="159" Height="25" FontSize="16" Content="显示定位目标轨迹" IsChecked="{Binding TrackVisible}" >
+                    
+                </CheckBox>
             </Grid>
             <Grid Grid.Row="2" Background="{StaticResource DefaultBackgroundBrush}" Grid.Column="0" Grid.ColumnSpan="3">
                 <Grid.ColumnDefinitions>

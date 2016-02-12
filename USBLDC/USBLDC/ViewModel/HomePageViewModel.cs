@@ -20,6 +20,7 @@ using USBLDC.Structure;
 using USBLDC.Helpers;
 using System.Windows.Controls;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
+using HelixToolkit.Wpf;
 
 namespace USBLDC.ViewModel
 {
@@ -29,12 +30,10 @@ namespace USBLDC.ViewModel
         private int GpsTickCount = 0;
         private int PoseTickCount = 0;
         private int PosTickCount = 0;
+        private List<Point3D> Path = new List<Point3D>();//track
 
         /// 中间变量，负责缓存大量更新数据
         private PosetureInfo poseture = null;
-
-        private AjustPositionInfo ajustPosition = null;
-
         private GPSInfo gpsInfo = null;
 
         /// 
@@ -79,13 +78,15 @@ namespace USBLDC.ViewModel
         private void UpdateAllData(object sender, EventArgs e)
         {
             PoseTickCount++;
-            UpdateGpsView(gpsInfo);
-            UpdatePoseView(poseture);
+            if(gpsInfo!=null)
+                UpdateGpsView(gpsInfo);
+            if(poseture!=null)
+                UpdatePoseView(poseture);
             
             if (PoseTickCount %2==0)
             {
-                if (ajustPosition!=null)
-                    UpdatePositionView(ajustPosition);
+                if (UnitCore.Instance.ajustPosition != null)
+                    UpdatePositionView(UnitCore.Instance.ajustPosition.Last().Value);
             }
             if (UnitCore.Instance.NetCore != null && UnitCore.Instance.NetCore.IsWorking&&UnitCore.Instance.NetCore.SonarIsOK)
             {
@@ -260,6 +261,11 @@ namespace USBLDC.ViewModel
         {
             get { return GetPropertyValue(() => CurrentModel); }
             set { SetPropertyValue(() => CurrentModel, value); }
+        }
+        public Model3D TrackModel
+        {
+            get { return GetPropertyValue(() => TrackModel); }
+            set { SetPropertyValue(() => TrackModel, value); }
         }
         public string HeadingChartTitle
         {
@@ -443,8 +449,10 @@ namespace USBLDC.ViewModel
                     break;
                 case (int)TypeId.AjustPos:
                     //UpdatePositionView(message);
-                    ajustPosition = message.Info as AjustPositionInfo;
+                    if (UnitCore.Instance.ajustPosition == null)
+                        UnitCore.Instance.ajustPosition = new Dictionary<DateTime, AjustPositionInfo>();
                     ajusttime = DateTime.Now;
+                    UnitCore.Instance.ajustPosition.Add(ajusttime, message.Info as AjustPositionInfo);
                     break;
 
                 default:
@@ -478,7 +486,50 @@ namespace USBLDC.ViewModel
                 ObjectCenter = x.ToString("F02") + "," + y.ToString("F02") + "," + z.ToString("F02");
                 if ((x * x + y * y + z * z) > 1)
                     ObjectVisibility = true;
+                UpdataTrack(x, y, z);
+                UpdataTrack(x+200, y-100, z+500);
+                UpdataTrack(x + 600, y + 1000, z + 1500);
+        }
+        public bool TrackVisible
+        {
+            get { return GetPropertyValue(() => TrackVisible); }
+            set
+            {
+
+                if (value == false)
+                    TrackModel = null;
+                else
+                {
+                    // create the WPF3D model
+                    var m = new Model3DGroup();
+                    var gm = new MeshBuilder();
+                    gm.AddTube(Path, 18, 10, false);
+                    m.Children.Add(new GeometryModel3D(gm.ToMesh(), Materials.Gold));
+                    TrackModel = m;
+                }
+                SetPropertyValue(() => TrackVisible, value);
+                
+            }
+        }
+        private void RmoveTrack()
+        {
+            TrackVisible=false;
+            Path.RemoveAll((s)=> { return s != null; });
             
+        }
+
+        private void UpdataTrack(float x, float y, float z)
+        {
+            Path.Add(new Point3D(x, y, z));
+            if (TrackVisible)
+            {
+                // create the WPF3D model
+                var m = new Model3DGroup();
+                var gm = new MeshBuilder();
+                gm.AddTube(Path, 18, 10, false);
+                m.Children.Add(new GeometryModel3D(gm.ToMesh(), Materials.Gold));
+                TrackModel = m;
+            }
         }
 
         private void UpdateGpsView(GPSInfo info)
