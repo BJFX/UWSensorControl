@@ -360,7 +360,7 @@ namespace USBLDC.ViewModel
                 sc.SonarGPSy = SonarGPSy;
                 sc.SonarGPSz = SonarGPSz;
                 if (!UnitCore.Instance.UpdateSonarConfig(false)) throw new Exception("无法保存默认参数");
-                UnitCore.Instance.EventAggregator.PublishMessage(new GoHomePageNavigationEvent());
+                UnitCore.Instance.EventAggregator.PublishMessage(new GoBackNavigationRequest());
             }
             catch (Exception ex)
             {

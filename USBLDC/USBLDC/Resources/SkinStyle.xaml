@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Color x:Key="DefaultBackground">#600F3A6E</Color>
+    <Color x:Key="DefaultBackground">#4F4F4F</Color>
     <!--Brush-->
     <SolidColorBrush x:Key="DefaultBackgroundBrush" Color="{DynamicResource DefaultBackground}"/>
     <DrawingBrush x:Key="MyWireBrushResource" 

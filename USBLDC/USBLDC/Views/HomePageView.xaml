@@ -12,10 +12,11 @@
       xmlns:adp="clr-namespace:USBLDC.AttachedProperty"
       xmlns:h="clr-namespace:HelixToolkit.Wpf;assembly=HelixToolkit.Wpf"
       xmlns:Converters="clr-namespace:USBLDC.Converters"
-      Background="#0B3B6B"
+      Background="#4F4F4F"
       DataContext="{Binding HomePageViewModel, Source={StaticResource ViewModelLocator}}" 
       mc:Ignorable="d" 
       Foreground="White"
+      KeepAlive="True"
       d:DesignHeight="748" d:DesignWidth="1024" 
         Title="HomePage" Loaded="Page_Loaded">
     <Page.Resources>
@@ -129,7 +130,7 @@
                         <TextBlock  VerticalAlignment="Center" FontSize="24" Text="m" Foreground="White"/>
                     </StackPanel>
                 </Grid>
-                <GroupBox Header="{Binding gpsTime}" Grid.Row="1" Grid.Column="0" FontSize="18" Foreground="White" Grid.ColumnSpan="2">
+                <GroupBox Header="{Binding gpsTitle}" Grid.Row="1" Grid.Column="0" FontSize="18" Foreground="White" Grid.ColumnSpan="2">
                     <UniformGrid Columns="2" >
                         <TextBlock Text="状态:" />
                         <TextBlock Text="{Binding gpsStatus, Converter={StaticResource GpsStatusConverter}}"/>

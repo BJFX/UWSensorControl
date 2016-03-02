@@ -55,8 +55,9 @@ namespace USBLDC.ViewModel
                                 "Z=" + coordinateZ.ToString("F02") + "m";
             ShowCmd = true;
             CurrentModel = null;
-            gpsTime = "GPS";
             ObjectVisibility = false;
+            gpsTitle = "GPS";
+
         }
 
         public override void InitializePage(object extraData)
@@ -128,10 +129,10 @@ namespace USBLDC.ViewModel
             }
             if (UnitCore.Instance.CommCore != null && UnitCore.Instance.CommCore.IsWorking)
             {
-                if (gpsTime.CompareTo(new DateTime(1970, 1, 1)) <= 0)
+                if (gpstime.CompareTo(new DateTime(1970, 1, 1)) <= 0)
                     GPSLastUpdate = "已连接，无数据 ";
                 else
-                    GPSLastUpdate = "端口打开，更新时间 " + gpsTime.ToString();
+                    GPSLastUpdate = "端口打开，更新时间 " + gpstime.ToString();
             }
             else
             {
@@ -196,10 +197,10 @@ namespace USBLDC.ViewModel
             set { SetPropertyValue(() => Noise, value); }
         }
 
-        public string gpsTime
+        public string gpsTitle
         {
-            get { return GetPropertyValue(() => gpsTime); }
-            set { SetPropertyValue(() => gpsTime, value); }
+            get { return GetPropertyValue(() => gpsTitle); }
+            set { SetPropertyValue(() => gpsTitle, value); }
         }
 
         public float shipLong
@@ -337,6 +338,8 @@ namespace USBLDC.ViewModel
             }
             if (!UnitCore.Instance.USBLTraceService.StartService())
             {
+                if (UnitCore.Instance.USBLTraceService.bCanceld)
+                    return;
                 UnitCore.Instance.EventAggregator.PublishMessage(new LogEvent("工程设置失败！", LogType.OnlyInfo));
                 return;
             }
@@ -480,7 +483,7 @@ namespace USBLDC.ViewModel
                 targetLat = info.AjustLat;
                 targetLong = info.AjustLong;
                 Noise = info.Noise;
-                var x = -coordinateX;//坐标轴x相反，取反,5是画图系数
+                var x = -coordinateX;//坐标轴x相反，取反
                 var y = -coordinateY;//坐标轴y相反，取反
                 var z = -coordinateY;//坐标轴z相反，取反
                 ObjectCenter = x.ToString("F02") + "," + y.ToString("F02") + "," + z.ToString("F02");
@@ -535,7 +538,7 @@ namespace USBLDC.ViewModel
         private void UpdateGpsView(GPSInfo info)
         {
             var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            gpsTime = "GPS-"+epoch.AddSeconds(info.GPSSecond).AddMilliseconds(info.GPSMicSecond).ToString();
+            gpsTitle = "GPS-" + epoch.AddSeconds(info.GPSSecond).AddMilliseconds(info.GPSMicSecond).ToString();
             gpsStatus = info.GPSStatus;
             Satelites = info.SatNum;
             gpsSpeed = info.Velocity;

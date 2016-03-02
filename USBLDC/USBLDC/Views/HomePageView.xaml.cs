@@ -45,8 +45,8 @@ namespace USBLDC.Views
 
         private void Page_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            LookDownButton.IsChecked = true;
-            NorthButton_Click(null,e);
+            //LookDownButton.IsChecked = true;
+            //NorthButton_Click(null,e);
         }
 
 

@@ -26,6 +26,7 @@
                        HorizontalAlignment="Left" 
                        VerticalAlignment="Center"
                        Margin="20,0,10,0"/>
+            <Button Name="CloseButton"  Style="{StaticResource CloseAppBarButtonStyle}" Click="CloseButton_Click" HorizontalAlignment="Right"/>
             <TextBlock Text="工程名" Grid.Row="1" FontSize="20" Margin="20,0,0,0" VerticalAlignment="Center"/>
             <TextBox x:Name ="NameBox" Width="300"  Grid.Row="1" Margin="100,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
             <TextBlock Text="路径" Grid.Row="2" FontSize="20" Margin="20,0,0,0" VerticalAlignment="Center"/>

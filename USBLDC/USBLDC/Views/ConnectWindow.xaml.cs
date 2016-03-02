@@ -123,6 +123,7 @@ namespace USBLDC.Views
                 GPSConnectStatus.Visibility = Visibility.Collapsed;
                 GPSBar.Visibility = Visibility.Hidden;
                 GPSConnectStatus.Visibility = Visibility.Visible;
+                CommOK.Visibility  = Visibility.Visible;
             }
             else
             {

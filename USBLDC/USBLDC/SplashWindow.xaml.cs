@@ -31,6 +31,7 @@ namespace USBLDC
             PathBox.Text = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             NameBox.Text = CreateNonBlankTimeString();
             ErrBlock.Text = "";
+            this.Topmost = true;
         }
         private string CreateNonBlankTimeString()
         {
@@ -125,14 +126,22 @@ namespace USBLDC
                         throw new Exception("请重新选择工程路径！");
                     }
                 }
+                
+                this.DialogResult = true;
                 this.Hide();
-
             }
             catch (Exception exception)
             {
                 ErrBlock.Text = exception.Message;
             }
 
+        }
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            
+            this.DialogResult = false;
+            this.Hide();
         }
 
     }
