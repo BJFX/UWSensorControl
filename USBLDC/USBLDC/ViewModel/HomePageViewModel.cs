@@ -44,10 +44,7 @@ namespace USBLDC.ViewModel
         private DateTime gpstime = new DateTime(1970, 1, 1);
         public override void Initialize()
         {
-            Heading = 45;
-            Pitch = -30;
-            Roll = 30;
-            Heave = 100;
+            
             StartCMD = RegisterCommand(ExecuteStartCMD, CanExecuteStartCMD, true);
             StopCMD = RegisterCommand(ExecuteStopCMD, CanExecuteStopCMD, true);
             HeadingChartTitle = "X=" + coordinateX.ToString("F02") + "m" + "\n" + "Y=" + coordinateY.ToString("F02") +
@@ -470,7 +467,7 @@ namespace USBLDC.ViewModel
             Pitch = info.Pitch;
             Roll = info.Roll;
             Heave = info.Heave;
-            PoseStatus = info.Status;
+            //PoseStatus = info.Status;
             
         }
 

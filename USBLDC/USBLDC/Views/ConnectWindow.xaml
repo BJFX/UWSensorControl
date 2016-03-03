@@ -66,7 +66,7 @@
             </StackPanel>
             <UniformGrid Grid.Row="4" Columns="3">
                 <Button Name="ModifyPara" FontSize ="22" Foreground ="White" Style="{StaticResource ChromeButtonStyle}" Content="修改参数" VerticalAlignment="Center" FontFamily="Microsoft YaHei UI" Click="ModifyPara_Click"  />
-                <Button Name="StartWork" FontSize ="22" Foreground ="White" Style="{StaticResource ChromeButtonStyle}" Grid.Row="4"  Content="开始工作" VerticalAlignment="Center" FontFamily="Microsoft YaHei UI" Click="StartWork_Click" Visibility="Hidden" />
+                <Button Name="StartWork" FontSize ="22" Foreground ="White" Style="{StaticResource ChromeButtonStyle}" Grid.Row="4"  Content="进入程序" VerticalAlignment="Center" FontFamily="Microsoft YaHei UI" Click="StartWork_Click" Visibility="Hidden" />
                 <Button Name="ModifyNet" FontSize ="22" Foreground ="White" Style="{StaticResource ChromeButtonStyle}" Grid.Row="4" Content="修改连接" VerticalAlignment="Center" FontFamily="Microsoft YaHei UI" Click="ModifyNet_Click"/>
                 
             </UniformGrid>

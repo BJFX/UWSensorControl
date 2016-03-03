@@ -42,15 +42,15 @@ namespace USBLDC.Comm
         }
         public ITCPServerService TCPDataService
         {
-            get { return _tcpDataService ?? (_tcpDataService = new TcpListenerService()); }
+            get { return _tcpDataService ?? (_tcpDataService = new USBLListenerService()); }
         }
         public ITCPServerService TCPCmdService
         {
-            get { return _tcpCmdService ?? (_tcpCmdService = new TcpListenerService()); }
+            get { return _tcpCmdService ?? (_tcpCmdService = new USBLListenerService()); }
         }
         public ITCPServerService TCPPoseService
         {
-            get { return _tcpPoseService ?? (_tcpPoseService = new TcpListenerService()); }
+            get { return _tcpPoseService ?? (_tcpPoseService = new PoseListenerService()); }
         }
         public bool SonarIsOK { get; set; }
 

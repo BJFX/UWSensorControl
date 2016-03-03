@@ -150,21 +150,18 @@
                 </GroupBox>
                 <GroupBox Header="姿态传感器" Grid.Row="1" Grid.Column="2" FontSize="18" Foreground="White">
                     <UniformGrid Columns="2" >
-                        <TextBlock Text="状态:" />
-                        <TextBlock Text="{Binding PoseStatus}"/>
-
-
+                        
                         <TextBlock Text="艏向角(°):"/>
-                        <TextBlock Text="{Binding Heading}" />
+                        <TextBlock Text="{Binding Heading, StringFormat=\{0:F2\}}" />
 
                         <TextBlock Text="纵倾(°):"/>
-                        <TextBlock Text="{Binding Pitch}"/>
+                        <TextBlock Text="{Binding Pitch, StringFormat=\{0:F2\}}"/>
 
                         <TextBlock Text="横滚(°):"/>
-                        <TextBlock Text="{Binding Roll}"/>
+                        <TextBlock Text="{Binding Roll, StringFormat=\{0:F2\}}"/>
 
                         <TextBlock Text="升沉(m):"/>
-                        <TextBlock Text="{Binding Heave}"/>
+                        <TextBlock Text="{Binding Heave, StringFormat=\{0:F2\}}"/>
                     </UniformGrid>
                 </GroupBox>
                 <h:HelixViewport3D Background="{StaticResource DefaultBackgroundBrush}" Grid.Row="2" Grid.ColumnSpan="3" Margin="4" 
