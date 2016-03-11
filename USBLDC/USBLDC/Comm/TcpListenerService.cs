@@ -11,7 +11,7 @@ using USBLDC.Structure;
 
 namespace USBLDC.Comm
 {
-    public class PoseListenerService:ITCPServerService
+    public abstract class BaseListenerService : ITCPServerService
     {
         public TcpListener _tcpListener;
         protected IPAddress IP;
@@ -52,57 +52,7 @@ namespace USBLDC.Comm
             return true;
         }
 
-        private void RecvThread(object obj)
-        {
-            PoseListenerService server = null;
-            server = obj as PoseListenerService;
-            if (server!=null)
-            {
-                var myReadBuffer = new byte[4100];
-                while (true)
-                {
-                    try
-                    {
-                        server.LinkerClient = server._tcpListener.AcceptTcpClient();
-                        NetworkStream stream = server.LinkerClient.GetStream();
-                        while (stream.CanRead)
-                        {
-                            Array.Clear(myReadBuffer, 0, 4100); //置零
-                            int numberOfBytesRead = 0;
-                            int id = BitConverter.ToInt32(myReadBuffer, 0);
-                            if (id == 0) //姿态数据
-                                id = (int) TypeId.Pose;
-                            var ret = stream.Read(myReadBuffer, 0, 3); //先读包头
-                            if (ret <= 0)
-                                break;
-                            do
-                            {
-                                int n = stream.Read(myReadBuffer, 3 + numberOfBytesRead,
-                                    (int) (29 - numberOfBytesRead));
-                                numberOfBytesRead += n;
-
-                            } while (numberOfBytesRead != 29);
-                            var e = new DataEventArgs(id, null, myReadBuffer);
-                            OnParsed(e);
-                        }
-                        //server.LinkerClient = null;
-                    }
-                    catch (Exception exception)
-                    {
-                        UnitCore.Instance.EventAggregator.PublishMessage(new ErrorEvent(exception,
-                            LogType.Both));
-                    }
-                    finally
-                    {
-                        if (server.LinkerClient != null)
-                            server.LinkerClient.Close();
-                        server.LinkerClient = null;
-                    }
-                }
-
-            }
-
-        }
+        public abstract void RecvThread(object obj);
 
         public void Stop()
         {
@@ -131,21 +81,13 @@ namespace USBLDC.Comm
         public TcpClient LinkerClient { get; set; }
 
     }
-
-    public class USBLListenerService : PoseListenerService
+    public class PoseListenerService : BaseListenerService
     {
-        public new bool Start()
+        public override void RecvThread(object obj)
         {
-            _tcpListener.Start();
-            TdThread = new Thread(RecvThread);
-            TdThread.Start(this);
-            return true;
-        }
-        private void RecvThread(object obj)
-        {
-            USBLListenerService server = null;
-            server = obj as USBLListenerService;
-            if (server != null)
+            PoseListenerService server = null;
+            server = obj as PoseListenerService;
+            if (server!=null)
             {
                 var myReadBuffer = new byte[4100];
                 while (true)
@@ -158,9 +100,64 @@ namespace USBLDC.Comm
                         {
                             Array.Clear(myReadBuffer, 0, 4100); //置零
                             int numberOfBytesRead = 0;
-                            int id = BitConverter.ToInt32(myReadBuffer, 0);
+                            
+                            var ret = stream.Read(myReadBuffer, 0, 3); //先读包头
+                            if (ret <= 0)
+                                break;
+                            do
+                            {
+                                int n = stream.Read(myReadBuffer, 3 + numberOfBytesRead,
+                                    (int) (29 - numberOfBytesRead));
+                                numberOfBytesRead += n;
+
+                            } while (numberOfBytesRead != 29);
+                            int id = (int) TypeId.Pose;
+                            var e = new DataEventArgs(id, null, myReadBuffer);
+                            OnParsed(e);
+                        }
+                        //server.LinkerClient = null;
+                    }
+                    catch (Exception exception)
+                    {
+                        UnitCore.Instance.EventAggregator.PublishMessage(new ErrorEvent(exception,
+                            LogType.Both));
+                    }
+                    finally
+                    {
+                        if (server.LinkerClient != null)
+                            server.LinkerClient.Close();
+                        server.LinkerClient = null;
+                    }
+                }
+
+            }
+
+        }
+
+    }
+
+    public class USBLListenerService : BaseListenerService
+    {
+        public override void RecvThread(object obj)
+        {
+            USBLListenerService server = null;
+            server = obj as USBLListenerService;
+            if (server != null)
+            {
+                var myReadBuffer = new byte[32768];
+                while (true)
+                {
+                    try
+                    {
+                        server.LinkerClient = server._tcpListener.AcceptTcpClient();
+                        NetworkStream stream = server.LinkerClient.GetStream();
+                        while (stream.CanRead)
+                        {
+                            Array.Clear(myReadBuffer, 0, 32768); //置零
+                            int numberOfBytesRead = 0;
+                            
                             stream.Read(myReadBuffer, 0, 32); //先读包头
-                            var packetLength = BitConverter.ToUInt32(myReadBuffer, 8);
+                            var packetLength = BitConverter.ToUInt32(myReadBuffer, 8)-32;
                             // Incoming message may be larger than the buffer size.
                             do
                             {
@@ -169,6 +166,7 @@ namespace USBLDC.Comm
                                 numberOfBytesRead += n;
 
                             } while (numberOfBytesRead != packetLength);
+                            int id = BitConverter.ToInt32(myReadBuffer, 0);
                             var e = new DataEventArgs(id, null, myReadBuffer);
                             OnParsed(e);
                         }

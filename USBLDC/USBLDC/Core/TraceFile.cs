@@ -65,6 +65,7 @@ namespace USBLDC.Core
         }
         public  void Close()
         {
+            Path = null;
             if (GpsFile != null)
                 GpsFile.Close();
             if (PoseFile != null)
@@ -97,6 +98,8 @@ namespace USBLDC.Core
         }
         public  void SaveGPS(GPSInfo gpsInfo)
         {
+            if (Path==null)
+                return;
             if (GpsFile == null)
             {
                 GpsFile = new ADFile("GPS","dat");
@@ -110,6 +113,8 @@ namespace USBLDC.Core
         }
         public void SavePose(PosetureInfo poseinfo)
         {
+            if (Path == null)
+                return;
             if (PoseFile == null)
             {
                 PoseFile = new ADFile("Pose", "dat");
@@ -123,6 +128,8 @@ namespace USBLDC.Core
         }
         public  void SaveAD(ADInfo info)
         {
+            if (Path == null)
+                return;
             if (ADFile == null)
             {
                 ADFile = new PingFile(ProjectName,"ad");
@@ -142,6 +149,8 @@ namespace USBLDC.Core
         }
         public void SavePosition(AjustPositionInfo info)
         {
+            if (Path == null)
+                return;
             if (PosFile == null)
             {
                 PosFile = new PingFile(ProjectName, "pos");
