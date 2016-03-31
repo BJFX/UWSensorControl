@@ -119,6 +119,7 @@ namespace USBLDC.Comm
 
             {
                 var strcmd = Encoding.ASCII.GetString(bytes);
+                queue.Clear();
                 var arg = new DataEventArgs((int) TypeId.GPS, strcmd, bytes);
                 OnParsed(arg);
             }
