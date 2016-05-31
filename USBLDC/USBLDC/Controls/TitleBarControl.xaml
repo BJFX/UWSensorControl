@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:Controls="clr-namespace:TinyMetroWpfLibrary.Controls;assembly=TinyMetroWpfLibrary.Controls"
              mc:Ignorable="d" 
-             HorizontalAlignment="Stretch" Height="100" ClipToBounds="False"
+             HorizontalAlignment="Stretch" Height="80" ClipToBounds="False"
              >
     <Grid>
        

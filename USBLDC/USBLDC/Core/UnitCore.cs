@@ -139,7 +139,13 @@ namespace USBLDC.Core
                 //USBLTraceService.StartService();
                 LoadConfiguration();
                 if(_appConf.GetVelProfileName()!=null)
-                    SoundFile = new SettleSoundFile(_appConf.GetVelProfileName());
+                {
+                    if(File.Exists(_appConf.GetVelProfileName()))
+                    {
+                        SoundFile = new SettleSoundFile(_appConf.GetVelProfileName());
+                    }
+                }
+                    
                 var shippath = _appConf.GetModelPath("Ship");
                 if (shippath == null)
                     throw new Exception("未找到模型组件！");
@@ -147,11 +153,7 @@ namespace USBLDC.Core
                 CurrentModel = await LoadAsync(shippath, false);
                 if (CurrentModel==null)
                     throw new Exception("加载模型组件失败！");
-                //this part replace to the connection splash
-                //NetCore.Initialize();
-                //NetCore.Start();
-                //CommCore.Initialize();
-                //CommCore.Start();
+
                 _serviceStarted = true;//if failed never get here
                 
                 return _serviceStarted;

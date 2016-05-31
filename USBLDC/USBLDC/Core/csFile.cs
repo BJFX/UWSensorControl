@@ -38,6 +38,7 @@ namespace USBLDC.Core
 
 	    public void SetFileSizeLimit(long size)
 	    {
+            length = 0;
 	        if (size>0)
 	        {
 	            sizelimit = size;
@@ -150,7 +151,7 @@ namespace USBLDC.Core
                 fileName = file_name;
                 ws = new StreamWriter(File.Open(fileName, FileMode.Append, FileAccess.Write, FileShare.Read));
                 ws.AutoFlush = true;
-				
+                length = 0;
 				writeOpened = true;
 				return true;
 			}
@@ -292,10 +293,10 @@ namespace USBLDC.Core
             }
             return Di.Exists && BinaryOpenWrite(Di.FullName +"\\"+ header + "_"+PingID.ToString() + "." + ext);
         }
-        public override bool Create()
+        public bool Create(uint id)
         {
             PkgNum = 0;
-            PingID = 0;
+            PingID = id;
             PingSecond = 0;
             PingMicSecond = 0;
             return OpenBinaryFile();

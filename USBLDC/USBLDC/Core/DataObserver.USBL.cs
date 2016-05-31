@@ -53,6 +53,7 @@ namespace USBLDC.Core
                         ajInfo.CalcPosition(UnitCore.Instance.SoundFile, UnitCore.Instance.SonarConfiguration,
                             (RawPositionInfo) info,longitude, latitude);
                         info = (StructureInterface)ajInfo;
+                        e.Id = (int)TypeId.AjustPos;
                     }
                     UnitCore.Instance.EventAggregator.PublishMessage(new ShowStructureInfo(info, e.Id));
                     SaveRecvData(info, e.Id);

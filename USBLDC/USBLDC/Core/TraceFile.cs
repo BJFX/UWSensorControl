@@ -134,14 +134,14 @@ namespace USBLDC.Core
             {
                 ADFile = new PingFile(ProjectName,"ad");
                 ADFile.SetPath(new DirectoryInfo(Path));
-                ADFile.Create();
+                ADFile.Create(info.PingNum);
                 ADFile.Write(info.SavePackage());
                 return;
             }
             if (ADFile.PingID != info.PingNum) //新的ping号
             {
                 ADFile.Close();
-                ADFile.Create();
+                ADFile.Create(info.PingNum);
                 
             }
             ADFile.Write(info.SavePackage());
@@ -155,14 +155,14 @@ namespace USBLDC.Core
             {
                 PosFile = new PingFile(ProjectName, "pos");
                 PosFile.SetPath(new DirectoryInfo(Path));
-                PosFile.Create();
+                PosFile.Create(info.raw.PingNum);
                 PosFile.Write(info.SavePackage());
                 return;
             }
             if (PosFile.PingID != info.raw.PingNum) //新的ping号
             {
                 PosFile.Close();
-                PosFile.Create();
+                PosFile.Create(info.raw.PingNum);
             }
             PosFile.Write(info.SavePackage());
 

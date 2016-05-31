@@ -65,8 +65,7 @@ namespace USBLDC
         private void Application_Exit(object sender, ExitEventArgs e)
         {
             LogHelper.WriteLog("程序关闭");
-            if (UnitCore.GetInstance().IsWorking)
-                UnitCore.GetInstance().Stop();
+            UnitCore.GetInstance().Stop();
         }
 
        
