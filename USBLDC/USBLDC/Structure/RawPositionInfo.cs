@@ -196,6 +196,8 @@ namespace USBLDC.Structure
                     scConfig = sc;
                     this.raw = raw;
                     USBL_GuiWei Position_Guiwei = new USBL_GuiWei(raw.XDistance, raw.YDistance, raw.ZDistance, raw.Heave, raw.Heading, raw.Pitch, raw.Roll, longitude, latitude, sc.SonarGPSx, sc.SonarGPSy, sc.SonarGPSz, raw.TravelTime, sc.SonarDepth, settleSoundFile.SVPd, settleSoundFile.SVPc);
+                    //USBL_GuiWei Position_Guiwei = new USBL_GuiWei((float)0.4785, (float)-0.5465, (float)-6.7128, raw.Heave, (float)48.7943, (float)0.1944, 0, longitude, latitude, sc.SonarGPSx, sc.SonarGPSy, sc.SonarGPSz, (float)0.0045, sc.SonarDepth, settleSoundFile.SVPd, settleSoundFile.SVPc);
+                    //USBL_GuiWei Position_Guiwei = new USBL_GuiWei((float)0.6391, (float)-0.0549, (float)-6.9063, raw.Heave, (float)48.73, (float)0.19, 0, longitude, latitude, sc.SonarGPSx, sc.SonarGPSy, sc.SonarGPSz, (float)0.0046, sc.SonarDepth, settleSoundFile.SVPd, settleSoundFile.SVPc);
                     AjustLat = (float)Position_Guiwei.LatTarget;
                     AjustLong = (float)Position_Guiwei.LonTarget;
                     Noise = raw.Noise;
@@ -249,6 +251,8 @@ namespace USBLDC.Structure
             offset += 4;
             Buffer.BlockCopy(BitConverter.GetBytes(scConfig.PosSaved), 0, bytes, offset, 4);
             offset += 4;
+            Buffer.BlockCopy(BitConverter.GetBytes(scConfig.SonarGPSx), 0, bytes, offset, 4);
+            offset += 4;
             Buffer.BlockCopy(BitConverter.GetBytes(scConfig.SonarGPSy), 0, bytes, offset, 4);
             offset += 4;
             Buffer.BlockCopy(BitConverter.GetBytes(scConfig.SonarGPSz), 0, bytes, offset, 4);
@@ -284,6 +288,12 @@ namespace USBLDC.Structure
             Buffer.BlockCopy(BitConverter.GetBytes(raw.Quality), 0, bytes, offset, 4);
             offset += 4;
             Buffer.BlockCopy(BitConverter.GetBytes(raw.Noise), 0, bytes, offset, 4);
+            offset += 4;
+            Buffer.BlockCopy(BitConverter.GetBytes(raw.TravelTime), 0, bytes, offset, 4);
+            offset += 4;
+            Buffer.BlockCopy(BitConverter.GetBytes(raw.XAngle), 0, bytes, offset, 4);
+            offset += 4;
+            Buffer.BlockCopy(BitConverter.GetBytes(raw.YAngle), 0, bytes, offset, 4);
             return bytes;
         }
     }

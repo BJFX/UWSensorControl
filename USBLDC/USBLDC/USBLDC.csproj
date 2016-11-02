@@ -52,20 +52,25 @@
     <ApplicationIcon>Assets\Logo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="De.TorstenMandelkow.MetroChart">
-      <HintPath>..\..\..\DeckUnit\Tools\De.TorstenMandelkow.MetroChart.dll</HintPath>
+    <Reference Include="De.TorstenMandelkow.MetroChart, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d5b8d1bbc99c4a2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\De.TorstenMandelkow.MetroChart.dll</HintPath>
     </Reference>
-    <Reference Include="HelixToolkit.Wpf">
-      <HintPath>..\..\..\DeckUnit\Tools\HelixToolkit.Wpf.dll</HintPath>
+    <Reference Include="HelixToolkit.Wpf, Version=2014.2.1.1, Culture=neutral, PublicKeyToken=52aa3500039caf0d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\HelixToolkit.Wpf.dll</HintPath>
     </Reference>
-    <Reference Include="HelixToolkit.Wpf.Input">
-      <HintPath>..\..\..\DeckUnit\Tools\HelixToolkit.Wpf.Input.dll</HintPath>
+    <Reference Include="HelixToolkit.Wpf.Input, Version=2014.2.1.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\HelixToolkit.Wpf.Input.dll</HintPath>
     </Reference>
-    <Reference Include="log4net">
-      <HintPath>..\..\..\DeckUnit\Tools\log4net.dll</HintPath>
+    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="MahApps.Metro">
-      <HintPath>..\..\..\DeckUnit\Tools\MahApps.Metro.dll</HintPath>
+    <Reference Include="MahApps.Metro, Version=1.1.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\MahApps.Metro.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Threading.Tasks">
       <HintPath>..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
@@ -98,15 +103,21 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="TinyMetroWpfLibrary">
-      <HintPath>..\..\..\DeckUnit\Tools\TinyMetroWpfLibrary.dll</HintPath>
+    <Reference Include="TinyMetroWpfLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\TinyMetroWpfLibrary.dll</HintPath>
     </Reference>
-    <Reference Include="TinyMetroWpfLibrary.Controls">
-      <HintPath>..\..\..\DeckUnit\Tools\TinyMetroWpfLibrary.Controls.dll</HintPath>
+    <Reference Include="TinyMetroWpfLibrary.Controls, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\TinyMetroWpfLibrary.Controls.dll</HintPath>
     </Reference>
     <Reference Include="TinyMetroWpfLibrary.Utility, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\DeckUnit\Tools\TinyMetroWpfLibrary.Utility.dll</HintPath>
+      <HintPath>bin\Debug\TinyMetroWpfLibrary.Utility.dll</HintPath>
+    </Reference>
+    <Reference Include="USBL.Guiwei, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\USBL.Guiwei\bin\Debug\USBL.Guiwei.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
@@ -121,6 +132,9 @@
     <Compile Include="AttachedProperty\BrushPropertys.cs" />
     <Compile Include="AttachedProperty\ListBoxSelectBringIntoView.cs" />
     <Compile Include="AttachedProperty\ScreenModelPropertys.cs" />
+    <Compile Include="Comm\CCheck.cs" />
+    <Compile Include="Comm\CCheckBP.cs" />
+    <Compile Include="Comm\CCycleMem.cs" />
     <Compile Include="Comm\IDataService.cs" />
     <Compile Include="Comm\NerWorkServer.cs" />
     <Compile Include="Comm\SerialService.cs" />
@@ -260,6 +274,7 @@
     </EmbeddedResource>
     <None Include="app.config" />
     <Resource Include="Font\seguisym.ttf" />
+    <None Include="log4net.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -350,10 +365,6 @@
     <Resource Include="Assets\ico_zoomout_p.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\USBL.Guiwei\USBL.Guiwei.csproj">
-      <Project>{58d7bad3-62d0-41df-ac26-ddf9ec8533aa}</Project>
-      <Name>USBL.Guiwei</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NMEA0183\NMEA0183.csproj">
       <Project>{849c3cc7-f45e-491f-b9a0-2d62004549be}</Project>
       <Name>NMEA0183</Name>

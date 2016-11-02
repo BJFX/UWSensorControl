@@ -329,7 +329,7 @@ namespace USBLDC.Core
                 if (Create() == false)
                     return 0;
             }
-            if (ext=="ad")
+            if(ext=="ad")
                 UpdateHeader();//更新包头
             bw.Seek(0, SeekOrigin.End);
             bw.Write(data);

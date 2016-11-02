@@ -21,10 +21,11 @@ namespace USBL.GuiWei
         public USBL_GuiWei(float x_carrier,float y_carrier,float z_carrier,float Heave,float Heading,
             float Pitch, float Roll, float Lon_local, float Lat_local, float us_x, float us_y, float us_z, float Travel_time, float ArrayDepth, int[] SVPd, double[] SVPc)
         {
-                trans_coor(x_carrier,y_carrier,z_carrier,Heading,Pitch,Roll);
-                direction(_X_carrier, _Y_carrier, _Z_carrier);
+                /*trans_coor(x_carrier,y_carrier,z_carrier,Heading,Pitch,Roll);
+                direction(_X_carrier, _Y_carrier, _Z_carrier);*/
+                direction(x_carrier, y_carrier, z_carrier);
                 CorrectionConstC PositionSoundMend = new CorrectionConstC(Travel_time, _phi, _gama, ArrayDepth, Heave, SVPd, SVPc);
-                PositionSoundMend.SoundSpeedMend();
+                PositionSoundMend.SoundSpeedMend();                
                 Translation(PositionSoundMend.ResultX, PositionSoundMend.ResultY, -PositionSoundMend.ResultH + ArrayDepth, us_x, us_y, us_z);
 
             
@@ -77,7 +78,7 @@ namespace USBL.GuiWei
 
         public void LongLagtitude(double LonLocal, double LatLocal)
         {
-            LonTarget = LonLocal + x_local / (111.3 * 1000 * Math.Abs(Math.Cos(LatLocal)));
+            LonTarget = LonLocal + x_local / (111.3 * 1000 * Math.Abs(Math.Cos(LatLocal/180*Math.PI)));
             LatTarget = LatLocal + y_local / (111.3 * 1000);
             DepthTarget = z_local;
         }

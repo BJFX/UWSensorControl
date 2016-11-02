@@ -65,6 +65,9 @@ namespace USBLDC.ViewModel
                 SonarGPSx = sc.SonarGPSx;
                 SonarGPSy = sc.SonarGPSy;
                 SonarGPSz = sc.SonarGPSz;
+                Pitchfixed = sc.Pitchfixed;
+                Rollfixed = sc.Rollfixed;
+                Headingfixed = sc.Headingfixed;
             }
             catch (Exception ex)
             {
@@ -178,6 +181,21 @@ namespace USBLDC.ViewModel
             get { return GetPropertyValue(() => SonarGPSz); }
             set { SetPropertyValue(() => SonarGPSz, value); }
         }
+        public float Pitchfixed
+        {
+            get { return GetPropertyValue(() => Pitchfixed); }
+            set { SetPropertyValue(() => Pitchfixed, value); }
+        }
+        public float Rollfixed
+        {
+            get { return GetPropertyValue(() => Rollfixed); }
+            set { SetPropertyValue(() => Rollfixed, value); }
+        }
+        public float Headingfixed
+        {
+            get { return GetPropertyValue(() => Headingfixed); }
+            set { SetPropertyValue(() => Headingfixed, value); }
+        }
         public string Profile
         {
             get { return GetPropertyValue(() => Profile); }
@@ -220,6 +238,9 @@ namespace USBLDC.ViewModel
                 sc.SonarGPSx = SonarGPSx;
                 sc.SonarGPSy = SonarGPSy;
                 sc.SonarGPSz = SonarGPSz;
+                sc.Pitchfixed = Pitchfixed;
+                sc.Rollfixed = Rollfixed;
+                sc.Headingfixed = Headingfixed;
                 /////////////////////////////////////////////////////////////////////////////////////
                 SaveFileDialog saveFileDialog = new SaveFileDialog();
                 saveFileDialog.Filter = "参数文件 (*.dat)|*.dat";
@@ -294,6 +315,9 @@ namespace USBLDC.ViewModel
                 SonarGPSx = sc.SonarGPSx;
                 SonarGPSy = sc.SonarGPSy;
                 SonarGPSz = sc.SonarGPSz;
+                Pitchfixed = sc.Pitchfixed;
+                Rollfixed = sc.Rollfixed;
+                Headingfixed = sc.Headingfixed;
                 
             }
             catch (Exception ex)
@@ -336,7 +360,8 @@ namespace USBLDC.ViewModel
                 else
                 {
                     throw new Exception("声速剖面文件不存在！");
-                }
+                }                
+
                 var sc = UnitCore.Instance.SonarConfiguration;
                 sc.VelCmd = SurVelSrcIndex;
                 if (AvgVelIndex == 1)
@@ -359,6 +384,9 @@ namespace USBLDC.ViewModel
                 sc.SonarGPSx = SonarGPSx;
                 sc.SonarGPSy = SonarGPSy;
                 sc.SonarGPSz = SonarGPSz;
+                sc.Pitchfixed = Pitchfixed;
+                sc.Rollfixed = Rollfixed;
+                sc.Headingfixed = Headingfixed;
                 if (!UnitCore.Instance.UpdateSonarConfig(false)) throw new Exception("无法保存默认参数");
                 UnitCore.Instance.EventAggregator.PublishMessage(new GoBackNavigationRequest());
             }

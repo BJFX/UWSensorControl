@@ -46,7 +46,7 @@ namespace USBLDC.Comm
         }
         public ITCPServerService TCPCmdService
         {
-            get { return _tcpCmdService ?? (_tcpCmdService = new USBLListenerService()); }
+            get { return _tcpCmdService ?? (_tcpCmdService = new USBLCmdListenerService()); }
         }
         public ITCPServerService TCPPoseService
         {
@@ -113,6 +113,8 @@ namespace USBLDC.Comm
                 TCPPoseService.UnRegister(NetDataObserver);
                 TCPPoseService.Stop();
             }
+            SonarIsOK = false;
+            PoseIsOK = false;
             IsWorking = false;
             IsInitialize = false;
         }

@@ -51,21 +51,21 @@ namespace NMEA0183
                                 UInt16.Parse(gpsinfo[2].Substring(2, 2)),
                                 UInt16.Parse(gpsinfo[2].Substring(4, 2)), microSenconds);
                             }
-                            if (gpsinfo[4] == "S")
+                            if (gpsinfo[5] == "S")
                                 Latitude =
-                                    -(UInt16.Parse(gpsinfo[3].Substring(0, 2)) + float.Parse(gpsinfo[3].Substring(2))/60);
+                                    -(UInt16.Parse(gpsinfo[4].Substring(0, 2)) + float.Parse(gpsinfo[4].Substring(2))/60);
                             else
                             {
-                                Latitude = UInt16.Parse(gpsinfo[3].Substring(0, 2)) +
-                                           float.Parse(gpsinfo[3].Substring(2))/60;
+                                Latitude = UInt16.Parse(gpsinfo[4].Substring(0, 2)) +
+                                           float.Parse(gpsinfo[4].Substring(2))/60;
                             }
-                            if (gpsinfo[6] == "W")
+                            if (gpsinfo[7] == "W")
                                 Longitude =
-                                    -(UInt16.Parse(gpsinfo[5].Substring(0, 2)) + float.Parse(gpsinfo[5].Substring(2)) / 60);
+                                    -(UInt16.Parse(gpsinfo[6].Substring(0, 2)) + float.Parse(gpsinfo[6].Substring(2)) / 60);
                             else
                             {
-                                Longitude = UInt16.Parse(gpsinfo[5].Substring(0, 2)) +
-                                           float.Parse(gpsinfo[5].Substring(2)) / 60;
+                                Longitude = UInt16.Parse(gpsinfo[6].Substring(0, 2)) +
+                                           float.Parse(gpsinfo[6].Substring(2)) / 60;
                             }
                             //刷新航向、航速信息
                             Speed = float.Parse(gpsinfo[8]);
@@ -80,7 +80,46 @@ namespace NMEA0183
                     case "GPGSV":
                         SatNum = UInt16.Parse(gpsinfo[4]);
                         break;
-                    case "GPGGA":
+                    case "GPZDA":
+                        if (gpsinfo[2] != "")
+                        {
+                            int microSenconds = 0;
+                            if (gpsinfo[2].Length > 7) //ms
+                                microSenconds = UInt16.Parse(gpsinfo[2].Substring(7));
+                            UTCTime = new DateTime(UInt16.Parse(gpsinfo[5]),
+                            UInt16.Parse(gpsinfo[4]),
+                            UInt16.Parse(gpsinfo[3]),
+                            UInt16.Parse(gpsinfo[2].Substring(0, 2)),
+                            UInt16.Parse(gpsinfo[2].Substring(2, 2)),
+                            UInt16.Parse(gpsinfo[2].Substring(4, 2)), microSenconds);
+                        }
+                        break;
+                    case "GPGGA":                        
+                        if (gpsinfo[7] == "1" || gpsinfo[7] == "2") //数据有效
+                        {                           
+                            if (gpsinfo[4] == "S")
+                                Latitude =
+                                    -(UInt16.Parse(gpsinfo[3].Substring(0, 2)) + float.Parse(gpsinfo[3].Substring(2)) / 60);
+                            else
+                            {
+                                Latitude = UInt16.Parse(gpsinfo[3].Substring(0, 2)) +
+                                           float.Parse(gpsinfo[3].Substring(2)) / 60;
+                            }
+                            if (gpsinfo[6] == "W")
+                                Longitude =
+                                    -(UInt16.Parse(gpsinfo[5].Substring(0, 3)) + float.Parse(gpsinfo[5].Substring(3)) / 60);
+                            else
+                            {
+                                Longitude = UInt16.Parse(gpsinfo[5].Substring(0, 3)) +
+                                           float.Parse(gpsinfo[5].Substring(3)) / 60;
+                            }
+                            Height = float.Parse(gpsinfo[12]);
+
+                        }
+                        else
+                        {
+                            Status = 98;
+                        }
                         Status = uint.Parse(gpsinfo[7]);
                         break;
                     default:

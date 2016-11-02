@@ -140,7 +140,7 @@ namespace USBLDC.Views
             int dataport,cmdport;
             int poseport;
            
-            if (int.TryParse(IpPortBox.Text, out dataport) && (dataport > 0 || dataport < 65535))
+            if (int.TryParse(IpPortBox.Text, out dataport) && (dataport > 0 &&dataport < 65535))
             {
 
             }
@@ -149,7 +149,7 @@ namespace USBLDC.Views
                 UnitCore.Instance.EventAggregator.PublishMessage(new LogEvent("数据端口格式不正确！", LogType.OnlyInfo));
                 return;
             }
-            if (int.TryParse(IpCmdPortBox.Text, out cmdport) && (cmdport > 0 || cmdport < 65535))
+            if (int.TryParse(IpCmdPortBox.Text, out cmdport) && (cmdport > 0 && cmdport < 65535))
             {
 
             }
@@ -159,7 +159,7 @@ namespace USBLDC.Views
                 return;
             }
             
-            if (int.TryParse(IpPosePortBox.Text, out poseport) && (poseport > 0 || poseport < 65535))
+            if (int.TryParse(IpPosePortBox.Text, out poseport) && (poseport > 0 && poseport < 65535))
             {
 
             }
@@ -193,6 +193,9 @@ namespace USBLDC.Views
             POSEConnectStatus.Visibility = Visibility.Collapsed;
             GPSConnectStatus.Visibility = Visibility.Collapsed;
             StartWork.Visibility = Visibility.Hidden;
+            TCPOK.Visibility = Visibility.Collapsed;
+            POSEOK.Visibility = Visibility.Collapsed;
+            CommOK.Visibility = Visibility.Collapsed;
             UnitCore.Instance.Start();
             Task.Factory.StartNew(() =>
             {

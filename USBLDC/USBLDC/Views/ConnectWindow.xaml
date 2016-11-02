@@ -8,10 +8,10 @@
       xmlns:Controls="clr-namespace:TinyMetroWpfLibrary.Controls;assembly=TinyMetroWpfLibrary.Controls"
       xmlns:converters="clr-namespace:USBLDC.Converters"
       x:Class="USBLDC.Views.ConnectWindow" 
-      mc:Ignorable="d" WindowStyle="None"
+      mc:Ignorable="d" 
         Title="ConnectWindow"
-        WindowStartupLocation="CenterScreen" ShowInTaskbar="False" ResizeMode="NoResize" TextBlock.Foreground="White"
-	     Width="700" Height="350" Loaded="Window_Loaded" Topmost="True" Closed="Window_Closed">
+        WindowStartupLocation="CenterScreen" ShowInTaskbar="False"  ResizeMode="NoResize" TextBlock.Foreground="White"
+	     Width="700" Height="350" Loaded="Window_Loaded" Topmost="False"  Closed="Window_Closed">
 
     <Window.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
@@ -54,8 +54,8 @@
                 <TextBlock Text="运动传感器" FontSize="20" Margin="20,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                 <ProgressBar Name="PoserBar" VerticalAlignment="Center" HorizontalAlignment="Left" Visibility="{Binding IsProcessing, Converter={StaticResource BooleanToVisibilityConverter}}"
 					Style="{StaticResource PerformanceProgressBar}" Foreground="Black" Width="200" Height="30" Margin="80,0,0,0" />
-                <TextBlock Name="POSEConnectStatus" FontSize="23" Margin="80,0,0,0" VerticalAlignment="Center" Visibility="Collapsed">通信已建立</TextBlock>
-                <Button Name="POSEOK" Style="{StaticResource DoneAppBarButtonStyle}"  Grid.Row="4" Width="80" BorderThickness="0" Height="80"   VerticalAlignment="Center" HorizontalAlignment="Left" Margin="100,0,0,0" IsEnabled="False" Visibility="Hidden" />
+                    <TextBlock Name="POSEConnectStatus" FontSize="23" Margin="80,0,0,0" VerticalAlignment="Center" Visibility="Collapsed">通信已建立</TextBlock>
+                    <Button Name="POSEOK" Style="{StaticResource DoneAppBarButtonStyle}"  Grid.Row="4" Width="80" BorderThickness="0" Height="80"   VerticalAlignment="Center" HorizontalAlignment="Left" Margin="100,0,0,0" IsEnabled="False" Visibility="Hidden" />
             </StackPanel>
             <StackPanel Grid.Row="3" Orientation="Horizontal">
                 <TextBlock Text="GPS数据" FontSize="20" Margin="20,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"/>

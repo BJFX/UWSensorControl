@@ -115,13 +115,15 @@ namespace USBLDC.Comm
         {
             var bytes = new byte[queue.Count];
             queue.CopyTo(bytes);
-            if((bytes[queue.Count-2]=='\r')&&(bytes[queue.Count-1]=='\n'))
-
+            if (queue.Count>1)
             {
-                var strcmd = Encoding.ASCII.GetString(bytes);
-                queue.Clear();
-                var arg = new DataEventArgs((int) TypeId.GPS, strcmd, bytes);
-                OnParsed(arg);
+                if ((bytes[queue.Count - 2] == '\r') && (bytes[queue.Count - 1] == '\n'))
+                {
+                    var strcmd = Encoding.ASCII.GetString(bytes);
+                    queue.Clear();
+                    var arg = new DataEventArgs((int)TypeId.GPS, strcmd, bytes);
+                    OnParsed(arg);
+                }
             }
         }
 

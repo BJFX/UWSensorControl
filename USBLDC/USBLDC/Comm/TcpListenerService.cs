@@ -16,7 +16,8 @@ namespace USBLDC.Comm
         public TcpListener _tcpListener;
         protected IPAddress IP;
         public static event EventHandler<DataEventArgs> DoParse;
-        protected Thread TdThread;
+        protected Thread TdThread;        
+
         public bool Init(int listenport)
         {
             try
@@ -83,6 +84,8 @@ namespace USBLDC.Comm
     }
     public class PoseListenerService : BaseListenerService
     {
+        private CCheckBP check = new CCheckBP();
+        private List<byte> _recvQueue = new List<byte>();
         public override void RecvThread(object obj)
         {
             PoseListenerService server = null;
@@ -99,28 +102,20 @@ namespace USBLDC.Comm
                         while (stream.CanRead)
                         {
                             Array.Clear(myReadBuffer, 0, 4100); //置零
-                            int numberOfBytesRead = 0;
-                            
-                            var ret = stream.Read(myReadBuffer, 0, 3); //先读包头
-                            if (ret <= 0)
-                                break;
-                            do
+                            while (stream.DataAvailable)
                             {
-                                int n = stream.Read(myReadBuffer, 3 + numberOfBytesRead,
-                                    (int) (29 - numberOfBytesRead));
-                                numberOfBytesRead += n;
-
-                            } while (numberOfBytesRead != 29);
-                            int id = (int) TypeId.Pose;
-                            var e = new DataEventArgs(id, null, myReadBuffer);
-                            OnParsed(e);
+                                stream.Read(myReadBuffer, 0, 1);
+                                _recvQueue.Add(myReadBuffer[0]);
+                            }
+                            CheckQueue(ref _recvQueue);
                         }
-                        //server.LinkerClient = null;
+                        //server.LinkerClient = null;                         
+
                     }
                     catch (Exception exception)
                     {
                         UnitCore.Instance.EventAggregator.PublishMessage(new ErrorEvent(exception,
-                            LogType.Both));
+                            LogType.OnlyLog));
                     }
                     finally
                     {
@@ -134,6 +129,31 @@ namespace USBLDC.Comm
 
         }
 
+        protected void CheckQueue(ref List<byte> queue)
+        {
+            var bytes = new byte[queue.Count];
+            queue.CopyTo(bytes);
+            byte[] ch = new byte[4096];
+            //对串口接收的数据进行解析
+            if (queue.Count != 0)
+            {
+                check.WriteData(bytes, (uint)queue.Count);//写入循环缓冲区，取完整帧和校验
+                while (check.IsFull())//取出所有完整帧
+                {
+                    //校验在PalnS1处理
+                    uint lenth = 0;
+                    check.GetFullData(ch, ref lenth);//得到完整帧以及帧的长度
+                    byte[] DataBuffer = new byte[lenth];
+                    int id = (int)TypeId.Pose; //与网络包格式一致
+                    Buffer.BlockCopy(ch, 0, DataBuffer, 0, (int)lenth);
+                    var e = new DataEventArgs(id, null, DataBuffer);
+                    OnParsed(e);
+                    //break;//只取出一组完整的帧
+                }
+                queue.Clear();
+
+            }
+        }
     }
 
     public class USBLListenerService : BaseListenerService
@@ -174,7 +194,60 @@ namespace USBLDC.Comm
                     catch (Exception exception)
                     {
                         UnitCore.Instance.EventAggregator.PublishMessage(new ErrorEvent(exception,
-                            LogType.Both));
+                            LogType.OnlyLog));
+                    }
+                    finally
+                    {
+                        if (server.LinkerClient != null)
+                            server.LinkerClient.Close();
+                        server.LinkerClient = null;
+                    }
+                }
+
+            }
+
+        }
+    }
+
+    public class USBLCmdListenerService : BaseListenerService
+    {
+        public override void RecvThread(object obj)
+        {
+            USBLCmdListenerService server = null;
+            server = obj as USBLCmdListenerService;
+            if (server != null)
+            {
+                var myReadBuffer = new byte[32768];
+                while (true)
+                {
+                    try
+                    {
+                        server.LinkerClient = server._tcpListener.AcceptTcpClient();
+                        NetworkStream stream = server.LinkerClient.GetStream();
+                        while (stream.CanRead)
+                        {
+                            Array.Clear(myReadBuffer, 0, 32768); //置零
+                            int numberOfBytesRead = 0;
+
+                            stream.Read(myReadBuffer, 0, 32); //先读包头
+                            var packetLength = BitConverter.ToUInt32(myReadBuffer, 8) - 32;
+                            // Incoming message may be larger than the buffer size.
+                            do
+                            {
+                                int n = stream.Read(myReadBuffer, 32 + numberOfBytesRead,
+                                    (int)(packetLength - numberOfBytesRead));
+                                numberOfBytesRead += n;
+
+                            } while (numberOfBytesRead != packetLength);
+                            int id = BitConverter.ToInt32(myReadBuffer, 0);
+                            var e = new DataEventArgs(id, null, myReadBuffer);
+                            OnParsed(e);
+                        }
+                    }
+                    catch (Exception exception)
+                    {
+                        UnitCore.Instance.EventAggregator.PublishMessage(new ErrorEvent(exception,
+                            LogType.OnlyLog));
                     }
                     finally
                     {

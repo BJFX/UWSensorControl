@@ -20,16 +20,21 @@ namespace USBLDC.Structure
         public uint SatNum { get; set; }
         public uint GPSStatus { get; set; }
         public uint[] Reserved = new uint[7];
+        public static int count=0;
         public bool Parse(byte[] bytes)
         {
             string msg = Encoding.Default.GetString(bytes);
-            if(GPS.Parse(msg))
+            char[] End = "\r\n".ToCharArray();
+            if(GPS.Parse(msg.TrimEnd(End)))
             {
+                GPSStatus = GPS.Status;
+                var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+                GPSSecond = (int)GPS.UTCTime.Subtract(epoch).TotalSeconds;
+                //GPSSecond = 1470986158 + count;
+                //count = count + 1;
+                GPSMicSecond = GPS.UTCTime.Subtract(epoch).Milliseconds; ;
                 if (GPS.Status == 1 || GPS.Status==2)
-                {
-                    var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-                    GPSSecond = GPS.UTCTime.Subtract(epoch).Seconds;
-                    GPSMicSecond = GPS.UTCTime.Subtract(epoch).Milliseconds; ;
+                {                    
                     Long = GPS.Longitude;
                     Lat = GPS.Latitude;
                     Height = GPS.Height;

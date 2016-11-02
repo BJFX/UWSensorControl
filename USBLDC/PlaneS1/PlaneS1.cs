@@ -38,12 +38,17 @@ namespace PlaneS1
             int hour = (int)BitConverter.ToUInt32(dat,7)/10000/1000;
             int minute = (int)BitConverter.ToUInt32(dat, 7)/100/1000%100;
             int second = (int)BitConverter.ToUInt32(dat, 7)/1000%100;
-            int milisecond = (int)BitConverter.ToUInt32(dat, 7) % 1000;
+            //int milisecond = (int)BitConverter.ToUInt32(dat, 7) % 1000;
+            int milisecond = (int)BitConverter.ToUInt32(dat, 11) % 1000;//用FOSN的系统运行时间替代GPS的毫秒
             return new DateTime(year, month, day, hour, minute, second, milisecond);
         }
         public static float GetHeading()
         {
-            return (float)BitConverter.ToInt16(dat,17)/(float)180;
+            float Heading = 360 - BitConverter.ToInt16(dat, 17) / (float)180;
+            if (Heading > 360)
+                Heading -= 360;
+
+            return Heading;
         }
 
         public static float GetPitch()

@@ -21,6 +21,7 @@ using USBLDC.Helpers;
 using System.Windows.Controls;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 using HelixToolkit.Wpf;
+using USBL.GuiWei;
 
 namespace USBLDC.ViewModel
 {
@@ -63,9 +64,9 @@ namespace USBLDC.ViewModel
                 CurrentModel = UnitCore.Instance.CurrentModel;
             var pos = new AjustPositionInfo();
             pos.Status = 1;
-            pos.XAjust = 1000;
-            pos.YAjust = 3040;
-            pos.ZAjust = 2300;
+            pos.XAjust = 0;
+            pos.YAjust = 0;
+            pos.ZAjust = 0;
             pos.Noise = 71;
             UpdatePositionView(pos);
             if(dtTimer==null)
@@ -359,7 +360,7 @@ namespace USBLDC.ViewModel
                 }
                 sc.SurVel = (float)velarray[id];
             }
-            if ((velcmd & 0x11) == 1)
+            if ((velcmd & 0x04) == 4)
             {
                 sc.AvgVel = (float) velarray.Average();
             }
@@ -482,7 +483,10 @@ namespace USBLDC.ViewModel
                 Noise = info.Noise;
                 var x = -coordinateX;//坐标轴x相反，取反
                 var y = -coordinateY;//坐标轴y相反，取反
-                var z = -coordinateY;//坐标轴z相反，取反
+                var z = coordinateZ;//坐标轴z相反，取反
+                //var x = -1500;
+                //var y = -0;
+                //var z = 1000;
                 ObjectCenter = x.ToString("F02") + "," + y.ToString("F02") + "," + z.ToString("F02");
                 if ((x * x + y * y + z * z) > 1)
                     ObjectVisibility = true;

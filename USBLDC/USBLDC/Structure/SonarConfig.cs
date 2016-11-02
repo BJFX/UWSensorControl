@@ -31,7 +31,11 @@ namespace USBLDC.Structure
         public float SonarGPSx{ get; set;}
         public float SonarGPSy{ get; set;}
         public float SonarGPSz{ get; set;}
-        public uint[] ReservedInfo =new uint[44];
+        public float Pitchfixed { get; set; }
+        public float Rollfixed { get; set; }
+        public float Headingfixed { get; set; }
+
+        public uint[] ReservedInfo =new uint[41];
         public SonarConfig()
         {
             Id = 0x0001;
@@ -57,6 +61,9 @@ namespace USBLDC.Structure
             SonarGPSx = 10;
             SonarGPSy = 10;
             SonarGPSz = 10;
+            Pitchfixed = 0;
+            Rollfixed = 0;
+            Headingfixed = 0;
         }
         public bool Parse(byte[] bytes)
         {
@@ -106,6 +113,12 @@ namespace USBLDC.Structure
             SonarGPSy = BitConverter.ToSingle(bytes, offset);
             offset += 4;
             SonarGPSz = BitConverter.ToSingle(bytes, offset);
+            offset += 4;
+            Pitchfixed = BitConverter.ToSingle(bytes, offset);
+            offset += 4;
+            Rollfixed = BitConverter.ToSingle(bytes, offset);
+            offset += 4;
+            Headingfixed = BitConverter.ToSingle(bytes, offset);
             return true;
         }
 
@@ -169,7 +182,13 @@ namespace USBLDC.Structure
             offset += 4;
             Buffer.BlockCopy(BitConverter.GetBytes(SonarGPSz),0,bytes,offset,4);
             offset += 4;
-            Buffer.BlockCopy(ReservedInfo, 0, bytes, offset, 176);
+            Buffer.BlockCopy(BitConverter.GetBytes(Pitchfixed), 0, bytes, offset, 4);
+            offset += 4;
+            Buffer.BlockCopy(BitConverter.GetBytes(Rollfixed), 0, bytes, offset, 4);
+            offset += 4;
+            Buffer.BlockCopy(BitConverter.GetBytes(Headingfixed), 0, bytes, offset, 4);
+            offset += 4;
+            Buffer.BlockCopy(ReservedInfo, 0, bytes, offset, 164);
             return bytes;
         }
     }
