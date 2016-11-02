@@ -20,8 +20,8 @@ namespace USBLDC.Views
             if (HelixViewport3D == null || HelixViewport3D.CameraController==null)
                 return;
             HelixViewport3D.CameraController.ChangeDirection(new Vector3D(0, 0, -6000), new Vector3D(-1, 0, 0), 1000);
-            HelixViewport3D.ZoomExtents(new Rect3D(ObjectD.Center.X, ObjectD.Center.Y, ObjectD.Center.Z, 
-                2*Math.Abs(ObjectD.Center.X),2*Math.Abs(ObjectD.Center.Y),2*Math.Abs(ObjectD.Center.Z)));
+            //HelixViewport3D.ZoomExtents(new Rect3D(ObjectD.Center.X, ObjectD.Center.Y, ObjectD.Center.Z, 
+            //    2*Math.Abs(ObjectD.Center.X),2*Math.Abs(ObjectD.Center.Y),2*Math.Abs(ObjectD.Center.Z)));
         }
 
         private void RadioButton_Checked_1(object sender, System.Windows.RoutedEventArgs e)
@@ -29,8 +29,8 @@ namespace USBLDC.Views
             if (HelixViewport3D == null || HelixViewport3D.CameraController == null)
                 return;
             HelixViewport3D.CameraController.ChangeDirection(new Vector3D(0, 6000, 0), new Vector3D(0, 0, 1), 1000);
-            HelixViewport3D.ZoomExtents(new Rect3D(ObjectD.Center.X, ObjectD.Center.Y, ObjectD.Center.Z,
-                2*Math.Abs(ObjectD.Center.X), 2*Math.Abs(ObjectD.Center.Y), 2*Math.Abs(ObjectD.Center.Z)));
+            //HelixViewport3D.ZoomExtents(new Rect3D(ObjectD.Center.X, ObjectD.Center.Y, ObjectD.Center.Z,
+            //    2*Math.Abs(ObjectD.Center.X), 2*Math.Abs(ObjectD.Center.Y), 2*Math.Abs(ObjectD.Center.Z)));
         }
 
         private void RadioButton_Checked_2(object sender, System.Windows.RoutedEventArgs e)
@@ -38,8 +38,8 @@ namespace USBLDC.Views
             if (HelixViewport3D == null || HelixViewport3D.CameraController == null)
                 return;
             HelixViewport3D.CameraController.ChangeDirection(new Vector3D(-6000, 0, 0), new Vector3D(0, 0, 1), 1000);
-            HelixViewport3D.ZoomExtents(new Rect3D(ObjectD.Center.X, ObjectD.Center.Y, ObjectD.Center.Z, 
-                2*Math.Abs(ObjectD.Center.X),2*Math.Abs(ObjectD.Center.Y),2*Math.Abs(ObjectD.Center.Z)));
+            //HelixViewport3D.ZoomExtents(new Rect3D(ObjectD.Center.X, ObjectD.Center.Y, ObjectD.Center.Z, 
+            //    2*Math.Abs(ObjectD.Center.X),2*Math.Abs(ObjectD.Center.Y),2*Math.Abs(ObjectD.Center.Z)));
 
         }
 
