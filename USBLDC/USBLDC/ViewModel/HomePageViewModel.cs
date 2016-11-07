@@ -28,10 +28,12 @@ namespace USBLDC.ViewModel
     public class HomePageViewModel : ViewModelBase, IHandleMessage<ShowStructureInfo>
     {
         private DispatcherTimer dtTimer = null;
+        private DispatcherTimer replayTimer = null;//replay
         private int GpsTickCount = 0;
         private int PoseTickCount = 0;
         private int PosTickCount = 0;
         private List<Point3D> Path = new List<Point3D>();//track
+        private List<Point3D> shipPath = new List<Point3D>();//track
 
         /// 中间变量，负责缓存大量更新数据
         private PosetureInfo poseture = null;
@@ -48,6 +50,9 @@ namespace USBLDC.ViewModel
             
             StartCMD = RegisterCommand(ExecuteStartCMD, CanExecuteStartCMD, true);
             StopCMD = RegisterCommand(ExecuteStopCMD, CanExecuteStopCMD, true);
+            StartReplayCMD = RegisterCommand(ExcuteStartReplayCMD, CanExcuteStartReplayCMD, true);
+            PauseReplayCMD = RegisterCommand(ExcutePauseReplayCMD, CanExcutePauseReplayCMD, true);
+            ExitReplayCMD = RegisterCommand(ExcuteExitReplayCMD, CanExcuteExitReplayCMD, true);
             HeadingChartTitle = "X=" + coordinateX.ToString("F02") + "m" + "\n" + "Y=" + coordinateY.ToString("F02") +
                                 "m" + "\n" +
                                 "Z=" + coordinateZ.ToString("F02") + "m";
@@ -55,8 +60,13 @@ namespace USBLDC.ViewModel
             CurrentModel = null;
             ObjectVisibility = false;
             gpsTitle = "GPS";
-
+            ReplayState = 0;//0:normal,1:replaying,2:pause
+            PauseString = "暂停回放";
         }
+
+       
+
+        
 
         public override void InitializePage(object extraData)
         {
@@ -298,6 +308,17 @@ namespace USBLDC.ViewModel
             get { return GetPropertyValue(() => ShowCmd); }
             set { SetPropertyValue(() => ShowCmd, value); }
         }
+        public uint ReplayState
+        {
+            get { return GetPropertyValue(() => ReplayState); }
+            set { SetPropertyValue(() => ReplayState, value); }
+        }
+        //title of replay pause 
+        public string PauseString
+        {
+            get { return GetPropertyValue(() => PauseString); }
+            set { SetPropertyValue(() => PauseString, value); }
+        }
         public ICommand StartCMD
         {
             get { return GetPropertyValue(() => StartCMD); }
@@ -401,8 +422,6 @@ namespace USBLDC.ViewModel
         {
             eventArgs.CanExecute = true;
         }
-
-
         private async void ExecuteStopCMD(object sender, ExecutedRoutedEventArgs eventArgs)
         {
             if(!UnitCore.Instance.NetCore.IsWorking || ShowCmd)
@@ -431,6 +450,59 @@ namespace USBLDC.ViewModel
                 ShowCmd = true;
                 await MainFrameViewModel.pMainFrame.DialogCoordinator.HideMetroDialogAsync(MainFrameViewModel.pMainFrame, dialog);
             }
+        }
+
+        ICommand StartReplayCMD
+        {
+            get { return GetPropertyValue(() => StartReplayCMD); }
+            set { SetPropertyValue(() => StartReplayCMD, value); }
+        }
+        private void CanExcuteStartReplayCMD(object sender, CanExecuteRoutedEventArgs eventArgs)
+        {
+            eventArgs.CanExecute = true;
+        }
+
+        private async void ExcuteStartReplayCMD(object sender, ExecutedRoutedEventArgs eventArgs)
+        {
+            if (SonarStatus == 0)
+            {
+
+            }
+            else
+            {
+                var md = new MetroDialogSettings();
+                md.AffirmativeButtonText = "关闭";
+                await MainFrameViewModel.pMainFrame.DialogCoordinator.ShowMessageAsync(MainFrameViewModel.pMainFrame, "请先停止声纳工作，然后开始回放定位结果数据",
+                    UnitCore.Instance.NetCore.Error, MessageDialogStyle.Affirmative, md);
+            }
+        }
+        ICommand ExitReplayCMD
+        {
+            get { return GetPropertyValue(() => ExitReplayCMD); }
+            set { SetPropertyValue(() => ExitReplayCMD, value); }
+        }
+        private void CanExcuteExitReplayCMD(object sender, CanExecuteRoutedEventArgs eventArgs)
+        {
+            eventArgs.CanExecute = true;
+        }
+
+        private void ExcuteExitReplayCMD(object sender, ExecutedRoutedEventArgs eventArgs)
+        {
+            throw new NotImplementedException();
+        }
+        ICommand PauseReplayCMD
+        {
+            get { return GetPropertyValue(() => PauseReplayCMD); }
+            set { SetPropertyValue(() => PauseReplayCMD, value); }
+        }
+        private void CanExcutePauseReplayCMD(object sender, CanExecuteRoutedEventArgs eventArgs)
+        {
+            eventArgs.CanExecute = true;
+        }
+
+        private void ExcutePauseReplayCMD(object sender, ExecutedRoutedEventArgs eventArgs)
+        {
+            throw new NotImplementedException();
         }
         public void Handle(ShowStructureInfo message)
         {

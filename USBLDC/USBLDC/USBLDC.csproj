@@ -142,6 +142,7 @@
     <Compile Include="Controls\TitleBarControl.xaml.cs">
       <DependentUpon>TitleBarControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\ReplayStateToVisibilityConverter.cs" />
     <Compile Include="Converters\GpsStatusConverter.cs" />
     <Compile Include="Converters\SonarStatusConverter.cs" />
     <Compile Include="Core\BasicConf.cs" />
