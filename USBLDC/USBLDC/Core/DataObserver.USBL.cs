@@ -55,6 +55,8 @@ namespace USBLDC.Core
                         info = (StructureInterface)ajInfo;
                         e.Id = (int)TypeId.AjustPos;
                     }
+                    if (UnitCore.Instance.State != 0)//replaying
+                        return;
                     UnitCore.Instance.EventAggregator.PublishMessage(new ShowStructureInfo(info, e.Id));
                     SaveRecvData(info, e.Id);
                 }

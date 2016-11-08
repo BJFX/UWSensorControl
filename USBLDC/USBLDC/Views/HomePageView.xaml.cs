@@ -2,6 +2,8 @@
 using System.Windows.Controls;
 using System.Windows.Media.Media3D;
 using HelixToolkit.Wpf;
+using MahApps.Metro.Controls.Dialogs;
+using USBLDC.ViewModel;
 
 namespace USBLDC.Views
 {
@@ -67,5 +69,6 @@ namespace USBLDC.Views
             if (distance < 6000 && e.Delta > 0)
                 e.Handled = true;
         }
+
     }
 }

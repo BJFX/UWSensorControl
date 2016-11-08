@@ -31,6 +31,30 @@
             <TextBlock Height="30" Text=".。。。" x:Name="MessageTextBlock"
                                Foreground="{DynamicResource AccentColorBrush}" />
         </Dialog:CustomDialog>
+        <Dialog:CustomDialog x:Key="ReplayDialog"
+                                 Title="选择回放文件路径"
+                                 x:Name="SelectReplayDialog">
+            <StackPanel Orientation="Vertical">
+                <ComboBox x:Name="SelectModeBox" SelectedIndex="0" Foreground="{DynamicResource AccentColorBrush}">
+                    <ComboBoxItem Content="选择文件"/>
+                    <ComboBoxItem Content="选择文件夹"/>
+                </ComboBox>
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name ="SelectBtn" Style="{DynamicResource SquareButtonStyle}"
+                            Margin="5"  Content="选择文件夹" Click="SelectReplayFile"/>
+                    <TextBlock  x:Name ="StatusBlock" Text="未选择文件"/>
+                </StackPanel>
+                <metroControl:MetroProgressBar x:Name="Percentbar" Visibility="Collapsed"/>
+                <UniformGrid>
+                    <Button x:Name="DownLoadBtn" Style="{DynamicResource SquareButtonStyle}"
+							Margin="5"
+							Content="回放" Click="StartReplayBtn" />
+                    <Button x:Name="CancelBtn"  Style="{DynamicResource SquareButtonStyle}"
+                            Margin="5"
+						    Content="取消" Click="CloseDialog" />
+                </UniformGrid>
+            </StackPanel>
+        </Dialog:CustomDialog>
     </metroControl:MetroWindow.Resources>
 
     <Grid x:Name="FirstGrid">

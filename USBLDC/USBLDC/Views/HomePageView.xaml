@@ -4,6 +4,7 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"  
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
       xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity" 
       xmlns:k="clr-namespace:TinyMetroWpfLibrary.Controls.TouchKeyBoard;assembly=TinyMetroWpfLibrary.Controls"
       xmlns:Controls="clr-namespace:TinyMetroWpfLibrary.Controls;assembly=TinyMetroWpfLibrary.Controls"
@@ -20,9 +21,11 @@
       d:DesignHeight="748" d:DesignWidth="1024" 
         Title="HomePage" Loaded="Page_Loaded">
     <Page.Resources>
+        <Converters:ReplayStateToVisibilityConverter x:Key="ReplayStateToVisibilityConverter"/>
         <Converters:GpsStatusConverter x:Key="GpsStatusConverter"/>
         <Converters:SonarStatusConverter x:Key="SonarStatusConverter"/>
         <Converters:VisibilityBoolToggleConverter x:Key="VisibilityBoolToggleConverter"/>
+
     </Page.Resources>
     <Controls:MetroContentControl>
         <Grid>
@@ -269,6 +272,7 @@
                 <StackPanel Name="WorkPanel" Orientation="Horizontal" Grid.Column="0" HorizontalAlignment="Left">
                     <Button x:Name="StartButton" Style="{StaticResource StartAppBarButtonStyle}" Visibility ="{Binding ShowCmd, ConverterParameter=IsCollapsed\=True, Converter={StaticResource VisibilityBoolToggleConverter}}" Command="{Binding StartCMD}"/>
                     <Button x:Name="StopButton" Style="{StaticResource StopAppBarButtonStyle}" Command="{Binding StopCMD}" Visibility="{Binding ShowCmd, ConverterParameter=IsReversed\=True;IsCollapsed\=True, Converter={StaticResource VisibilityBoolToggleConverter}}"/>
+                    <Button x:Name="ReplayButton" Style="{StaticResource OpenLocalAppBarButtonStyle}" Command="{Binding StartReplayCMD}" Visibility="{Binding ReplayState, ConverterParameter=开始回放, Converter={StaticResource ReplayStateToVisibilityConverter}}"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Grid.Column="1"  Margin="0,0,0,0">
                     <TextBlock VerticalAlignment="Center" FontSize="18" Foreground="White">

@@ -32,6 +32,7 @@ namespace USBLDC.ViewModel
         private int GpsTickCount = 0;
         private int PoseTickCount = 0;
         private int PosTickCount = 0;
+        private int ReplayFileIndex = 0;
         private List<Point3D> Path = new List<Point3D>();//track
         private List<Point3D> shipPath = new List<Point3D>();//track
 
@@ -61,6 +62,7 @@ namespace USBLDC.ViewModel
             ObjectVisibility = false;
             gpsTitle = "GPS";
             ReplayState = 0;//0:normal,1:replaying,2:pause
+            //UnitCore.Instance.State = ReplayState;
             PauseString = "暂停回放";
         }
 
@@ -308,10 +310,15 @@ namespace USBLDC.ViewModel
             get { return GetPropertyValue(() => ShowCmd); }
             set { SetPropertyValue(() => ShowCmd, value); }
         }
-        public uint ReplayState
+
+        public uint ReplayState//0:normal,1:replaying,2:pause
         {
             get { return GetPropertyValue(() => ReplayState); }
-            set { SetPropertyValue(() => ReplayState, value); }
+            set 
+            {
+                SetPropertyValue(() => ReplayState, value);
+                UnitCore.Instance.State = value;
+            }
         }
         //title of replay pause 
         public string PauseString
@@ -332,7 +339,18 @@ namespace USBLDC.ViewModel
 
         private async void ExecuteStartCMD(object sender, ExecutedRoutedEventArgs eventArgs)
         {
-
+            if(ReplayState!=0)
+            {
+                var md = new MetroDialogSettings();
+                md.AffirmativeButtonText = "确定";
+                await MainFrameViewModel.pMainFrame.DialogCoordinator.ShowMessageAsync(MainFrameViewModel.pMainFrame,
+                    "正在回放结果数据",
+                    "请先退出回放模式再开始工作", MessageDialogStyle.Affirmative, md);
+                return;
+            }
+            UnitCore.Instance.ajustPosition.Clear();
+            TrackModel = null;
+            RmoveTrack();
             if (!UnitCore.Instance.NetCore.SonarIsOK)
             {
                 UnitCore.Instance.NetCore.Stop();
@@ -466,15 +484,51 @@ namespace USBLDC.ViewModel
         {
             if (SonarStatus == 0)
             {
-
+                var dialog = (BaseMetroDialog)App.Current.MainWindow.Resources["ReplayDialog"];
+                await MainFrameViewModel.pMainFrame.DialogCoordinator.ShowMetroDialogAsync(MainFrameViewModel.pMainFrame,
+                    dialog);
+                //check the filelist
+                if(UnitCore.Instance.Replaylist!=null&&UnitCore.Instance.Replaylist.Count>0)
+                {
+                    //start replay
+                    ReplayFileIndex = 0;
+                    if (replayTimer!=null)
+                        replayTimer.Stop();
+                    if (replayTimer == null)
+                        replayTimer = new DispatcherTimer(TimeSpan.FromSeconds(2), DispatcherPriority.Input,
+                    ResultReplaying, Dispatcher.CurrentDispatcher);
+                }
+                else
+                {
+                    return;
+                }
             }
             else
             {
                 var md = new MetroDialogSettings();
-                md.AffirmativeButtonText = "关闭";
+                md.AffirmativeButtonText = "确定";
                 await MainFrameViewModel.pMainFrame.DialogCoordinator.ShowMessageAsync(MainFrameViewModel.pMainFrame, "请先停止声纳工作，然后开始回放定位结果数据",
                     UnitCore.Instance.NetCore.Error, MessageDialogStyle.Affirmative, md);
             }
+        }
+
+        private void ResultReplaying(object sender, EventArgs e)
+        {
+            if(ReplayFileIndex<UnitCore.Instance.Replaylist.Count)
+            {
+                var filename = UnitCore.Instance.Replaylist[ReplayFileIndex];
+                //tbd
+                //
+                //
+                ReplayFileIndex++;
+            }
+            if(ReplayFileIndex==UnitCore.Instance.Replaylist.Count)
+            {
+                ReplayState = 2;
+                UnitCore.Instance.State = 2;
+                ReplayFileIndex = 0;
+            }
+                
         }
         ICommand ExitReplayCMD
         {
@@ -486,9 +540,23 @@ namespace USBLDC.ViewModel
             eventArgs.CanExecute = true;
         }
 
-        private void ExcuteExitReplayCMD(object sender, ExecutedRoutedEventArgs eventArgs)
+        private async void ExcuteExitReplayCMD(object sender, ExecutedRoutedEventArgs eventArgs)
         {
-            throw new NotImplementedException();
+            var md = new MetroDialogSettings();
+            md.AffirmativeButtonText = "退出";
+            md.NegativeButtonText = "取消";
+            var ret = await MainFrameViewModel.pMainFrame.DialogCoordinator.ShowMessageAsync(MainFrameViewModel.pMainFrame,
+                "退出回放模式",
+                "确认退出回放模式？", MessageDialogStyle.AffirmativeAndNegative, md);
+            if(ret == MessageDialogResult.Affirmative)
+            {
+                replayTimer.Stop();
+                ReplayState = 0;
+                UnitCore.Instance.State = ReplayState;
+                UnitCore.Instance.Replaylist.Clear();
+                UnitCore.Instance.Replaylist = null;
+            }
+
         }
         ICommand PauseReplayCMD
         {
@@ -502,7 +570,18 @@ namespace USBLDC.ViewModel
 
         private void ExcutePauseReplayCMD(object sender, ExecutedRoutedEventArgs eventArgs)
         {
-            throw new NotImplementedException();
+            if(ReplayState==1)
+            {
+                replayTimer.Stop();
+                PauseString = "继续回放";
+                ReplayState = 2;  
+            }
+            if (ReplayState == 2)
+            {
+                replayTimer.Start();
+                PauseString = "暂停回放";
+                ReplayState = 1;
+            }
         }
         public void Handle(ShowStructureInfo message)
         {

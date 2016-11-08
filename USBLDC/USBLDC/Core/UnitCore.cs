@@ -39,7 +39,8 @@ namespace USBLDC.Core
         public SettleSoundFile SoundFile = null;
         public Mutex ACMMutex { get; set; }//全局解析锁
         public Dictionary<DateTime, AjustPositionInfo> ajustPosition = null;
-
+        public uint State;////0:normal,1:replaying,2:pause
+        public List<string> Replaylist = null;
         public USBLTraceService USBLTraceService
         {
             get { return _usblTraceService ?? (_usblTraceService = new USBLTraceService()); }
