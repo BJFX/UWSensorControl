@@ -52,9 +52,9 @@ namespace USBLDC.ViewModel
             
             StartCMD = RegisterCommand(ExecuteStartCMD, CanExecuteStartCMD, true);
             StopCMD = RegisterCommand(ExecuteStopCMD, CanExecuteStopCMD, true);
-            StartReplayCMD = RegisterCommand(ExcuteStartReplayCMD, CanExcuteStartReplayCMD, true);
-            PauseReplayCMD = RegisterCommand(ExcutePauseReplayCMD, CanExcutePauseReplayCMD, true);
-            ExitReplayCMD = RegisterCommand(ExcuteExitReplayCMD, CanExcuteExitReplayCMD, true);
+            StartReplayCMD = RegisterCommand(ExecuteStartReplayCMD, CanExecuteStartReplayCMD, true);
+            PauseReplayCMD = RegisterCommand(ExecutePauseReplayCMD, CanExecutePauseReplayCMD, true);
+            ExitReplayCMD = RegisterCommand(ExecuteExitReplayCMD, CanExecuteExitReplayCMD, true);
             HeadingChartTitle = "X=" + coordinateX.ToString("F02") + "m" + "\n" + "Y=" + coordinateY.ToString("F02") +
                                 "m" + "\n" +
                                 "Z=" + coordinateZ.ToString("F02") + "m";
@@ -483,12 +483,12 @@ namespace USBLDC.ViewModel
             get { return GetPropertyValue(() => StartReplayCMD); }
             set { SetPropertyValue(() => StartReplayCMD, value); }
         }
-        private void CanExcuteStartReplayCMD(object sender, CanExecuteRoutedEventArgs eventArgs)
+        private void CanExecuteStartReplayCMD(object sender, CanExecuteRoutedEventArgs eventArgs)
         {
             eventArgs.CanExecute = true;
         }
 
-        private async void ExcuteStartReplayCMD(object sender, ExecutedRoutedEventArgs eventArgs)
+        private async void ExecuteStartReplayCMD(object sender, ExecutedRoutedEventArgs eventArgs)
         {
             if (SonarStatus == 0)
             {
@@ -557,12 +557,12 @@ namespace USBLDC.ViewModel
             get { return GetPropertyValue(() => ExitReplayCMD); }
             set { SetPropertyValue(() => ExitReplayCMD, value); }
         }
-        private void CanExcuteExitReplayCMD(object sender, CanExecuteRoutedEventArgs eventArgs)
+        private void CanExecuteExitReplayCMD(object sender, CanExecuteRoutedEventArgs eventArgs)
         {
             eventArgs.CanExecute = true;
         }
 
-        private async void ExcuteExitReplayCMD(object sender, ExecutedRoutedEventArgs eventArgs)
+        private async void ExecuteExitReplayCMD(object sender, ExecutedRoutedEventArgs eventArgs)
         {
             var md = new MetroDialogSettings();
             md.AffirmativeButtonText = "退出";
@@ -577,6 +577,7 @@ namespace USBLDC.ViewModel
                 UnitCore.Instance.State = ReplayState;
                 UnitCore.Instance.Replaylist.Clear();
                 UnitCore.Instance.Replaylist = null;
+                subTitle = "实时";
             }
 
         }
@@ -585,7 +586,7 @@ namespace USBLDC.ViewModel
             get { return GetPropertyValue(() => PauseReplayCMD); }
             set { SetPropertyValue(() => PauseReplayCMD, value); }
         }
-        private void CanExcutePauseReplayCMD(object sender, CanExecuteRoutedEventArgs eventArgs)
+        private void CanExecutePauseReplayCMD(object sender, CanExecuteRoutedEventArgs eventArgs)
         {
             eventArgs.CanExecute = true;
         }

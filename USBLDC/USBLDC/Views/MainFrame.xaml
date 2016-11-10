@@ -46,7 +46,7 @@
                 </StackPanel>
                 <metroControl:MetroProgressBar x:Name="Percentbar" Visibility="Collapsed"/>
                 <UniformGrid>
-                    <Button x:Name="DownLoadBtn" Style="{DynamicResource SquareButtonStyle}"
+                    <Button x:Name="PlayBtn" Style="{DynamicResource SquareButtonStyle}"
 							Margin="5"
 							Content="回放" Click="StartReplayBtn" />
                     <Button x:Name="CancelBtn"  Style="{DynamicResource SquareButtonStyle}"

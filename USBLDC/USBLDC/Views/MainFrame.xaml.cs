@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using Microsoft.Win32;
 using USBLDC.Structure;
 using System.Collections.Generic;
+using System.IO;
 namespace USBLDC.Views
 {
     /// <summary>
@@ -52,7 +53,7 @@ namespace USBLDC.Views
         {
             var newdialog = (BaseMetroDialog)App.Current.MainWindow.Resources["ReplayDialog"];
             var status = newdialog.FindChild<TextBlock>("StatusBlock");
-            var btn = newdialog.FindChild<Button>("DownLoadBtn");
+            var btn = newdialog.FindChild<Button>("PlayBtn");
             var box = newdialog.FindChild<ComboBox>("SelectModeBox");
             if(box.SelectedIndex==0)//file
             {
@@ -63,13 +64,30 @@ namespace USBLDC.Views
                     if (UnitCore.Instance.Replaylist == null)
                         UnitCore.Instance.Replaylist = new List<string>();
                     UnitCore.Instance.Replaylist.Add(ReplayFileName);
-                    status.Text = OpenFileDlg.SafeFileName;
                     btn.IsEnabled = true;
                 }
             }
             else if(box.SelectedIndex==1)//folder
             {
-
+                var FolderDlg = new System.Windows.Forms.FolderBrowserDialog();
+                FolderDlg.Description = "请选择结果文件路径";
+                if (FolderDlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    string foldPath = FolderDlg.SelectedPath;
+                    var di = new DirectoryInfo(foldPath);
+                    if (di.Exists)
+                    {
+                        var filist = di.GetFiles("*.pos", SearchOption.TopDirectoryOnly);
+                        foreach (var fi in filist)
+                        {
+                            var ReplayFileName = fi.FullName;
+                            if (UnitCore.Instance.Replaylist == null)
+                                UnitCore.Instance.Replaylist = new List<string>();
+                            UnitCore.Instance.Replaylist.Add(ReplayFileName);
+                            btn.IsEnabled = true;
+                        }
+                    }
+                }
             }
             
         }
