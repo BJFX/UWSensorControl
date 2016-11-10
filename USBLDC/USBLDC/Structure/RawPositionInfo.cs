@@ -184,7 +184,90 @@ namespace USBLDC.Structure
         public RawPositionInfo raw { get; set; }
         public bool Parse(byte[] bytes)
         {
-            throw new NotImplementedException();
+            try
+            {
+                int offset = 0;
+                raw.PingNum = BitConverter.ToUInt32(bytes, offset);
+                offset += 4;
+                raw.PingSecond = BitConverter.ToUInt32(bytes, offset);
+                offset += 4;
+                raw.PingMicSecond = BitConverter.ToUInt32(bytes, offset);
+                offset += 4;
+                scConfig.VelCmd = BitConverter.ToUInt32(bytes, offset);
+                offset += 4;
+                scConfig.SurVel = BitConverter.ToSingle(bytes, offset);
+                offset += 4;
+                scConfig.AvgVel = BitConverter.ToSingle(bytes, offset);
+                offset += 4;
+                scConfig.FixedTVG = BitConverter.ToSingle(bytes, offset);
+                offset += 4;
+                scConfig.TVGSampling = BitConverter.ToSingle(bytes, offset);
+                offset += 4;
+                scConfig.TVGSamples = BitConverter.ToUInt32(bytes, offset);
+                offset += 4;
+                scConfig.TVGA1 = BitConverter.ToSingle(bytes, offset);
+                offset += 4;
+                scConfig.TVGA2 = BitConverter.ToSingle(bytes, offset);
+                offset += 4;
+                scConfig.TVGA3 = BitConverter.ToSingle(bytes, offset);
+                offset += 4;
+                scConfig.PingPeriod = BitConverter.ToSingle(bytes, offset);
+                offset += 4;
+                scConfig.ADSaved = BitConverter.ToUInt32(bytes, offset);
+                offset += 4;
+                scConfig.PoseSaved = BitConverter.ToUInt32(bytes, offset);
+                offset += 4;
+                scConfig.PosSaved = BitConverter.ToUInt32(bytes, offset);
+                offset += 4;
+                scConfig.SonarGPSx = BitConverter.ToSingle(bytes, offset);
+                offset += 4;
+                scConfig.SonarGPSy = BitConverter.ToSingle(bytes, offset);
+                offset += 4;
+                scConfig.SonarGPSz = BitConverter.ToSingle(bytes, offset);
+                offset += 4;
+                XAjust = BitConverter.ToSingle(bytes, offset);
+                offset += 4;
+                YAjust = BitConverter.ToSingle(bytes, offset);
+                offset += 4;
+                ZAjust = BitConverter.ToSingle(bytes, offset);
+                offset += 4;
+                AjustLong = BitConverter.ToSingle(bytes, offset);
+                offset += 4;
+                AjustLat = BitConverter.ToSingle(bytes, offset);
+                offset += 4;
+                raw.BeamingAngle1 = BitConverter.ToSingle(bytes, offset);
+                offset += 4;
+                raw.BeamingAngle2 = BitConverter.ToSingle(bytes, offset);
+                offset += 4;
+                raw.EpochSecond = BitConverter.ToUInt32(bytes, offset);
+                offset += 4;
+                raw.EpochMicSecond = BitConverter.ToUInt32(bytes, offset);
+                offset += 4;
+                raw.Pitch = BitConverter.ToSingle(bytes, offset);
+                offset += 4;
+                raw.Roll = BitConverter.ToSingle(bytes, offset);
+                offset += 4;
+                raw.Heading = BitConverter.ToSingle(bytes, offset);
+                offset += 4;
+                raw.Heave = BitConverter.ToSingle(bytes, offset);
+                offset += 4;
+                raw.Amp = BitConverter.ToSingle(bytes, offset);
+                offset += 4;
+                raw.Quality = BitConverter.ToUInt32(bytes, offset);
+                offset += 4;
+                raw.Noise = BitConverter.ToSingle(bytes, offset);
+                offset += 4;
+                raw.TravelTime = BitConverter.ToSingle(bytes, offset);
+                offset += 4;
+                raw.XAngle = BitConverter.ToSingle(bytes, offset);
+                offset += 4;
+                raw.YAngle = BitConverter.ToSingle(bytes, offset);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
         }
 
         public bool CalcPosition(SettleSoundFile settleSoundFile, SonarConfig sc, RawPositionInfo raw, float longitude, float latitude)

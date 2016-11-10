@@ -205,7 +205,7 @@
                                    Margin="4" 
                                    Title="三维视图"
                                    TitleSize="20"
-                                   SubTitleSize="16" PreviewMouseWheel="PosViewport3D_PreviewMouseWheel">
+                                   SubTitleSize="16" PreviewMouseWheel="PosViewport3D_PreviewMouseWheel" SubTitle="{Binding subTitle}">
                     <h:HelixViewport3D.DefaultCamera>
                         <PerspectiveCamera x:Name ="PosCamera" Position="1000,-1000,6000" LookDirection="0,0,-3000" UpDirection="-1,0,0" NearPlaneDistance="3000" FarPlaneDistance="60000"/>
                     </h:HelixViewport3D.DefaultCamera>

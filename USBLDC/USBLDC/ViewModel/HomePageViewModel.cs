@@ -12,6 +12,7 @@ using System.Windows.Media.Media3D;
 using System.Windows.Threading;
 using MahApps.Metro.Controls.Dialogs;
 using NMEA0183;
+using System.IO;
 using TinyMetroWpfLibrary.EventAggregation;
 using TinyMetroWpfLibrary.ViewModel;
 using USBLDC.Core;
@@ -64,6 +65,7 @@ namespace USBLDC.ViewModel
             ReplayState = 0;//0:normal,1:replaying,2:pause
             //UnitCore.Instance.State = ReplayState;
             PauseString = "暂停回放";
+            subTitle = "实时";
         }
 
        
@@ -106,7 +108,7 @@ namespace USBLDC.ViewModel
                     if (ajusttime.CompareTo(new DateTime(1970,1,1))<=0)
                         SonarUpdate = "已连接，无数据 ";
                     else
-                        SonarUpdate = "已连接，更新时间 " + ajusttime.ToString();
+                        SonarUpdate = "已连接，时间 " + ajusttime.ToString();
                 }
                 else
                 {
@@ -125,7 +127,7 @@ namespace USBLDC.ViewModel
                     if (posetime.CompareTo(new DateTime(1970, 1, 1)) <= 0)
                         PoseUpdate = "已连接，无数据 ";
                     else
-                        PoseUpdate = "已连接，更新时间 " + posetime.ToString();
+                        PoseUpdate = "已连接，时间: " + posetime.ToString();
                 }
                 else
                 {
@@ -148,6 +150,11 @@ namespace USBLDC.ViewModel
             {
                 GPSLastUpdate = "端口关闭";
             }
+        }
+        public string subTitle
+        {
+            get { return GetPropertyValue(() => SonarUpdate); }
+            set { SetPropertyValue(() => SonarUpdate, value); }
         }
         public string SonarUpdate
         {
@@ -348,7 +355,8 @@ namespace USBLDC.ViewModel
                     "请先退出回放模式再开始工作", MessageDialogStyle.Affirmative, md);
                 return;
             }
-            UnitCore.Instance.ajustPosition.Clear();
+            if(UnitCore.Instance.ajustPosition!=null)
+                UnitCore.Instance.ajustPosition.Clear();
             TrackModel = null;
             RmoveTrack();
             if (!UnitCore.Instance.NetCore.SonarIsOK)
@@ -517,9 +525,23 @@ namespace USBLDC.ViewModel
             if(ReplayFileIndex<UnitCore.Instance.Replaylist.Count)
             {
                 var filename = UnitCore.Instance.Replaylist[ReplayFileIndex];
-                //tbd
-                //
-                //
+                var fs = File.Open(filename, FileMode.Open, FileAccess.Read);
+                var adjustinfo = new AjustPositionInfo();
+                byte[] bytes = new byte[256];
+                Array.Clear(bytes, 0, 256);
+                fs.Read(bytes,0,256);
+                filename = filename.Substring(filename.LastIndexOf('\\')+1);
+                subTitle = filename;
+                if(adjustinfo.Parse(bytes))
+                {
+                   var info = (StructureInterface)adjustinfo;
+                   Handle(new ShowStructureInfo(info,(int)TypeId.AjustPos));
+                }
+                else
+                {
+                    var errmsg= "无法解析文件:"+filename;
+                   UnitCore.Instance.EventAggregator.PublishMessage(new LogEvent(errmsg, LogType.Both));
+                }
                 ReplayFileIndex++;
             }
             if(ReplayFileIndex==UnitCore.Instance.Replaylist.Count)
