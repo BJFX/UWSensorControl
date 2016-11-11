@@ -264,7 +264,7 @@
             </Grid>
             <Grid Grid.Row="2" Background="{StaticResource DefaultBackgroundBrush}" Grid.Column="0" Grid.ColumnSpan="3">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="1.2*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
@@ -273,6 +273,8 @@
                     <Button x:Name="StartButton" Style="{StaticResource StartAppBarButtonStyle}" Visibility ="{Binding ShowCmd, ConverterParameter=IsCollapsed\=True, Converter={StaticResource VisibilityBoolToggleConverter}}" Command="{Binding StartCMD}"/>
                     <Button x:Name="StopButton" Style="{StaticResource StopAppBarButtonStyle}" Command="{Binding StopCMD}" Visibility="{Binding ShowCmd, ConverterParameter=IsReversed\=True;IsCollapsed\=True, Converter={StaticResource VisibilityBoolToggleConverter}}"/>
                     <Button x:Name="ReplayButton" Style="{StaticResource OpenLocalAppBarButtonStyle}" Command="{Binding StartReplayCMD}" Visibility="{Binding ReplayState, ConverterParameter=开始回放, Converter={StaticResource ReplayStateToVisibilityConverter}}"/>
+                    <Button x:Name="PauseButton" Style="{StaticResource}" Command="{Binding}" Visibility="{Binding ReplayState, ConverterParameter=开始回放, Converter={StaticResource ReplayStateToVisibilityConverter}}"/>
+                    <Button x:Name="ExitButton" Style="{StaticResource QuitAppBarButtonStyle}" Command="{Binding}" Visibility="{Binding ReplayState, ConverterParameter=开始回放, Converter={StaticResource ReplayStateToVisibilityConverter}}"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Grid.Column="1"  Margin="0,0,0,0">
                     <TextBlock VerticalAlignment="Center" FontSize="18" Foreground="White">

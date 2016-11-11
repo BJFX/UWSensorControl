@@ -478,7 +478,7 @@ namespace USBLDC.ViewModel
             }
         }
 
-        ICommand StartReplayCMD
+        public ICommand StartReplayCMD
         {
             get { return GetPropertyValue(() => StartReplayCMD); }
             set { SetPropertyValue(() => StartReplayCMD, value); }
@@ -548,11 +548,12 @@ namespace USBLDC.ViewModel
             {
                 ReplayState = 2;
                 UnitCore.Instance.State = 2;
+                replayTimer.Stop();
                 ReplayFileIndex = 0;
             }
                 
         }
-        ICommand ExitReplayCMD
+        public ICommand ExitReplayCMD
         {
             get { return GetPropertyValue(() => ExitReplayCMD); }
             set { SetPropertyValue(() => ExitReplayCMD, value); }
@@ -581,7 +582,7 @@ namespace USBLDC.ViewModel
             }
 
         }
-        ICommand PauseReplayCMD
+        public ICommand PauseReplayCMD
         {
             get { return GetPropertyValue(() => PauseReplayCMD); }
             set { SetPropertyValue(() => PauseReplayCMD, value); }
@@ -591,13 +592,13 @@ namespace USBLDC.ViewModel
             eventArgs.CanExecute = true;
         }
 
-        private void ExcutePauseReplayCMD(object sender, ExecutedRoutedEventArgs eventArgs)
+        private void ExecutePauseReplayCMD(object sender, ExecutedRoutedEventArgs eventArgs)
         {
             if(ReplayState==1)
             {
                 replayTimer.Stop();
                 PauseString = "继续回放";
-                ReplayState = 2;  
+                ReplayState = 2;
             }
             if (ReplayState == 2)
             {
@@ -605,6 +606,7 @@ namespace USBLDC.ViewModel
                 PauseString = "暂停回放";
                 ReplayState = 1;
             }
+            UnitCore.Instance.State = ReplayState;
         }
         public void Handle(ShowStructureInfo message)
         {
