@@ -182,6 +182,12 @@ namespace USBLDC.Structure
         public float Noise { get; set; }
         public SonarConfig scConfig { get; set; }
         public RawPositionInfo raw { get; set; }
+
+        public AjustPositionInfo 
+        {
+            scConfig = new SonarConfig();
+            raw = new RawPositionInfo();
+        }
         public bool Parse(byte[] bytes)
         {
             try

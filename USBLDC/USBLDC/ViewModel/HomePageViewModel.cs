@@ -77,11 +77,6 @@ namespace USBLDC.ViewModel
             if (CurrentModel == null && UnitCore.Instance.CurrentModel != null)
                 CurrentModel = UnitCore.Instance.CurrentModel;
             var pos = new AjustPositionInfo();
-            pos.Status = 1;
-            pos.XAjust = 0;
-            pos.YAjust = 0;
-            pos.ZAjust = 0;
-            pos.Noise = 71;
             UpdatePositionView(pos);
             if(dtTimer==null)
                 dtTimer = new DispatcherTimer(TimeSpan.FromSeconds(1), DispatcherPriority.Input,
@@ -492,16 +487,28 @@ namespace USBLDC.ViewModel
         {
             if (SonarStatus == 0)
             {
+                if (ReplayState != 0)
+                {
+                    var md = new MetroDialogSettings();
+                    md.AffirmativeButtonText = "确定";
+                    md.NegativeButtonText = "取消";
+                    var ret = await MainFrameViewModel.pMainFrame.DialogCoordinator.ShowMessageAsync(MainFrameViewModel.pMainFrame, "请先停止声纳工作，然后开始回放定位结果数据",
+                        UnitCore.Instance.NetCore.Error, MessageDialogStyle.AffirmativeAndNegative, md);
+                    if (ret != MessageDialogResult.Affirmative)
+                    {
+                        return;
+                    }
+                }
+                //start replay
+                ReplayFileIndex = 0;
+                if (replayTimer != null)
+                    replayTimer.Stop();
                 var dialog = (BaseMetroDialog)App.Current.MainWindow.Resources["ReplayDialog"];
                 await MainFrameViewModel.pMainFrame.DialogCoordinator.ShowMetroDialogAsync(MainFrameViewModel.pMainFrame,
                     dialog);
                 //check the filelist
                 if(UnitCore.Instance.Replaylist!=null&&UnitCore.Instance.Replaylist.Count>0)
-                {
-                    //start replay
-                    ReplayFileIndex = 0;
-                    if (replayTimer!=null)
-                        replayTimer.Stop();
+                {     
                     if (replayTimer == null)
                         replayTimer = new DispatcherTimer(TimeSpan.FromSeconds(2), DispatcherPriority.Input,
                     ResultReplaying, Dispatcher.CurrentDispatcher);

@@ -272,9 +272,10 @@
                 <StackPanel Name="WorkPanel" Orientation="Horizontal" Grid.Column="0" HorizontalAlignment="Left">
                     <Button x:Name="StartButton" Style="{StaticResource StartAppBarButtonStyle}" Visibility ="{Binding ShowCmd, ConverterParameter=IsCollapsed\=True, Converter={StaticResource VisibilityBoolToggleConverter}}" Command="{Binding StartCMD}"/>
                     <Button x:Name="StopButton" Style="{StaticResource StopAppBarButtonStyle}" Command="{Binding StopCMD}" Visibility="{Binding ShowCmd, ConverterParameter=IsReversed\=True;IsCollapsed\=True, Converter={StaticResource VisibilityBoolToggleConverter}}"/>
-                    <Button x:Name="ReplayButton" Style="{StaticResource OpenLocalAppBarButtonStyle}" Command="{Binding StartReplayCMD}" Visibility="{Binding ReplayState, ConverterParameter=开始回放, Converter={StaticResource ReplayStateToVisibilityConverter}}"/>
-                    <Button x:Name="PauseButton" Style="{StaticResource}" Command="{Binding}" Visibility="{Binding ReplayState, ConverterParameter=开始回放, Converter={StaticResource ReplayStateToVisibilityConverter}}"/>
-                    <Button x:Name="ExitButton" Style="{StaticResource QuitAppBarButtonStyle}" Command="{Binding}" Visibility="{Binding ReplayState, ConverterParameter=开始回放, Converter={StaticResource ReplayStateToVisibilityConverter}}"/>
+                    <Button x:Name="OpenReplayButton" Style="{StaticResource OpenLocalAppBarButtonStyle}" Command="{Binding StartReplayCMD}" />
+                    <Button x:Name="StartReplayButton" Content="回放" Command="{Binding}" Visibility="{Binding ReplayState, ConverterParameter=开始回放, Converter={StaticResource ReplayStateToVisibilityConverter}}"/>
+                    <Button x:Name="PauseButton" Content="暂停" Command="{Binding}" Visibility="{Binding ReplayState, ConverterParameter=暂停回放, Converter={StaticResource ReplayStateToVisibilityConverter}}"/>
+                    <Button x:Name="ExitButton" Content="退出" Command="{Binding}" Visibility="{Binding ReplayState, ConverterParameter=退出回放, Converter={StaticResource ReplayStateToVisibilityConverter}}"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Grid.Column="1"  Margin="0,0,0,0">
                     <TextBlock VerticalAlignment="Center" FontSize="18" Foreground="White">
