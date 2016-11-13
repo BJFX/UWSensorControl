@@ -41,7 +41,7 @@
                 </ComboBox>
                 <StackPanel Orientation="Horizontal">
                     <Button x:Name ="SelectBtn" Style="{DynamicResource SquareButtonStyle}"
-                            Margin="5"  Content="选择文件夹" Click="SelectReplayFile"/>
+                            Margin="5"  Content="选择" Click="SelectReplayFile"/>
                     <TextBlock  x:Name ="StatusBlock" Text="未选择文件"/>
                 </StackPanel>
                 <metroControl:MetroProgressBar x:Name="Percentbar" Visibility="Collapsed"/>

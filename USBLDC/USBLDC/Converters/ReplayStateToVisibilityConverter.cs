@@ -15,8 +15,8 @@ namespace USBLDC.Converters
             {
                 switch (para)
                 {
-                    case "开始回放":
-                        return Visibility.Visible;
+                    case "继续回放":
+                        return Visibility.Collapsed;
                         break;
                     case "暂停回放":
                         return Visibility.Collapsed;
@@ -32,7 +32,7 @@ namespace USBLDC.Converters
             {
                 switch (para)
                 {
-                    case "开始回放":
+                    case "继续回放":
                         return Visibility.Collapsed;
                         break;
                     case "暂停回放":
@@ -49,11 +49,11 @@ namespace USBLDC.Converters
             {
                 switch (para)
                 {
-                    case "开始回放":
-                        return Visibility.Collapsed;
+                    case "继续回放":
+                        return Visibility.Visible;
                         break;
                     case "暂停回放":
-                        return Visibility.Visible;
+                        return Visibility.Collapsed;
                         break;
                     case "退出回放":
                         return Visibility.Visible;

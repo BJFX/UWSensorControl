@@ -183,7 +183,7 @@ namespace USBLDC.Structure
         public SonarConfig scConfig { get; set; }
         public RawPositionInfo raw { get; set; }
 
-        public AjustPositionInfo 
+        public AjustPositionInfo()
         {
             scConfig = new SonarConfig();
             raw = new RawPositionInfo();

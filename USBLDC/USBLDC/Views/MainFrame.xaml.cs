@@ -65,6 +65,7 @@ namespace USBLDC.Views
                         UnitCore.Instance.Replaylist = new List<string>();
                     UnitCore.Instance.Replaylist.Add(ReplayFileName);
                     btn.IsEnabled = true;
+                    status.Text = ReplayFileName;
                 }
             }
             else if(box.SelectedIndex==1)//folder
@@ -77,6 +78,7 @@ namespace USBLDC.Views
                     var di = new DirectoryInfo(foldPath);
                     if (di.Exists)
                     {
+                        status.Text = foldPath;
                         var filist = di.GetFiles("*.pos", SearchOption.TopDirectoryOnly);
                         foreach (var fi in filist)
                         {
@@ -85,6 +87,7 @@ namespace USBLDC.Views
                                 UnitCore.Instance.Replaylist = new List<string>();
                             UnitCore.Instance.Replaylist.Add(ReplayFileName);
                             btn.IsEnabled = true;
+                           
                         }
                     }
                 }
@@ -94,11 +97,6 @@ namespace USBLDC.Views
 
         private async void StartReplayBtn(object sender, RoutedEventArgs e)
         {
-            AjustPositionInfo ajInfo = new AjustPositionInfo();
-
-            var info = (StructureInterface)ajInfo;
-            var Id = (int)TypeId.AjustPos;
-            UnitCore.Instance.EventAggregator.PublishMessage(new ShowStructureInfo(info, Id));
             await MainFrameViewModel.pMainFrame.DialogCoordinator.HideMetroDialogAsync(MainFrameViewModel.pMainFrame, (BaseMetroDialog)App.Current.MainWindow.Resources["ReplayDialog"]);
         }
 

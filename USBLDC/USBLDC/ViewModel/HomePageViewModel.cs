@@ -53,6 +53,7 @@ namespace USBLDC.ViewModel
             StartCMD = RegisterCommand(ExecuteStartCMD, CanExecuteStartCMD, true);
             StopCMD = RegisterCommand(ExecuteStopCMD, CanExecuteStopCMD, true);
             StartReplayCMD = RegisterCommand(ExecuteStartReplayCMD, CanExecuteStartReplayCMD, true);
+            ResumeReplayCMD = RegisterCommand(ExecuteResumeReplayCMD, CanExecuteResumeReplayCMD, true);
             PauseReplayCMD = RegisterCommand(ExecutePauseReplayCMD, CanExecutePauseReplayCMD, true);
             ExitReplayCMD = RegisterCommand(ExecuteExitReplayCMD, CanExecuteExitReplayCMD, true);
             HeadingChartTitle = "X=" + coordinateX.ToString("F02") + "m" + "\n" + "Y=" + coordinateY.ToString("F02") +
@@ -492,7 +493,7 @@ namespace USBLDC.ViewModel
                     var md = new MetroDialogSettings();
                     md.AffirmativeButtonText = "确定";
                     md.NegativeButtonText = "取消";
-                    var ret = await MainFrameViewModel.pMainFrame.DialogCoordinator.ShowMessageAsync(MainFrameViewModel.pMainFrame, "请先停止声纳工作，然后开始回放定位结果数据",
+                    var ret = await MainFrameViewModel.pMainFrame.DialogCoordinator.ShowMessageAsync(MainFrameViewModel.pMainFrame, "正在回放数据，确定要重新选择结果数据吗？",
                         UnitCore.Instance.NetCore.Error, MessageDialogStyle.AffirmativeAndNegative, md);
                     if (ret != MessageDialogResult.Affirmative)
                     {
@@ -506,17 +507,7 @@ namespace USBLDC.ViewModel
                 var dialog = (BaseMetroDialog)App.Current.MainWindow.Resources["ReplayDialog"];
                 await MainFrameViewModel.pMainFrame.DialogCoordinator.ShowMetroDialogAsync(MainFrameViewModel.pMainFrame,
                     dialog);
-                //check the filelist
-                if(UnitCore.Instance.Replaylist!=null&&UnitCore.Instance.Replaylist.Count>0)
-                {     
-                    if (replayTimer == null)
-                        replayTimer = new DispatcherTimer(TimeSpan.FromSeconds(2), DispatcherPriority.Input,
-                    ResultReplaying, Dispatcher.CurrentDispatcher);
-                }
-                else
-                {
-                    return;
-                }
+                
             }
             else
             {
@@ -559,6 +550,37 @@ namespace USBLDC.ViewModel
                 ReplayFileIndex = 0;
             }
                 
+        }
+        public ICommand ResumeReplayCMD
+        {
+            get { return GetPropertyValue(() => ResumeReplayCMD); }
+            set { SetPropertyValue(() => ResumeReplayCMD, value); }
+        }
+        private void CanExecuteResumeReplayCMD(object sender, CanExecuteRoutedEventArgs eventArgs)
+        {
+            eventArgs.CanExecute = true;
+        }
+
+        private async void ExecuteResumeReplayCMD(object sender, ExecutedRoutedEventArgs eventArgs)
+        {
+            if (ReplayState == 2)
+            {
+                //check the filelist
+                if (UnitCore.Instance.Replaylist != null && UnitCore.Instance.Replaylist.Count > 0)
+                {
+                    if (replayTimer == null)
+                        replayTimer = new DispatcherTimer(TimeSpan.FromSeconds(2), DispatcherPriority.Input,
+                    ResultReplaying, Dispatcher.CurrentDispatcher);
+                    replayTimer.Start();
+                    ReplayState = 1;
+                    UnitCore.Instance.State = 1;
+                }
+                else
+                {
+                    return;
+                }
+            }
+
         }
         public ICommand ExitReplayCMD
         {
