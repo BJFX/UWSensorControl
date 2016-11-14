@@ -160,6 +160,7 @@
     <Compile Include="Events\GoHomePageNavigationEvent.cs" />
     <Compile Include="Events\GoSonarConfigEvent.cs" />
     <Compile Include="Events\ShowStructureInfo.cs" />
+    <Compile Include="Events\StartReplayEvent.cs" />
     <Compile Include="Helpers\GpsHelper.cs" />
     <Compile Include="Helpers\SettleSoundFile.cs" />
     <Compile Include="Helpers\TreeHelper.cs" />

@@ -26,7 +26,7 @@ using USBL.GuiWei;
 
 namespace USBLDC.ViewModel
 {
-    public class HomePageViewModel : ViewModelBase, IHandleMessage<ShowStructureInfo>
+    public class HomePageViewModel : ViewModelBase, IHandleMessage<ShowStructureInfo>, IHandleMessage<StartReplayEvent>
     {
         private DispatcherTimer dtTimer = null;
         private DispatcherTimer replayTimer = null;//replay
@@ -351,10 +351,7 @@ namespace USBLDC.ViewModel
                     "请先退出回放模式再开始工作", MessageDialogStyle.Affirmative, md);
                 return;
             }
-            if(UnitCore.Instance.ajustPosition!=null)
-                UnitCore.Instance.ajustPosition.Clear();
-            TrackModel = null;
-            RmoveTrack();
+            CleanScreen();
             if (!UnitCore.Instance.NetCore.SonarIsOK)
             {
                 UnitCore.Instance.NetCore.Stop();
@@ -483,7 +480,17 @@ namespace USBLDC.ViewModel
         {
             eventArgs.CanExecute = true;
         }
+        private void CleanScreen()
+        {
+            TrackModel = null;
+            RmoveTrack();
+            if (UnitCore.Instance.ajustPosition != null)
+                UnitCore.Instance.ajustPosition.Clear();
+            UpdateGpsView(new GPSInfo());
+            UpdatePoseView(new PosetureInfo());
+            UpdatePositionView(new AjustPositionInfo());
 
+        }
         private async void ExecuteStartReplayCMD(object sender, ExecutedRoutedEventArgs eventArgs)
         {
             if (SonarStatus == 0)
@@ -501,6 +508,8 @@ namespace USBLDC.ViewModel
                     }
                 }
                 //start replay
+                CleanScreen();
+                
                 ReplayFileIndex = 0;
                 if (replayTimer != null)
                     replayTimer.Stop();
@@ -532,8 +541,12 @@ namespace USBLDC.ViewModel
                 subTitle = filename;
                 if(adjustinfo.Parse(bytes))
                 {
-                   var info = (StructureInterface)adjustinfo;
-                   Handle(new ShowStructureInfo(info,(int)TypeId.AjustPos));
+                    if (UnitCore.Instance.ajustPosition == null)
+                        UnitCore.Instance.ajustPosition = new Dictionary<DateTime, AjustPositionInfo>();
+                    ajusttime = DateTime.Now;
+                    subTitle =ajusttime+" "+filename;
+                    UnitCore.Instance.ajustPosition.Add(ajusttime,adjustinfo);
+                    UpdatePositionView(UnitCore.Instance.ajustPosition.Last().Value);
                 }
                 else
                 {
@@ -561,10 +574,12 @@ namespace USBLDC.ViewModel
             eventArgs.CanExecute = true;
         }
 
-        private async void ExecuteResumeReplayCMD(object sender, ExecutedRoutedEventArgs eventArgs)
+        private void ExecuteResumeReplayCMD(object sender, ExecutedRoutedEventArgs eventArgs)
         {
-            if (ReplayState == 2)
+            if (ReplayState != 1)
             {
+                if (dtTimer != null && dtTimer.IsEnabled)
+                    dtTimer.Stop();
                 //check the filelist
                 if (UnitCore.Instance.Replaylist != null && UnitCore.Instance.Replaylist.Count > 0)
                 {
@@ -603,6 +618,8 @@ namespace USBLDC.ViewModel
             if(ret == MessageDialogResult.Affirmative)
             {
                 replayTimer.Stop();
+                if (dtTimer != null)
+                    dtTimer.Start();
                 ReplayState = 0;
                 UnitCore.Instance.State = ReplayState;
                 UnitCore.Instance.Replaylist.Clear();
@@ -750,6 +767,11 @@ namespace USBLDC.ViewModel
             gpsSpeed = info.Velocity;
             shipLong = info.Long;
             shipLat = info.Lat;
+        }
+
+        public void Handle(StartReplayEvent message)
+        {
+            ExecuteResumeReplayCMD(null, null);
         }
     }
 }

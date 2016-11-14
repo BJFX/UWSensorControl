@@ -49,7 +49,7 @@ namespace USBLDC.Views
                 this.WindowState = WindowState.Normal;
         }
 
-        private void SelectReplayFile(object sender, RoutedEventArgs e)
+        private async void SelectReplayFile(object sender, RoutedEventArgs e)
         {
             var newdialog = (BaseMetroDialog)App.Current.MainWindow.Resources["ReplayDialog"];
             var status = newdialog.FindChild<TextBlock>("StatusBlock");
@@ -80,6 +80,13 @@ namespace USBLDC.Views
                     {
                         status.Text = foldPath;
                         var filist = di.GetFiles("*.pos", SearchOption.TopDirectoryOnly);
+                        if (filist.Length == 0)
+                        {
+                            var md = new MetroDialogSettings();
+                            md.AffirmativeButtonText = "确定";
+                            await MainFrameViewModel.pMainFrame.DialogCoordinator.ShowMessageAsync(MainFrameViewModel.pMainFrame, "没有符合条件的文件（*.pos）",
+                                UnitCore.Instance.NetCore.Error, MessageDialogStyle.Affirmative, md);
+                        }
                         foreach (var fi in filist)
                         {
                             var ReplayFileName = fi.FullName;
@@ -98,6 +105,7 @@ namespace USBLDC.Views
         private async void StartReplayBtn(object sender, RoutedEventArgs e)
         {
             await MainFrameViewModel.pMainFrame.DialogCoordinator.HideMetroDialogAsync(MainFrameViewModel.pMainFrame, (BaseMetroDialog)App.Current.MainWindow.Resources["ReplayDialog"]);
+            UnitCore.Instance.EventAggregator.PublishMessage(new StartReplayEvent());
         }
 
         private async void CloseDialog(object sender, RoutedEventArgs e)
