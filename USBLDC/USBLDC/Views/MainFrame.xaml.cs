@@ -96,12 +96,18 @@ namespace USBLDC.Views
                             btn.IsEnabled = true;
                            
                         }
+                        if (UnitCore.Instance.Replaylist.Count > 1)
+                        {
+                            var pc = new PosFileStringComparer();
+                            UnitCore.Instance.Replaylist.Sort(pc);
+                        }
+                            
                     }
                 }
             }
             
         }
-
+        
         private async void StartReplayBtn(object sender, RoutedEventArgs e)
         {
             await MainFrameViewModel.pMainFrame.DialogCoordinator.HideMetroDialogAsync(MainFrameViewModel.pMainFrame, (BaseMetroDialog)App.Current.MainWindow.Resources["ReplayDialog"]);
@@ -111,6 +117,29 @@ namespace USBLDC.Views
         private async void CloseDialog(object sender, RoutedEventArgs e)
         {
             await MainFrameViewModel.pMainFrame.DialogCoordinator.HideMetroDialogAsync(MainFrameViewModel.pMainFrame, (BaseMetroDialog)App.Current.MainWindow.Resources["ReplayDialog"]);
+        }
+    }
+    class PosFileStringComparer : IComparer<string>
+    {
+
+        public int Compare(string x, string y)
+        {
+            x = x.Substring(x.LastIndexOf("\\")+1);
+            y = y.Substring(y.LastIndexOf("\\") + 1);
+            var xstr = x.Split(new char[] {'_','.'});
+            var ystr = y.Split(new char[] { '_', '.' });
+            for (int i = 0; i < 5; i++)
+            {
+                if(int.Parse(xstr[i])<int.Parse(ystr[i]))
+                {
+                    return -1;
+                }
+                if (int.Parse(ystr[i]) < int.Parse(xstr[i]))
+                {
+                    return 1;
+                }
+            }
+            return 0;
         }
     }
 }

@@ -64,7 +64,7 @@ namespace USBLDC.ViewModel
             ObjectVisibility = false;
             gpsTitle = "GPS";
             ReplayState = 0;//0:normal,1:replaying,2:pause
-            //UnitCore.Instance.State = ReplayState;
+            UnitCore.Instance.State = ReplayState;
             PauseString = "暂停回放";
             subTitle = "实时";
         }
@@ -94,7 +94,7 @@ namespace USBLDC.ViewModel
             
             if (PoseTickCount %2==0)
             {
-                if (UnitCore.Instance.ajustPosition != null)
+                if (UnitCore.Instance.ajustPosition != null && UnitCore.Instance.ajustPosition.Count>0)
                     UpdatePositionView(UnitCore.Instance.ajustPosition.Last().Value);
             }
             if (UnitCore.Instance.NetCore != null && UnitCore.Instance.NetCore.IsWorking&&UnitCore.Instance.NetCore.SonarIsOK)
@@ -149,8 +149,8 @@ namespace USBLDC.ViewModel
         }
         public string subTitle
         {
-            get { return GetPropertyValue(() => SonarUpdate); }
-            set { SetPropertyValue(() => SonarUpdate, value); }
+            get { return GetPropertyValue(() => subTitle); }
+            set { SetPropertyValue(() => subTitle, value); }
         }
         public string SonarUpdate
         {
@@ -538,13 +538,13 @@ namespace USBLDC.ViewModel
                 Array.Clear(bytes, 0, 256);
                 fs.Read(bytes,0,256);
                 filename = filename.Substring(filename.LastIndexOf('\\')+1);
-                subTitle = filename;
+                //subTitle = filename;
                 if(adjustinfo.Parse(bytes))
                 {
                     if (UnitCore.Instance.ajustPosition == null)
                         UnitCore.Instance.ajustPosition = new Dictionary<DateTime, AjustPositionInfo>();
                     ajusttime = DateTime.Now;
-                    subTitle =ajusttime+" "+filename;
+                    subTitle = "PING:"+adjustinfo.raw.PingNum+ "-" + filename;
                     UnitCore.Instance.ajustPosition.Add(ajusttime,adjustinfo);
                     UpdatePositionView(UnitCore.Instance.ajustPosition.Last().Value);
                 }
@@ -578,17 +578,18 @@ namespace USBLDC.ViewModel
         {
             if (ReplayState != 1)
             {
-                if (dtTimer != null && dtTimer.IsEnabled)
-                    dtTimer.Stop();
+                
                 //check the filelist
                 if (UnitCore.Instance.Replaylist != null && UnitCore.Instance.Replaylist.Count > 0)
                 {
                     if (replayTimer == null)
-                        replayTimer = new DispatcherTimer(TimeSpan.FromSeconds(2), DispatcherPriority.Input,
+                        replayTimer = new DispatcherTimer(TimeSpan.FromMilliseconds(500), DispatcherPriority.Input,
                     ResultReplaying, Dispatcher.CurrentDispatcher);
                     replayTimer.Start();
                     ReplayState = 1;
                     UnitCore.Instance.State = 1;
+                    if (dtTimer != null)
+                        dtTimer.Stop();
                 }
                 else
                 {
@@ -622,8 +623,7 @@ namespace USBLDC.ViewModel
                     dtTimer.Start();
                 ReplayState = 0;
                 UnitCore.Instance.State = ReplayState;
-                UnitCore.Instance.Replaylist.Clear();
-                UnitCore.Instance.Replaylist = null;
+                CleanScreen();
                 subTitle = "实时";
             }
 
@@ -645,14 +645,17 @@ namespace USBLDC.ViewModel
                 replayTimer.Stop();
                 PauseString = "继续回放";
                 ReplayState = 2;
+                UnitCore.Instance.State = ReplayState;
+                return;
             }
             if (ReplayState == 2)
             {
                 replayTimer.Start();
                 PauseString = "暂停回放";
                 ReplayState = 1;
+                UnitCore.Instance.State = ReplayState;
             }
-            UnitCore.Instance.State = ReplayState;
+            
         }
         public void Handle(ShowStructureInfo message)
         {
@@ -713,8 +716,8 @@ namespace USBLDC.ViewModel
                 if ((x * x + y * y + z * z) > 1)
                     ObjectVisibility = true;
                 UpdataTrack(x, y, z);
-                UpdataTrack(x+200, y-100, z+500);
-                UpdataTrack(x + 600, y + 1000, z + 1500);
+                //UpdataTrack(x+200, y-100, z+500);
+                //UpdataTrack(x + 600, y + 1000, z + 1500);
         }
         public bool TrackVisible
         {
