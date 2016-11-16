@@ -64,8 +64,7 @@ namespace USBLDC.Views
         private void PosViewport3D_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
         {
             var distance = PosViewport3D.CameraController.CameraPosition.DistanceTo(new Point3D(0, 0, 0));
-            latboard.Position = new Point3D(distance/3, 0, -1000);
-            if (distance > 12000 && e.Delta < 0)
+            if (distance > 14000 && e.Delta < 0)
                 e.Handled = true;
             if (distance < 6000 && e.Delta > 0)
                 e.Handled = true;

@@ -67,18 +67,16 @@ namespace USBLDC.ViewModel
             UnitCore.Instance.State = ReplayState;
             PauseString = "暂停回放";
             subTitle = "实时";
+            CamPos = "0,0,6000";
+            TrackVisible = true;
         }
-
-       
-
-        
 
         public override void InitializePage(object extraData)
         {
+
             if (CurrentModel == null && UnitCore.Instance.CurrentModel != null)
                 CurrentModel = UnitCore.Instance.CurrentModel;
-            var pos = new AjustPositionInfo();
-            UpdatePositionView(pos);
+            UpdatePositionView(new AjustPositionInfo());
             if(dtTimer==null)
                 dtTimer = new DispatcherTimer(TimeSpan.FromSeconds(1), DispatcherPriority.Input,
             UpdateAllData, Dispatcher.CurrentDispatcher);
@@ -146,6 +144,11 @@ namespace USBLDC.ViewModel
             {
                 GPSLastUpdate = "端口关闭";
             }
+        }
+        public string CamPos
+        {
+            get { return GetPropertyValue(() => CamPos); }
+            set { SetPropertyValue(() => CamPos, value); }
         }
         public string subTitle
         {
@@ -709,9 +712,8 @@ namespace USBLDC.ViewModel
                 var x = -coordinateX;//坐标轴x相反，取反
                 var y = -coordinateY;//坐标轴y相反，取反
                 var z = coordinateZ;//坐标轴z相反，取反
-                //var x = -1500;
-                //var y = -0;
-                //var z = 1000;
+
+                CamPos = (x/2).ToString("F02") + "," + (y/2).ToString("F02") + "," + (6000+z/2).ToString("F02");
                 ObjectCenter = x.ToString("F02") + "," + y.ToString("F02") + "," + z.ToString("F02");
                 if ((x * x + y * y + z * z) > 1)
                     ObjectVisibility = true;

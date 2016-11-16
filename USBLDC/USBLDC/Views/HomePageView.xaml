@@ -207,7 +207,7 @@
                                    TitleSize="20"
                                    SubTitleSize="16" PreviewMouseWheel="PosViewport3D_PreviewMouseWheel" SubTitle="{Binding subTitle}">
                     <h:HelixViewport3D.DefaultCamera>
-                        <PerspectiveCamera x:Name ="PosCamera" Position="0,0,6000" LookDirection="0,0,-6000" UpDirection="-1,0,0" NearPlaneDistance="3000" FarPlaneDistance="60000"/>
+                        <PerspectiveCamera x:Name ="PosCamera" Position="{Binding CamPos}" LookDirection="0,0,-6000" UpDirection="-1,0,0" NearPlaneDistance="3000" FarPlaneDistance="60000"/>
                     </h:HelixViewport3D.DefaultCamera>
                     <h:SunLight/>
                     <h:GridLinesVisual3D  Fill="Cornsilk" Length ="12000" Width="12000" MinorDistance="1500" MajorDistance="20000" Thickness="6">
@@ -217,9 +217,25 @@
                             </Transform3DGroup>
                         </h:GridLinesVisual3D.Transform>
                     </h:GridLinesVisual3D>
-                    <h:BillboardTextVisual3D x:Name="latboard" Position="1500,0,-100" DepthOffset="0.1" Text="latitude"/>
-                    <h:BillboardTextVisual3D Position="3000,0,-100" DepthOffset="0.1" Text="test code"/>
-                    <h:BillboardTextVisual3D Position="1500,0,-100" DepthOffset="0.1" Text="test code"/>
+                    <h:BillboardTextVisual3D x:Name="latleftbottom0" Position="1500,-6000,-100" DepthOffset="0.1" Text="latitude" Foreground="White"/>
+                    <h:BillboardTextVisual3D x:Name="latleftbottom1" Position="3000,-6000,-100" DepthOffset="0.1" Text="test code" Foreground="White"/>
+                    <h:BillboardTextVisual3D x:Name="latleftbottom2" Position="4500,-6000,-100" DepthOffset="0.1" Text="test code" Foreground="White"/>
+                    <h:BillboardTextVisual3D x:Name="latleftbottom3" Position="6000,-6000,-100" DepthOffset="0.1" Text="latitude" Foreground="White"/>
+
+                    <h:BillboardTextVisual3D x:Name="lattop0" Position="-1500,6000,-100" DepthOffset="0.1" Text="latitude" Foreground="White"/>
+                    <h:BillboardTextVisual3D x:Name="lattop1" Position="-3000,6000,-100" DepthOffset="0.1" Text="test code" Foreground="White"/>
+                    <h:BillboardTextVisual3D x:Name="lattop2" Position="-4500,6000,-100" DepthOffset="0.1" Text="test code" Foreground="White"/>
+                    <h:BillboardTextVisual3D x:Name="lattop3" Position="-6000,6000,-100" DepthOffset="0.1" Text="latitude" Foreground="White"/>
+
+                    <h:BillboardTextVisual3D x:Name="langtop0" Position="-6000,-1500,-100" DepthOffset="0.1" Text="latitude" Foreground="White"/>
+                    <h:BillboardTextVisual3D x:Name="langtop1" Position="-6000,-3000,-100" DepthOffset="0.1" Text="test code" Foreground="White"/>
+                    <h:BillboardTextVisual3D x:Name="langtop2" Position="-6000,-4500,-100" DepthOffset="0.1" Text="test code" Foreground="White"/>
+                    <h:BillboardTextVisual3D x:Name="langtop3" Position="-6000,-6000,-100" DepthOffset="0.1" Text="latitude" Foreground="White"/>
+
+                    <h:BillboardTextVisual3D x:Name="langbottom0" Position="6000,1500,-100" DepthOffset="0.1" Text="latitude" Foreground="White"/>
+                    <h:BillboardTextVisual3D x:Name="langbottom1" Position="6000,3000,-100" DepthOffset="0.1" Text="test code" Foreground="White"/>
+                    <h:BillboardTextVisual3D x:Name="langbottom2" Position="6000,4500,-100" DepthOffset="0.1" Text="test code" Foreground="White"/>
+                    <h:BillboardTextVisual3D x:Name="langbottom3" Position="6000,6000,-100" DepthOffset="0.1" Text="latitude" Foreground="White"/>
                     <ModelVisual3D Content="{Binding CurrentModel}">
                         <ModelVisual3D.Transform>
                             <Transform3DGroup>
