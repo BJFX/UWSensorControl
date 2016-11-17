@@ -145,6 +145,90 @@ namespace USBLDC.ViewModel
                 GPSLastUpdate = "端口关闭";
             }
         }
+        #region latitude
+        public double latleft0
+        {
+            get { return GetPropertyValue(() => latleft0); }
+            set { SetPropertyValue(() => latleft0, value); }
+        }
+        public double latleft1
+        {
+            get { return GetPropertyValue(() => latleft1); }
+            set { SetPropertyValue(() => latleft1, value); }
+        }
+        public double latleft2
+        {
+            get { return GetPropertyValue(() => latleft2); }
+            set { SetPropertyValue(() => latleft2, value); }
+        }
+        public double latleft3
+        {
+            get { return GetPropertyValue(() => latleft3); }
+            set { SetPropertyValue(() => latleft3, value); }
+        }
+        public double latTop0
+        {
+            get { return GetPropertyValue(() => latTop0); }
+            set { SetPropertyValue(() => latTop0, value); }
+        }
+        public double latTop1
+        {
+            get { return GetPropertyValue(() => latTop1); }
+            set { SetPropertyValue(() => latTop1, value); }
+        }
+        public double latTop2
+        {
+            get { return GetPropertyValue(() => latTop2); }
+            set { SetPropertyValue(() => latTop2, value); }
+        }
+        public double latTop3
+        {
+            get { return GetPropertyValue(() => latTop3); }
+            set { SetPropertyValue(() => latTop3, value); }
+        }
+        #endregion
+        #region Longitude
+        public double longbottom0
+        {
+            get { return GetPropertyValue(() => longbottom0); }
+            set { SetPropertyValue(() => longbottom0, value); }
+        }
+        public double longbottom1
+        {
+            get { return GetPropertyValue(() => longbottom1); }
+            set { SetPropertyValue(() => longbottom1, value); }
+        }
+        public double longbottom2
+        {
+            get { return GetPropertyValue(() => longbottom2); }
+            set { SetPropertyValue(() => longbottom2, value); }
+        }
+        public double longbottom3
+        {
+            get { return GetPropertyValue(() => longbottom3); }
+            set { SetPropertyValue(() => longbottom3, value); }
+        }
+        public double longTop0
+        {
+            get { return GetPropertyValue(() => longTop0); }
+            set { SetPropertyValue(() => longTop0, value); }
+        }
+        public double longTop1
+        {
+            get { return GetPropertyValue(() => longTop1); }
+            set { SetPropertyValue(() => longTop1, value); }
+        }
+        public double longTop2
+        {
+            get { return GetPropertyValue(() => longTop2); }
+            set { SetPropertyValue(() => longTop2, value); }
+        }
+        public double longTop3
+        {
+            get { return GetPropertyValue(() => longTop3); }
+            set { SetPropertyValue(() => longTop3, value); }
+        }
+        #endregion
         public string CamPos
         {
             get { return GetPropertyValue(() => CamPos); }
@@ -699,7 +783,55 @@ namespace USBLDC.ViewModel
             //PoseStatus = info.Status;
             
         }
+        public double LongOffset(float LonLocal, float LatLocal, float x)
+        {
+            var LonTarget = LonLocal + x / (111.3 * 1000 * Math.Abs(Math.Cos(LatLocal/180*Math.PI)));
+            if (LonTarget > 180)
+            {
+                LonTarget -= 360;
+            }
+            else if(LonTarget<-180)
+            {
+                LonTarget += 360;
+            }
+            return LonTarget;
+        }
+        public double LatOffset(float LatLocal, float y)
+        {
+            var LatTarget = LatLocal + y / (111.3 * 1000);
+            if (LatTarget > 90)
+            {
+                LatTarget = 180 - LatTarget;
+            }
+            else if (LatTarget < -90)
+            {
+                LatTarget = -180 - LatTarget;
+            }
+            return LatTarget;
+        }
+        private void UpdateLatLong(GPSInfo gpsInfo)
+        {
+            longbottom0 = LongOffset(gpsInfo.Long, gpsInfo.Lat, 1500);
+            longbottom1 = LongOffset(gpsInfo.Long, gpsInfo.Lat, 3000);
+            longbottom2 = LongOffset(gpsInfo.Long, gpsInfo.Lat, 4500);
+            longbottom3 = LongOffset(gpsInfo.Long, gpsInfo.Lat, 6000);
 
+            longTop0 = LongOffset(gpsInfo.Long, gpsInfo.Lat, -1500);
+            longTop1 = LongOffset(gpsInfo.Long, gpsInfo.Lat, -3000);
+            longTop2 = LongOffset(gpsInfo.Long, gpsInfo.Lat, -4500);
+            longTop3 = LongOffset(gpsInfo.Long, gpsInfo.Lat, -6000);
+
+            latleft0 = LatOffset(gpsInfo.Lat, -1500);
+            latleft1 = LatOffset(gpsInfo.Lat, -3000);
+            latleft2 = LatOffset(gpsInfo.Lat, -4500);
+            latleft3 = LatOffset(gpsInfo.Lat, -6000);
+
+            latTop0 = LatOffset(gpsInfo.Lat, 1500);
+            latTop1 = LatOffset(gpsInfo.Lat, 3000);
+            latTop2 = LatOffset(gpsInfo.Lat, 4500);
+            latTop3 = LatOffset(gpsInfo.Lat, 6000);
+
+        }
         private void UpdatePositionView(AjustPositionInfo info)
         {
                 coordinateX = info.XAjust;
@@ -772,6 +904,7 @@ namespace USBLDC.ViewModel
             gpsSpeed = info.Velocity;
             shipLong = info.Long;
             shipLat = info.Lat;
+            UpdateLatLong(info);
         }
 
         public void Handle(StartReplayEvent message)

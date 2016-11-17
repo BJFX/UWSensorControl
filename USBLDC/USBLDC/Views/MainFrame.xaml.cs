@@ -86,6 +86,7 @@ namespace USBLDC.Views
                             md.AffirmativeButtonText = "确定";
                             await MainFrameViewModel.pMainFrame.DialogCoordinator.ShowMessageAsync(MainFrameViewModel.pMainFrame, "没有符合条件的文件（*.pos）",
                                 UnitCore.Instance.NetCore.Error, MessageDialogStyle.Affirmative, md);
+                            return;
                         }
                         foreach (var fi in filist)
                         {
