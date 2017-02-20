@@ -21,8 +21,8 @@ namespace NMEA0183
         public static bool Parse(string msg)
         {
             bool ret = true;
-            string newcomming = msg;
-                char[] charSeparators = new char[] {',','*','#','$',';'};
+            string newcomming = msg.TrimEnd(new char[]{'\r','\n','\0'});
+                char[] charSeparators = new char[] {',','*','#','$',';','\r','\n'};
             try
             {
                 string[] gpsinfo = newcomming.Split(charSeparators, StringSplitOptions.None);
