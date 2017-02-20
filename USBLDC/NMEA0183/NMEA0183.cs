@@ -64,8 +64,16 @@ namespace NMEA0183
                                     -(UInt16.Parse(gpsinfo[6].Substring(0, 2)) + float.Parse(gpsinfo[6].Substring(2)) / 60);
                             else
                             {
-                                Longitude = UInt16.Parse(gpsinfo[6].Substring(0, 2)) +
+                                if (gpsinfo[6].IndexOf('.')==4)//2bit lng
+                                {
+                                    Longitude = UInt16.Parse(gpsinfo[6].Substring(0, 2)) +
                                            float.Parse(gpsinfo[6].Substring(2)) / 60;
+                                }
+                                if (gpsinfo[6].IndexOf('.') == 5)//3bit lng
+                                {
+                                    Longitude = UInt16.Parse(gpsinfo[6].Substring(0, 3)) +
+                                           float.Parse(gpsinfo[6].Substring(3)) / 60;
+                                }
                             }
                             //刷新航向、航速信息
                             Speed = float.Parse(gpsinfo[8]);
