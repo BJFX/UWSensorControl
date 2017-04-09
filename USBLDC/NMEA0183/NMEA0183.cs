@@ -83,6 +83,7 @@ namespace NMEA0183
                         else
                         {
                             Status = 98;
+                            ret = false;
                         }
                         break;
                     case "GPGSV":
